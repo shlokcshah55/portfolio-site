@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Shared by the outgoing home view and the incoming journal view;
+     must match ZOOM_IN_MS / ZOOM_OUT_MS in App.jsx. */
+  --zoom-in: 950ms;
+  --zoom-out: 700ms;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #af240f;
+  color: #faf3ec;
+  overflow-x: hidden;
+}
+
+body {
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  min-height: 100vh;
+}
+
+/* The home view scales to 5x mid-transition; without this it would
+   briefly push the document out to five viewports wide. */
+body.is-zooming {
+  overflow: clip;
+}
+
+#root {
+  min-height: 100vh;
+}

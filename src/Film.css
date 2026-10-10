@@ -1,0 +1,125 @@
+/* Film — the camcorder is the whole view. camera.jpeg is laid out at
+   its native aspect ratio in a centered stage; the video overlay sits
+   in a box positioned as a percentage of that same stage, matching the
+   screen's actual pixel rect within the photo (measured in Film.jsx). */
+
+.film-view {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(120% 90% at 50% 30%, #2a2620 0%, #16130f 68%, #0c0a08 100%);
+  transform-origin: var(--zx, 50%) var(--zy, 50%);
+  animation: film-in var(--zoom-in) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.film-view.is-closing {
+  animation: film-out var(--zoom-out) cubic-bezier(0.6, 0, 0.3, 1) both;
+  pointer-events: none;
+}
+
+@keyframes film-in {
+  from {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes film-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+}
+
+.film-back {
+  position: absolute;
+  top: clamp(1rem, 3vh, 2rem);
+  left: clamp(1rem, 3vw, 2.5rem);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f6ece0;
+  background: rgba(20, 14, 10, 0.35);
+  backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, #f6ece0 35%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.film-back:hover,
+.film-back:focus-visible {
+  color: #15100c;
+  background: #f6ece0;
+  border-color: #f6ece0;
+}
+
+.film-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.5rem, 6vw, 4rem);
+}
+
+.camcorder {
+  position: relative;
+  width: min(100%, 78rem);
+  aspect-ratio: 1407 / 768;
+}
+
+.camcorder__body {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.camcorder__screen {
+  position: absolute;
+  overflow: hidden;
+  border-radius: clamp(2px, 0.3vw, 6px);
+  background: #000;
+}
+
+.camcorder__clip {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-view,
+  .film-view.is-closing {
+    animation: none;
+  }
+}

@@ -1,0 +1,390 @@
+.stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Matched to the video's own backdrop red (175, 36, 15) so the
+     keyed edges blend seamlessly into the page. */
+  --bg-red: #af240f;
+  --text-color: #faf3ec;
+  /* The video is 16:9 landscape shown with object-fit: contain, so
+     its displayed box is min(100vw, 177.7vh) wide and min(56.25vw,
+     100vh) tall, centered. Anchors below are measured fractions of
+     the source frame: head left edge 0.077 video-widths left of
+     center, body/bag right edge 0.117 video-widths right of center,
+     eye level at 0.24 of the video height, waist at 0.75. --tuck is
+     how far a word slides in behind the silhouette. */
+  --vid-w: min(100vw, 177.7vh);
+  --vid-h: min(56.25vw, 100vh);
+  --head-left: calc(0.077 * var(--vid-w));
+  --body-right: calc(0.117 * var(--vid-w));
+  --tuck: 0.38em;
+  background: var(--bg-red);
+}
+
+/* Zoom transition into the journal. The camera pushes through the
+   clicked tile: home scales up and past the viewer from that exact
+   point (--zx/--zy, set inline from the tile's bounding box) while
+   the journal grows into place from the same origin. Durations here
+   must match ZOOM_IN_MS / ZOOM_OUT_MS in App.jsx. */
+.stage.is-leaving,
+.stage.is-away,
+.stage.is-returning {
+  transform-origin: var(--zx, 50%) var(--zy, 50%);
+  will-change: transform, opacity;
+}
+
+.stage.is-leaving {
+  animation: stage-depart var(--zoom-in) cubic-bezier(0.62, 0, 0.28, 1) both;
+  pointer-events: none;
+}
+
+.stage.is-away {
+  transform: scale(5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.stage.is-returning {
+  animation: stage-return var(--zoom-out) cubic-bezier(0.16, 1, 0.3, 1) both;
+  pointer-events: none;
+}
+
+@keyframes stage-depart {
+  to {
+    transform: scale(5);
+    opacity: 0;
+  }
+}
+
+@keyframes stage-return {
+  from {
+    transform: scale(5);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Order, bottom to top: red background (.stage), text, then the
+   chroma-keyed character on .video-box — the video's backdrop is cut
+   to transparent in CursorScrubVideo, so the character silhouette is
+   the only thing actually occluding text. */
+.name-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@font-face {
+  font-family: "Notable";
+  src: url("/fonts/Notable-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+.name-word {
+  position: absolute;
+  font-family: "Notable", "Arial Narrow", sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(2.75rem, 8vw, 7.75rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+/* Left side at face height; the right edge tucks --tuck past the
+   head's left edge so the tail of the K hides behind the head. */
+.name-word-shlok {
+  top: calc(50% - 0.26 * var(--vid-h));
+  right: calc(50% + var(--head-left) - var(--tuck) - 0.35em);
+  transform: translateY(-50%);
+  text-align: right;
+}
+
+/* Right side at hip height; the left edge tucks --tuck past the
+   body's right edge so the first S hides behind the body. */
+.name-word-shah {
+  top: calc(50% + 0.25 * var(--vid-h));
+  left: calc(50% + var(--body-right) - var(--tuck));
+  transform: translateY(-50%);
+  text-align: left;
+}
+
+/* Hover-reveal items: two per side, hidden until the cursor enters
+   that side of the window (see LEFT_EDGE / RIGHT_EDGE in App.jsx).
+   Sits above the video so the items stay clickable and readable. */
+.reveal-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  font-family: "Inter", sans-serif;
+}
+
+/* Position, size, tilt, and delay all arrive per item as custom
+   properties set inline from REVEAL_ITEMS in App.jsx. */
+.reveal-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: var(--text-color);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(var(--slide), 1.6rem) rotate(calc(var(--tilt) * 2.2))
+    scale(0.86);
+  transition:
+    opacity 0.4s ease var(--delay),
+    transform 0.65s cubic-bezier(0.2, 1.1, 0.35, 1) var(--delay),
+    visibility 0s linear calc(0.4s + var(--delay));
+}
+
+.reveal-item.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, 0) rotate(var(--tilt)) scale(1);
+  pointer-events: auto;
+  transition:
+    opacity 0.4s ease var(--delay),
+    transform 0.65s cubic-bezier(0.2, 1.1, 0.35, 1) var(--delay),
+    visibility 0s;
+}
+
+.reveal-item img {
+  width: var(--size);
+  height: auto;
+  filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.38));
+  transition: transform 0.35s cubic-bezier(0.2, 1.1, 0.35, 1);
+}
+
+.reveal-item:hover img,
+.reveal-item:focus-visible img {
+  transform: translateY(-10px) rotate(calc(var(--tilt) * -0.6)) scale(1.06);
+}
+
+/* Label rides under one corner of the image, not centered beneath
+   it, so the pairs never line up into a caption grid. */
+.reveal-label {
+  /* --pull-y / --pull-x come from each item's measured alpha bounds
+     (see REVEAL_ITEMS), tucking the label against the object rather
+     than the image box, which is mostly empty. */
+  margin-top: calc(var(--size) * var(--pull-y) * -1);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.reveal-left {
+  --slide: -3rem;
+  align-items: flex-start;
+  transform-origin: left center;
+}
+
+.reveal-left .reveal-label {
+  margin-left: calc(var(--size) * var(--pull-x));
+}
+
+.reveal-right {
+  --slide: 3rem;
+  align-items: flex-end;
+  transform-origin: right center;
+  text-align: right;
+}
+
+.reveal-right .reveal-label {
+  margin-right: calc(var(--size) * var(--pull-x));
+}
+
+.video-box {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.swivel-hint {
+  position: absolute;
+  z-index: 3;
+  top: calc(50% - 0.52 * var(--vid-h) - 1.5rem);
+  left: 50%;
+  transform: translate(-50%, -100%);
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-color);
+  opacity: 0.6;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .swivel-hint {
+    white-space: normal;
+    text-align: center;
+    max-width: 80vw;
+    font-size: 0.7rem;
+  }
+}
+
+/* Nav, badge, and info-block sit above everything, including the
+   video, so they read as real interface chrome around the character. */
+.site-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  padding: 1.75rem clamp(1.25rem, 4vw, 3rem);
+  font-family: "Inter", sans-serif;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+}
+
+.nav-cta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+  text-decoration: none;
+  border: 1.5px solid color-mix(in srgb, var(--text-color) 55%, transparent);
+  border-radius: 999px;
+  padding: 0.6rem 1.3rem;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.nav-cta:hover {
+  background: var(--text-color);
+  color: var(--bg-red);
+}
+
+.info-block {
+  position: absolute;
+  z-index: 3;
+  right: clamp(1.25rem, 4vw, 3rem);
+  bottom: clamp(1.75rem, 5vh, 3.5rem);
+  max-width: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.9rem;
+  text-align: right;
+  font-family: "Inter", sans-serif;
+}
+
+.info-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+.info-block p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.pill-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--bg-red);
+  background: var(--text-color);
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.5rem;
+  white-space: nowrap;
+  transition: transform 0.15s ease;
+}
+
+.pill-btn:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 720px) {
+  .site-nav {
+    padding: 1.25rem 1.25rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .info-block {
+    right: 1.25rem;
+    bottom: 1.5rem;
+    max-width: 11rem;
+  }
+}
+
+@media (max-width: 720px) {
+  /* No cursor to track, and the items would crowd the character. */
+  .reveal-layer {
+    display: none;
+  }
+
+  .stage {
+    --tuck: 0.3em;
+  }
+
+  .name-word {
+    font-size: clamp(1.85rem, 10vw, 4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage.is-leaving,
+  .stage.is-returning {
+    animation-duration: 0.2s;
+  }
+}

@@ -1,0 +1,541 @@
+/* Travels — the map is the centerpiece. A pin marks every place I've
+   been; the handful with something written about them also get a
+   length of rope running out to a pinned-up photo, the way a scrapbook
+   or a corkboard works. A rope's position, length and angle are
+   computed in Travels.jsx from the pin and frame coordinates, not
+   measured from the DOM — see the note at the top of that file. */
+
+.travels-view {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  color: #f6ece0;
+  background:
+    radial-gradient(120% 90% at 50% 28%, #2c2013 0%, #150e08 68%, #0c0704 100%);
+  transform-origin: var(--zx, 50%) var(--zy, 50%);
+  animation: travels-in var(--zoom-in) cubic-bezier(0.16, 1, 0.3, 1) both;
+  --ink: #f6ece0;
+  --muted: color-mix(in srgb, var(--ink) 65%, transparent);
+  --gilt: #d8b071;
+}
+
+.travels-view.is-closing {
+  animation: travels-out var(--zoom-out) cubic-bezier(0.6, 0, 0.3, 1) both;
+  pointer-events: none;
+}
+
+@keyframes travels-in {
+  from {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes travels-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+}
+
+.travels-scroll {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: clamp(4.5rem, 9vh, 6rem) 0 clamp(2rem, 6vh, 4rem);
+}
+
+/* ---------------------------------------------------------------- */
+/* Back button — floats over the map, the only chrome on this view   */
+/* ---------------------------------------------------------------- */
+
+.travels-back {
+  position: absolute;
+  top: clamp(1rem, 3vh, 2rem);
+  left: clamp(1rem, 3vw, 2.5rem);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: rgba(20, 14, 10, 0.35);
+  backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.travels-back:hover,
+.travels-back:focus-visible {
+  color: #15100c;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+/* ---------------------------------------------------------------- */
+/* The map                                                           */
+/* ---------------------------------------------------------------- */
+
+/* Aspect ratio matches WorldMap's STAGE_W / STAGE_H (1150 x 740), not
+   the map's own viewBox — the map is inset within this box (see
+   MAP_OFFSET_X/Y in WorldMap.jsx), leaving a gutter so photo frames,
+   placed as plain percentages of this same box, can sit well clear of
+   the coastline instead of crowding it. Ropes still run the full
+   distance from a country's pin, deliberately crossing the map — see
+   the note at the top of Travels.jsx. */
+.world-map-wrap {
+  position: relative;
+  width: min(98vw, 150rem);
+  aspect-ratio: 1150 / 740;
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------- */
+/* Pin — the rope's anchor point on a featured country.              */
+/* ---------------------------------------------------------------- */
+
+.map-pin {
+  position: absolute;
+  z-index: 2;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+}
+
+.map-pin__head {
+  display: block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #e2604a, #a5301f);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.55),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------------------------------------------------------------- */
+/* Rope                                                              */
+/* ---------------------------------------------------------------- */
+
+.rope {
+  position: absolute;
+  height: auto;
+  transform-origin: 0 50%;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.45));
+}
+
+/* ---------------------------------------------------------------- */
+/* Photo frames                                                      */
+/* ---------------------------------------------------------------- */
+
+.photo-frame {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(4.5rem, 7.5vw, 6.5rem);
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transform: translate(-50%, -18%) rotate(var(--tilt)) scale(var(--scale, 1));
+  transition:
+    transform 0.28s cubic-bezier(0.2, 0.9, 0.25, 1),
+    filter 0.28s ease;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.5));
+}
+
+.photo-frame:hover,
+.photo-frame:focus-visible {
+  transform: translate(-50%, -22%) rotate(var(--tilt)) scale(calc(var(--scale, 1) * 1.08));
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.55));
+}
+
+.photo-frame:focus-visible {
+  outline: 2px solid var(--gilt);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.photo-frame__pin {
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-bottom: -0.3rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #f0d060, #b8892a);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+
+.photo-frame__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0.45rem 0.45rem 0.6rem;
+  background: #fbf6ea;
+  border-radius: 0.15rem;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+.photo-frame__photo {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(155deg, #e7d3ae, #c9a06c);
+  background-size: cover;
+  background-position: center;
+}
+
+.photo-frame__initial {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.7rem;
+  color: #6a4620;
+  opacity: 0.75;
+}
+
+.photo-frame__caption {
+  margin-top: 0.45rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  color: #3a2a1a;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------- */
+/* Reader                                                            */
+/* ---------------------------------------------------------------- */
+
+.travels-reader {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.travels-reader__scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(10, 6, 2, 0.68);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  animation: travels-fade-in 0.25s ease both;
+}
+
+.travels-reader__sheet {
+  position: relative;
+  width: min(32rem, 100%);
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  background: #f6ece0;
+  color: #241a12;
+  border-radius: 0.5rem;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  animation: travels-sheet-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes travels-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes travels-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.97);
+  }
+}
+
+.travels-reader__date {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a6a3d;
+}
+
+.travels-reader__sheet h2 {
+  margin: 0.6rem 0 0.9rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  line-height: 1.15;
+}
+
+.travels-reader__sheet p {
+  margin: 0 0 1.1rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #4a382a;
+}
+
+.travels-reader__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.65rem;
+}
+
+.travels-reader__pager {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #6a4620;
+}
+
+.travels-reader__pager button {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  font: inherit;
+  color: #241a12;
+  background: rgba(138, 106, 61, 0.14);
+  border: 1px solid rgba(138, 106, 61, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.travels-reader__pager button:hover:not(:disabled),
+.travels-reader__pager button:focus-visible:not(:disabled) {
+  background: rgba(138, 106, 61, 0.28);
+}
+
+.travels-reader__pager button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.travels-reader__close {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f6ece0;
+  background: #241a12;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.65rem 1.4rem;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------- */
+/* Stats — a few index cards pinned below the map: a running count,   */
+/* a hand-ranked top 5, and whatever's next.                          */
+/* ---------------------------------------------------------------- */
+
+.travels-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  max-width: 62rem;
+  margin: clamp(2.5rem, 6vh, 4.5rem) auto 0;
+  padding: 0 clamp(1.25rem, 5vw, 3rem);
+}
+
+.stat-card {
+  position: relative;
+  flex: 1 1 14rem;
+  max-width: 17rem;
+  padding: 1.5rem 1.4rem 1.65rem;
+  background: #fbf6ea;
+  color: #241a12;
+  border-radius: 0.2rem;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 16px 30px rgba(0, 0, 0, 0.45);
+}
+
+.stat-card--count {
+  transform: rotate(-2deg);
+}
+
+.stat-card--leaderboard {
+  transform: rotate(1.2deg);
+}
+
+.stat-card--next {
+  transform: rotate(-1deg);
+}
+
+.stat-card__pin {
+  position: absolute;
+  top: -0.35rem;
+  left: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #f0d060, #b8892a);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+  transform: translateX(-50%);
+}
+
+.stat-card__number {
+  display: block;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 2.75rem;
+  line-height: 1;
+  color: #a5301f;
+}
+
+.stat-card__label {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6a4620;
+}
+
+.stat-card__title {
+  margin: 0 0 0.9rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.05rem;
+}
+
+.stat-card__list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stat-card__list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+}
+
+.stat-card__rank {
+  display: inline-grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fbf6ea;
+  background: #a5301f;
+  border-radius: 50%;
+}
+
+.stat-card__next-place {
+  display: block;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.4rem;
+  color: #a5301f;
+}
+
+/* ---------------------------------------------------------------- */
+/* Touch fallback                                                    */
+/* ---------------------------------------------------------------- */
+
+.travels-index {
+  display: none;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 5vw, 4rem);
+  list-style: none;
+}
+
+.travels-index button {
+  display: grid;
+  gap: 0.3rem;
+  width: 100%;
+  padding: 1.15rem 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  cursor: pointer;
+}
+
+.travels-index__date {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--gilt) 85%, transparent);
+}
+
+.travels-index__name {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.15rem;
+}
+
+.travels-index__blurb {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .world-map-wrap {
+    display: none;
+  }
+
+  .travels-index {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .travels-view,
+  .travels-view.is-closing {
+    animation: travels-fade-in 0.2s ease both;
+  }
+
+  .photo-frame,
+  .travels-reader__scrim,
+  .travels-reader__sheet {
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+  }
+}

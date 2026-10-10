@@ -1,0 +1,857 @@
+/* Journal — a static 2.5D bookshelf, every book on screen at once.
+
+   Every book is a CSS box. The spine faces the viewer; the two covers
+   run backward into the shelf on either side; the top edge caps it. The
+   fore-edge is the face at the BACK of the box — on a real shelf it
+   points into the wall, so it is never drawn.
+
+   At rest the spine sits flush at z = 0 and the row reads flat. On hover
+   the book pivots on its bottom-front edge and tips its top toward the
+   viewer, the way you tip a book out by hooking its headband. That is
+   what brings the top page edge into view — the only page surface
+   reachable from the front — and only a sliver of it: the visible depth
+   is d x sin(tilt), about an eighth of the book's height at 15 degrees.
+
+   Turning the book on Y instead would reveal a cover, not pages, which
+   is why the tilt is on X.
+
+   The whole shelf shares one 3D space (.shelf__space) so the browser
+   depth-sorts a pulled-out book in front of its neighbours without any
+   z-index bookkeeping. That is also why nothing between .shelf__space
+   and a face carries `filter`, `opacity`, or `overflow` — any of those
+   would flatten the subtree and collapse the effect.
+
+   FITTING THE ROW. The row is wider than the shelf at full size, so
+   rather than scroll or drag it into view, useFitShelf in Journal.jsx
+   measures it and writes --fit — a single scale factor .shelf__space is
+   shrunk by so the whole row, and the plank under it, fit the viewport
+   at once, no scrolling required. .shelf centres that scaled row with
+   flexbox, so `perspective-origin: 50%` keeps the vanishing point in
+   the middle of the row rather than off to one side. */
+
+.journal-view {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  background: #15100c;
+  color: #f6ece0;
+  transform-origin: var(--zx, 50%) var(--zy, 50%);
+  animation: journal-in var(--zoom-in) cubic-bezier(0.16, 1, 0.3, 1) both;
+  --ink: #f6ece0;
+  --muted: color-mix(in srgb, var(--ink) 58%, transparent);
+  --gilt: #d8b071;
+}
+
+.journal-view.is-closing {
+  animation: journal-out var(--zoom-out) cubic-bezier(0.6, 0, 0.3, 1) both;
+  pointer-events: none;
+}
+
+@keyframes journal-in {
+  from {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes journal-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+}
+
+/* One copy of the panelling scaled to cover, rather than a tiled
+   texture — the source art has no seamless edges. */
+.journal-wall {
+  position: absolute;
+  inset: 0;
+  background: url("/bookshelf/trim/back.png") center / cover no-repeat;
+  filter: saturate(0.5) sepia(0.3) brightness(0.4) contrast(1.06);
+}
+
+/* The centred book's own colour washes the room through --lit. Slow,
+   because it should read as the light changing rather than a swap. */
+.journal-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      120% 85% at 50% 8%,
+      rgba(216, 176, 113, 0.16),
+      transparent 62%
+    ),
+    radial-gradient(
+      100% 70% at 50% 62%,
+      color-mix(in srgb, var(--lit, #15100c) 48%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(130% 100% at 50% 55%, transparent 38%, rgba(8, 5, 3, 0.82));
+  transition: background 0.75s ease;
+}
+
+/* No horizontal padding here — the shelf runs the full width of the
+   viewport, so the text blocks carry their own insets instead. */
+.journal-scroll {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  padding-bottom: 0;
+}
+
+/* ---------------------------------------------------------------- */
+/* Header                                                            */
+/* ---------------------------------------------------------------- */
+
+.journal-head {
+  flex: none;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: clamp(0.75rem, 2vh, 1.5rem) clamp(1.25rem, 5vw, 4rem)
+    clamp(0.5rem, 1.25vh, 1rem);
+  text-align: center;
+}
+
+.journal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding: 0.55rem 1.15rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--ink) 32%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.journal-back:hover,
+.journal-back:focus-visible {
+  color: #15100c;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.journal-title {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.journal-sub {
+  margin: 0.75rem auto 0;
+  max-width: 26rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- */
+/* The rail                                                          */
+/* ---------------------------------------------------------------- */
+
+.rail {
+  position: relative;
+}
+
+/* Text and artwork must not be draggable — a stray drag shouldn't
+   hijack the browser's own drag-and-drop over the shelf. */
+.rail img,
+.rail .book-title {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---------------------------------------------------------------- */
+/* Shelves                                                           */
+/* ---------------------------------------------------------------- */
+
+/* Everything on the shelf is measured in --unit, so the row scales as
+   one object. The full row is almost always wider than the viewport, so
+   --fit (set in Journal.jsx) shrinks .shelf__space down to whatever
+   width is available — every book stays on screen and centred, with
+   nothing to scroll or drag. */
+.shelf {
+  --unit: clamp(0.55rem, 2vh, 1.5rem);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  perspective: calc(120 * var(--unit));
+  perspective-origin: 50% 62%;
+  /* Headroom for the title card above, and room for the plank below —
+     it hangs off the bottom of .shelf__space on position:absolute, so
+     it contributes no height of its own and the caption would
+     otherwise sit on top of it. */
+  padding: calc(5 * var(--unit)) 0 calc(2.4 * var(--unit));
+}
+
+.shelf__space {
+  position: relative;
+  flex: none;
+  transform-style: preserve-3d;
+  transform: scale(var(--fit, 1));
+  transform-origin: 50% 100%;
+}
+
+.shelf__books {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: calc(0.7 * var(--unit));
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform-style: preserve-3d;
+}
+
+/* The plank rides slightly toward the viewer so its front lip covers
+   the base of a book at rest, and a pulled-out book clears it. It spans
+   the whole rail, so it is sized off the row rather than the screen. */
+/* The plank spans the whole rail, so unlike the single-screen version it
+   has to tile rather than stretch. The tile is taken several units wide
+   so the repeat is long enough that its seams do not read as a pattern,
+   and a gradient rides over the top to break up whatever is left.
+   Graded down harder than before too: at full brightness a plank this
+   long becomes the brightest thing on screen and pulls the eye off the
+   books it is meant to be holding up. */
+.shelf__plank {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: calc(1.7 * var(--unit));
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.45),
+      rgba(0, 0, 0, 0) 45%,
+      rgba(0, 0, 0, 0.3)
+    ),
+    url("/bookshelf/trim/shelf.png") left center / calc(26 * var(--unit)) 100%
+      repeat-x;
+  filter: brightness(0.52) saturate(0.8);
+  transform: translateZ(calc(0.9 * var(--unit)));
+}
+
+.rail__hint {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: calc(2 * var(--unit, 1rem));
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--gilt) 70%, transparent);
+}
+
+.rail__hint-line {
+  width: clamp(2rem, 8vw, 6rem);
+  height: 1px;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+/* ---------------------------------------------------------------- */
+/* A book                                                            */
+/* ---------------------------------------------------------------- */
+
+.book-slot,
+.book-figure {
+  --h: calc(var(--n) * var(--unit));
+  --w: calc(var(--h) * var(--ar));
+  --d: calc(var(--h) * 0.5);
+  position: relative;
+  flex: none;
+  width: var(--w);
+  height: var(--h);
+  transform-style: preserve-3d;
+}
+
+/* A plain div, not the button: form controls are flattened out of
+   preserve-3d by some engines. All pointer work happens on .book-hit
+   underneath, so the artwork itself is inert. */
+.book {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  /* The pivot is the bottom-front edge — where a real book touches the
+     shelf as it tips out. The z term is what puts it on the front edge
+     rather than the middle of the base. */
+  transform-origin: 50% 100% calc(var(--d) / 2);
+  /* Pull the box back by half its depth so the spine face lands on
+     z = 0 — flush with the front of the shelf. */
+  transform: translateZ(calc(var(--d) / -2)) rotate(var(--lean));
+  transition: transform 0.62s cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+
+/* Negative rotateX tips the top toward the viewer (positive tips it
+   away). 15 degrees is enough to read as a tilt without turning the top
+   edge into a slab. */
+.book-slot:hover .book,
+.book-slot:focus-within .book {
+  transform: translateY(calc(-0.8 * var(--unit)))
+    translateZ(calc(3.5 * var(--unit) - var(--d) / 2)) rotateX(-15deg)
+    rotate(var(--lean));
+}
+
+.book-hit {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.book-hit:focus-visible {
+  outline: 2px solid var(--gilt);
+  outline-offset: 5px;
+  border-radius: 2px;
+}
+
+.book__face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  backface-visibility: hidden;
+}
+
+.book__face--spine {
+  width: 100%;
+  background-image: var(--spine-img);
+  filter: var(--tint);
+  transform: translateZ(calc(var(--d) / 2));
+}
+
+/* The page block, seen from above. pages-edge.png runs its striations
+   along its own height, which maps to the depth axis here — so the
+   stretch lands along the lines rather than across them. The gradients
+   are the cover boards standing slightly proud at either side, and
+   ambient occlusion deepening toward the back of the shelf. */
+.book__face--top {
+  width: 100%;
+  height: var(--d);
+  background-image:
+    linear-gradient(to top, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0.62)),
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0) 13%,
+      rgba(0, 0, 0, 0) 87%,
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("/bookshelf/trim/pages-edge.png");
+  transform: translateY(calc(var(--d) / -2)) rotateX(90deg);
+}
+
+/* Bookcloth lifted out of each spine (see make_cover in the asset
+   script). Knocked well down: a cover on a packed shelf sits in the
+   shadow of its neighbours. */
+.book__face--cover {
+  width: var(--d);
+  background-image: var(--cover-img);
+  filter: var(--tint) brightness(0.5);
+}
+
+.book__face--cover-right {
+  transform: translateX(calc(var(--w) - var(--d) / 2)) rotateY(90deg);
+}
+
+.book__face--cover-left {
+  transform: translateX(calc(var(--d) / -2)) rotateY(-90deg);
+}
+
+.book--display .book__face--cover {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  background: url("/bookshelf/trim/book3full.png") center / 100% 100% no-repeat;
+  filter: none;
+}
+
+.book--display {
+  transform-origin: 50% 100% 0;
+  transform: translateZ(0) rotate(var(--lean));
+}
+
+/* Already drawn at three-quarters, so it tips at a shallower angle than
+   the built boxes — it is a billboard, and a steep tilt reads as a photo
+   falling over rather than a book coming forward. */
+.book-slot--display:hover .book--display,
+.book-slot--display:focus-within .book--display {
+  transform: translateY(calc(-0.9 * var(--unit)))
+    translateZ(calc(3 * var(--unit))) rotateX(-8deg) rotate(var(--lean));
+}
+
+/* Contact shadow, drawn on the slot rather than the book so it stays
+   put on the plank while the book lifts away from it. */
+.book-slot::after {
+  content: "";
+  position: absolute;
+  left: -18%;
+  right: -18%;
+  bottom: calc(-0.3 * var(--unit));
+  height: calc(0.95 * var(--unit));
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(0, 0, 0, 0.62),
+    transparent 70%
+  );
+  opacity: 0.85;
+  transform: translateZ(0.2rem);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.book-slot:hover::after {
+  opacity: 0.45;
+  transform: translateZ(0.2rem) scaleX(1.3);
+}
+
+/* ---------------------------------------------------------------- */
+/* Title card                                                        */
+/* ---------------------------------------------------------------- */
+
+/* Pushed well forward in the shared 3D space so no neighbouring book
+   can ever be sorted in front of it. */
+.book-title {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 2.4rem);
+  width: max-content;
+  max-width: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.7rem 1.1rem;
+  text-align: center;
+  background: rgba(20, 14, 10, 0.82);
+  border: 1px solid color-mix(in srgb, var(--gilt) 30%, transparent);
+  border-radius: 0.4rem;
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 0.55rem) translateZ(calc(12 * var(--unit)));
+  transition:
+    opacity 0.26s ease,
+    transform 0.46s cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+
+.book-slot:hover .book-title,
+.book-slot:focus-within .book-title {
+  opacity: 1;
+  transform: translate(-50%, 0) translateZ(calc(12 * var(--unit)));
+}
+
+.book-title__name {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.book-title__date {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--gilt) 85%, transparent);
+}
+
+/* Decor standing in the row, resting on the plank like the books.
+   Sized by height so the whole shelf scales together; width follows
+   from the artwork. */
+.shelf__decor {
+  position: relative;
+  flex: none;
+  align-self: flex-end;
+  pointer-events: none;
+}
+
+/* Graded down hard. These are photographs dropped into a scene of
+   illustrated books lit by one dim warm source, and at anything near
+   full brightness they read as cut-outs pasted on top. */
+.shelf__decor img {
+  display: block;
+  height: calc(var(--n) * var(--unit));
+  width: auto;
+  filter: brightness(0.66) saturate(0.7) contrast(1.06);
+}
+
+/* The same contact shadow the books get, and for the same reason: a
+   drop-shadow() traces the alpha silhouette, so on an open shape like
+   the headphone arch it draws a dark echo of the whole outline and
+   turns the object into a sticker. A shadow pooled at the base is what
+   actually grounds something standing on a shelf. */
+.shelf__decor::after {
+  content: "";
+  position: absolute;
+  left: -14%;
+  right: -14%;
+  bottom: calc(-0.3 * var(--unit));
+  height: calc(0.95 * var(--unit));
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(0, 0, 0, 0.6),
+    transparent 70%
+  );
+  opacity: 0.85;
+  transform: translateZ(0.2rem);
+}
+
+/* ---------------------------------------------------------------- */
+/* Reading view                                                      */
+/* ---------------------------------------------------------------- */
+
+/* The shelf stays mounted underneath so the rail keeps its position,
+   but it must not be reachable while an entry is open. */
+.journal-view.is-reading .journal-scroll {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.entry {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  animation: fade-in 0.45s ease both;
+  --unit: clamp(0.55rem, 2vh, 1.5rem);
+}
+
+/* align-self, because .entry is a flex column and a flex item would
+   otherwise be stretched to the full width of the page. */
+.entry__back {
+  flex: none;
+  align-self: flex-start;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: clamp(1.5rem, 4vh, 2.5rem) 0 0 clamp(1.25rem, 5vw, 4rem);
+  padding: 0.55rem 1.15rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: inherit;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.entry__back:hover,
+.entry__back:focus-visible {
+  color: var(--bg);
+  background: var(--ink);
+}
+
+.entry__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1rem, 3vh, 2rem);
+  align-items: center;
+  max-width: 78rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vh, 2rem) clamp(1.5rem, 6vw, 5rem);
+  /* An entry longer than the window has to be readable. Safe to scroll
+     here: .entry__left below owns the perspective, so this overflow is
+     outside the 3D context rather than flattening it. */
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (min-width: 900px) {
+  .entry__body {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  .entry__left {
+    flex: 0 0 46%;
+  }
+
+  .entry__right {
+    flex: 1 1 auto;
+  }
+}
+
+/* The book gets its own perspective here rather than sharing the
+   shelf's: it is one object on its own now, and a vanishing point tuned
+   for a row of thirteen would view it from far off to one side. */
+.entry__left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  perspective: calc(70 * var(--unit));
+  perspective-origin: 50% 50%;
+}
+
+.entry__fly {
+  transform: translate(var(--fx, 0px), var(--fy, 0px)) scale(var(--fs, 1));
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+/* Only the landed state carries a transition, so the first paint sits
+   silently on the shelf position instead of animating in from nowhere. */
+.entry.is-landed .entry__fly {
+  transform: none;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Two and a half times the shelf size — this is the reading copy, held
+   up rather than filed away. --n still comes from the entry, so the
+   relative heights of the books are preserved here too. */
+/* Half the height in depth is right on the shelf, where only a sliver of
+   the top edge is ever visible and the exaggeration reads as a solid
+   book. Held up and turned toward the reader it becomes a slab, and it
+   stretches cover-bookN.png — a narrow strip of bookcloth lifted off the
+   spine — across a face wide enough to show every missing pixel. A
+   proper book's proportion fixes the silhouette and the blur together. */
+.entry__left .book-figure {
+  --h: min(calc(var(--n) * var(--unit) * 2.2), 48vh);
+  --w: calc(var(--h) * var(--ar));
+  --d: calc(var(--h) * 0.17);
+  height: var(--h);
+  width: var(--w);
+}
+
+/* Turned most of the way round to its cover, and pivoting about its own
+   centre rather than the shelf edge — nothing is resting on anything. */
+.entry__left .book {
+  transform-origin: 50% 50% 0;
+  transform: translateZ(calc(var(--d) / -2)) rotateY(var(--spin, -58deg));
+  cursor: grab;
+  pointer-events: auto;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* No transition while the hand is on it, or the book lags the pointer. */
+.entry__left .book.is-turning {
+  cursor: grabbing;
+  transition: none;
+}
+
+.entry__left .book--display {
+  transform: rotateY(var(--spin, 0deg));
+}
+
+.entry__left .book__face--cover {
+  filter: var(--tint);
+}
+
+.entry__turn {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  opacity: 0.45;
+}
+
+/* The half-second hold is the point: the book lands, and only then does
+   the copy arrive. Losing the delay makes the whole thing feel rushed. */
+.entry__right {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.entry.is-landed .entry__right {
+  transform: translateY(0);
+  opacity: 1;
+  transition:
+    transform 1s ease 0.5s,
+    opacity 0.8s ease 0.5s;
+}
+
+.entry__date {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.entry__title {
+  margin: 0.5rem 0 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3.4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.entry__rule {
+  width: 60px;
+  height: 1px;
+  margin: 1rem 0;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.entry__blurb {
+  margin: 0 0 1rem;
+  max-width: 34rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  font-style: italic;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+.entry__para {
+  margin: 0 0 0.85rem;
+  max-width: 34rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  opacity: 0.78;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Touch fallback                                                    */
+/* ---------------------------------------------------------------- */
+
+.journal-index {
+  display: none;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 5vw, 4rem);
+  list-style: none;
+}
+
+.journal-index button {
+  display: grid;
+  gap: 0.3rem;
+  width: 100%;
+  padding: 1.15rem 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  cursor: pointer;
+}
+
+.journal-index__date {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--gilt) 85%, transparent);
+}
+
+.journal-index__name {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.15rem;
+}
+
+.journal-index__blurb {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .rail {
+    display: none;
+  }
+
+  .journal-index {
+    display: block;
+  }
+
+  .journal-scroll {
+    display: block;
+    overflow-y: hidden;
+    padding-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journal-view,
+  .journal-view.is-closing {
+    animation: fade-in 0.2s ease both;
+  }
+
+  .book,
+  .book-title,
+  .book-slot::after,
+  .entry.is-landed .entry__fly {
+    transition-duration: 0.01ms;
+  }
+
+  /* Keep the delay so the copy still arrives second; drop the travel. */
+  .entry__right {
+    transform: none;
+  }
+
+  .entry.is-landed .entry__right {
+    transition:
+      transform 0.01ms,
+      opacity 0.2s ease 0.2s;
+  }
+}

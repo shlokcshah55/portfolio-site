@@ -1,0 +1,61 @@
+/* A vector world map: every country is its own <path>, filled from the
+   same wood-tan palette the ropes and photo cards use (see Travels.css)
+   so it reads as one family of objects. Hovering any country lifts it
+   slightly — see the stacking note in WorldMap.jsx for why the hovered
+   feature is re-rendered last. */
+
+/* left/top/width/height come from WorldMap.jsx as inline style, derived
+   from MAP_OFFSET_X/Y and STAGE_W/H — the map is inset within a larger
+   stage rather than filling it, see the comment there. */
+.world-map {
+  position: absolute;
+  overflow: visible;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.45));
+}
+
+.country {
+  fill: #c9a06c;
+  stroke: #6a4620;
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+  cursor: default;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.9, 0.25, 1),
+    filter 0.22s ease,
+    fill 0.22s ease;
+}
+
+.country:hover,
+.country.is-hovered {
+  transform: translateY(-4px) scale(1.02);
+  filter: brightness(1.12) drop-shadow(0 10px 14px rgba(20, 10, 0, 0.45));
+}
+
+/* Every visited country shares one color, whether or not it has a
+   story yet — the rope/photo/click affordance is what sets a featured
+   country apart, not its fill. */
+.country--visited,
+.country--featured {
+  fill: #b8892a;
+}
+
+.country--visited:hover,
+.country--visited.is-hovered,
+.country--featured:hover,
+.country--featured.is-hovered {
+  filter: brightness(1.15) drop-shadow(0 10px 14px rgba(20, 10, 0, 0.45));
+}
+
+/* Featured also has a rope and a photo, so it gets an actual pointer to
+   signal it's clickable in its own right. */
+.country--featured {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .country {
+    transition-duration: 0.01ms;
+  }
+}

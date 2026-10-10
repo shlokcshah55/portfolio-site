@@ -1,0 +1,248 @@
+/* Finances — the safe sits in a dark vault. Locked, a combination field
+   hangs beneath it; unlocked, the safe nudges aside and a ledger slides
+   in next to it. */
+
+.finances-view {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  color: #f6ece0;
+  background: radial-gradient(120% 90% at 50% 30%, #262321 0%, #131110 68%, #0a0908 100%);
+  transform-origin: var(--zx, 50%) var(--zy, 50%);
+  animation: finances-in var(--zoom-in) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.finances-view.is-closing {
+  animation: finances-out var(--zoom-out) cubic-bezier(0.6, 0, 0.3, 1) both;
+  pointer-events: none;
+}
+
+@keyframes finances-in {
+  from {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes finances-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+}
+
+.finances-back {
+  position: absolute;
+  top: clamp(1rem, 3vh, 2rem);
+  left: clamp(1rem, 3vw, 2.5rem);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f6ece0;
+  background: rgba(20, 14, 10, 0.35);
+  backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, #f6ece0 35%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.finances-back:hover,
+.finances-back:focus-visible {
+  color: #15100c;
+  background: #f6ece0;
+  border-color: #f6ece0;
+}
+
+.finances-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: clamp(4rem, 10vh, 6rem) clamp(1.5rem, 6vw, 4rem) clamp(2rem, 6vh, 4rem);
+}
+
+/* The safe itself only fills the middle third of its 500x500 PNG
+   (alpha bounds y: 158-351), so the box is oversized and the negative
+   margins trim the transparent padding above and below it. */
+.finances-safe {
+  --safe-w: clamp(20rem, 52vw, 40rem);
+  width: var(--safe-w);
+  height: auto;
+  margin: calc(var(--safe-w) * -0.27) 0 calc(var(--safe-w) * -0.25);
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
+  user-select: none;
+  transition: transform 0.6s cubic-bezier(0.2, 1.1, 0.35, 1);
+}
+
+.finances-safe.is-open {
+  transform: rotate(-3deg) scale(0.92);
+}
+
+.lock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.lock.is-shaking {
+  animation: lock-shake 0.4s ease;
+}
+
+@keyframes lock-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+.lock__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.lock__field {
+  display: flex;
+  border: 1px solid color-mix(in srgb, #f6ece0 35%, transparent);
+  border-radius: 999px;
+  background: rgba(20, 14, 10, 0.45);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+
+.lock__field:focus-within {
+  border-color: #f6ece0;
+}
+
+.lock__input {
+  width: 12rem;
+  padding: 0.7rem 1.2rem;
+  font: inherit;
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  color: #f6ece0;
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+
+.lock__button {
+  padding: 0 1.3rem;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #15100c;
+  background: #f6ece0;
+  border: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.lock__button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.ledger {
+  width: min(100%, 26rem);
+  animation: ledger-in 0.6s cubic-bezier(0.2, 1.1, 0.35, 1) both;
+}
+
+@keyframes ledger-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ledger__title {
+  margin: 0 0 1rem;
+  font-family: "Anton", Impact, sans-serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ledger__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid color-mix(in srgb, #f6ece0 25%, transparent);
+}
+
+.ledger__row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, #f6ece0 25%, transparent);
+  font-size: 0.92rem;
+}
+
+.ledger__date {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  align-self: center;
+}
+
+.ledger__value {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  color: #d8b071;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finances-view,
+  .finances-view.is-closing,
+  .lock.is-shaking,
+  .ledger {
+    animation: none;
+  }
+}

@@ -1,0 +1,279 @@
+{
+  "date": "2026-10-09",
+  "through_line": "Making trust checkable. Three posts this week replace \"just trust us\" with something you can verify: signed time (Meta's NTS), attested server code (Google's TEE-based federated learning) and model-found bugs with proofs of concept (Anthropic's OSS Scanner). #toolshed also brought up dependency security.",
+  "sections": [
+    {
+      "key": "work",
+      "title": "Came up at work",
+      "sub": "Terms people used this week as if everyone already knew them."
+    },
+    {
+      "key": "shipping",
+      "title": "Shipping now"
+    },
+    {
+      "key": "reading",
+      "title": "Worth reading"
+    },
+    {
+      "key": "foundations",
+      "title": "Foundations",
+      "sub": "Background reading, not news. Shown with the year it was published."
+    }
+  ],
+  "items": [
+    {
+      "id": "hdls01",
+      "section": "work",
+      "concept_label": "Headless browser detection",
+      "title": "How sites tell headless Chrome from a person",
+      "url": "https://datadome.co/threat-research/how-new-headless-chrome-the-cdp-signal-are-impacting-bot-detection/",
+      "summary": "Someone spotted HeadlessChrome user agents coming from datacenter IPs and suspected cloud agents. Detection works by spotting mismatches: navigator.webdriver, missing window.chrome, the side effects of the Chrome DevTools Protocol (CDP) that drives Puppeteer and Playwright, and HTTP/2 frame ordering that still looks like headless Chromium even when the user agent is spoofed. This matters more now that agents, not just scrapers, use dashboards.",
+      "provenance": "#ai-chat · Thursday",
+      "read_time": "~8 min",
+      "published": null,
+      "undated": false,
+      "concepts": [
+        "headless-browser-detection"
+      ]
+    },
+    {
+      "id": "gtop01",
+      "section": "work",
+      "concept_label": "GitOps (Argo CD)",
+      "title": "Argo CD: Git as the source of truth for deploys",
+      "url": "https://argoproj.github.io/cd/",
+      "summary": "When Argo CD went down this week, deploys stopped. A controller inside the cluster keeps comparing live Kubernetes state with what's declared in Git and syncs any difference. It's pull-based, so CI never holds cluster credentials, and a rollback is a git revert. Worth knowing why it's the reconciler, not the CI pipeline, that sits on the deploy path.",
+      "provenance": "#engineering · Thursday",
+      "read_time": "~6 min",
+      "published": null,
+      "undated": false,
+      "concepts": [
+        "gitops"
+      ]
+    },
+    {
+      "id": "hook01",
+      "section": "work",
+      "concept_label": "Agent hooks",
+      "title": "Claude Code hooks: deterministic guardrails around an agent",
+      "url": "https://code.claude.com/docs/en/hooks-guide",
+      "summary": "There was a proposal to have a hook check known bot-review findings before the agent pushes. Hooks are shell commands that run at fixed points in the tool-call lifecycle. A PreToolUse hook can allow, deny, ask or rewrite a call, and exiting with code 2 blocks it. This is how you turn \"please remember to\" into something the agent can't skip.",
+      "provenance": "#engineering-nits · Thursday",
+      "read_time": "~10 min",
+      "published": null,
+      "undated": false,
+      "concepts": [
+        "agent-hooks"
+      ]
+    },
+    {
+      "id": "slsa01",
+      "section": "work",
+      "concept_label": "SLSA / supply-chain provenance",
+      "title": "SLSA levels: proving how an artifact was built",
+      "url": "https://www.chainguard.dev/supply-chain-security-101/what-is-slsa",
+      "summary": "Local-dev dependency security came up. SLSA is the shared vocabulary for it. Build level 1 means provenance exists, level 2 means it's signed by a hosted builder, and level 3 means hermetic, ephemeral, tamper-resistant builds. A separate source track covers review and history integrity. It pairs with today's OSS Scanner item.",
+      "provenance": "#toolshed · Thursday",
+      "read_time": "~9 min",
+      "published": null,
+      "undated": false,
+      "concepts": [
+        "slsa"
+      ]
+    },
+    {
+      "id": "apol01",
+      "section": "work",
+      "concept_label": "Priority scheduling and load shedding",
+      "title": "The 1201/1202 alarms: load shedding that saved Apollo 11",
+      "url": "https://nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.1201-fm.html",
+      "summary": "Margaret Hamilton was in the news. During the descent, a misconfigured radar switch flooded the guidance computer with work. The Executive ran out of core sets, restarted, and used phase tables to bring back only guidance, navigation and autopilot jobs, dropping everything else. It's the original case of priority-based shedding under overload, the same idea behind modern admission control.",
+      "provenance": "#random-eng · Thursday",
+      "read_time": "~12 min",
+      "published": null,
+      "undated": false,
+      "concepts": [
+        "load-shedding"
+      ]
+    },
+    {
+      "id": "cybr01",
+      "section": "shipping",
+      "concept_label": null,
+      "title": "Anthropic Cyber Mission and OSS Scanner",
+      "url": "https://www.anthropic.com/news/anthropic-cyber-mission",
+      "summary": "Open-source projects can opt in to free, periodic scans by Anthropic's strongest models, modelled on OSS-Fuzz. Each report has a proof of concept and a suggested fix. Reports go out without human review, at an expected true-positive rate above 90%. The post says the hard part has moved from finding bugs to verifying and fixing them. Relevant if you maintain anything open source.",
+      "provenance": "Anthropic · 8 Oct",
+      "read_time": "~8 min",
+      "published": "2026-10-08",
+      "undated": false,
+      "concepts": [
+        "ai-vulnerability-discovery",
+        "slsa"
+      ]
+    },
+    {
+      "id": "mldr01",
+      "section": "shipping",
+      "concept_label": null,
+      "title": "ML Drift: Google open-sources its on-device GPU inference engine",
+      "url": "https://developers.googleblog.com/ml-drift-next-gen-gpu-aiml-inference-at-the-edge/",
+      "summary": "This is the GPU engine under LiteRT, now Apache-2.0. It hides OpenGL ES, OpenCL, Metal and WebGPU behind one compute layer and already runs in Chrome, Photos and Meet. It's a good look at what on-device inference really takes once you get past the demo.",
+      "provenance": "Google Developers · 8 Oct",
+      "read_time": "~7 min",
+      "published": "2026-10-08",
+      "undated": false,
+      "concepts": [
+        "on-device-inference"
+      ]
+    },
+    {
+      "id": "haik01",
+      "section": "shipping",
+      "concept_label": null,
+      "title": "Claude Haiku 5.5",
+      "url": "https://www.anthropic.com/claude-haiku-5-5",
+      "summary": "This is the new small tier, pitched for high-volume, cost-sensitive work. It matters mainly if you route traffic between model sizes: check whether jobs you send to Sonnet can move down a tier.",
+      "provenance": "Anthropic · 7 Oct",
+      "read_time": "~5 min",
+      "published": "2026-10-07",
+      "undated": false,
+      "concepts": [
+        "small-language-models"
+      ]
+    },
+    {
+      "id": "nts001",
+      "section": "reading",
+      "concept_label": null,
+      "title": "NTS: Meta makes network time authenticated",
+      "url": "https://engineering.fb.com/2026/10/06/production-engineering/nts-authenticated-time-at-meta/",
+      "summary": "NTP has been unauthenticated since 1985, yet every certificate and token expiry check depends on it. NTS (RFC 8915) does a TLS key exchange once, then signs every NTP packet. The neat part is that Meta's servers keep no state: cookie keys are derived as HKDF(master, day number), so there's no key ring to replicate. It's also clear about the limit: an attacker who delays packets can still shift your clock.",
+      "provenance": "Meta Engineering · 6 Oct",
+      "read_time": "12 min",
+      "published": "2026-10-06",
+      "undated": false,
+      "concepts": [
+        "network-time-security"
+      ]
+    },
+    {
+      "id": "abnb01",
+      "section": "reading",
+      "concept_label": null,
+      "title": "Airbnb captures and replays real database traffic",
+      "url": "https://airbnb.tech/infrastructure/beyond-synthetic-testing-capturing-and-replaying-real-database-workloads-at-airbnb/",
+      "summary": "Airbnb runs hundreds of MySQL-compatible clusters at millions of QPS. Instead of synthetic benchmarks, they record production queries and replay them offline to size clusters, test version upgrades and reproduce incidents. Read it for the design choices: how they capture, keep ordering and handle writes.",
+      "provenance": "Airbnb Engineering · 6 Oct",
+      "read_time": "~14 min",
+      "published": "2026-10-06",
+      "undated": false,
+      "concepts": [
+        "traffic-replay"
+      ]
+    },
+    {
+      "id": "gfl001",
+      "section": "reading",
+      "concept_label": null,
+      "title": "Google moves federated learning into attested TEEs",
+      "url": "https://research.google/blog/toward-provably-private-learning-from-federated-data/",
+      "summary": "Devices upload encrypted data bound to a published access policy. A Raft-replicated KMS made of TEEs releases keys only to workloads that match that policy, and policies sit on the public Rekor transparency log with reproducible builds. The result is server-side training that outsiders can verify, and Gboard's training time dropped from 1–2 months.",
+      "provenance": "Google Research · 2 Oct",
+      "read_time": "~9 min",
+      "published": "2026-10-02",
+      "undated": false,
+      "concepts": [
+        "confidential-computing",
+        "federated-learning"
+      ]
+    },
+    {
+      "id": "tla001",
+      "section": "foundations",
+      "concept_label": "TLA+ · your gap",
+      "title": "Learn TLA+ — Hillel Wayne's free, hands-on course",
+      "url": "https://learntla.com/",
+      "summary": "You rated TLA+ a 2. This course starts from zero with PlusCal and model checking, so you write a spec and watch TLC find a race, instead of reading about Amazon doing it. Read the first two chapters on the train and run the model at your desk.",
+      "provenance": "learntla.com · 2022",
+      "read_time": "~20 min for the opening chapters",
+      "published": "2022",
+      "undated": false,
+      "concepts": [
+        "tla-plus"
+      ]
+    }
+  ],
+  "bank_summary": {
+    "open_gaps": [
+      "tla-plus"
+    ],
+    "learning": [
+      "partial-indexes"
+    ],
+    "recently_closed": [
+      "nats"
+    ],
+    "most_met_unrated": "confidential-computing"
+  },
+  "source_ledger_text": "Fresh: Meta Eng (6 Oct) · Google Research (7 Oct) · Google Developers (8 Oct) · Anthropic news (8 Oct) · OpenAI (8 Oct; nothing strong enough to make the cut, and DevDay on 29 Sep is outside the 7-day window) · Airbnb (6 Oct) · ElevenLabs (9 Oct; launches and offices only, cut). Quiet: Monzo, nothing since 21 Sep · Anthropic engineering, nothing since 23 Apr, excluded as stale · Granola, no engineering posts found · Meta AI blog, no dated posts found. Failed: Ramp (no content rendered; second failure) · Google Cloud (not checked) · Gmail needs reconnecting, so AlphaSignal and Levels.fyi were skipped. Slack: 11 of 12 channels read; #team-ai not found.",
+  "source_ledger": {
+    "meta_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-06"
+    },
+    "google_research": {
+      "status": "fresh",
+      "newest": "2026-10-07"
+    },
+    "google_developers": {
+      "status": "fresh",
+      "newest": "2026-10-08"
+    },
+    "google_cloud": {
+      "status": "not_checked"
+    },
+    "airbnb": {
+      "status": "fresh",
+      "newest": "2026-10-06"
+    },
+    "openai": {
+      "status": "fresh",
+      "newest": "2026-10-08"
+    },
+    "anthropic_news": {
+      "status": "fresh",
+      "newest": "2026-10-08"
+    },
+    "anthropic_engineering": {
+      "status": "stale",
+      "newest": "2026-04-23"
+    },
+    "meta_ai": {
+      "status": "quiet"
+    },
+    "monzo": {
+      "status": "quiet",
+      "newest": "2026-09-21"
+    },
+    "elevenlabs": {
+      "status": "fresh",
+      "newest": "2026-10-09"
+    },
+    "granola": {
+      "status": "quiet"
+    },
+    "ramp": {
+      "status": "failed"
+    },
+    "gmail": {
+      "status": "failed",
+      "note": "needs reconnecting"
+    },
+    "slack": {
+      "status": "ok",
+      "note": "11/12 channels; #team-ai not found"
+    }
+  }
+}
