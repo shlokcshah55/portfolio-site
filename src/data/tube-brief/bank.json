@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-09",
+  "updated_at": "2026-10-10",
   "concepts": {
     "agent-context-engineering": {
       "name": "Agent context engineering",
@@ -44,7 +44,7 @@
       "origins": [
         "slack"
       ],
-      "last_article": "https://code.claude.com/docs/en/hooks-guide"
+      "last_article": "https://dev.to/ji_ai/how-i-automated-my-entire-claude-code-workflow-with-hooks-5cp8"
     },
     "ai-vulnerability-discovery": {
       "name": "AI vulnerability discovery",
@@ -148,6 +148,26 @@
         "blogs"
       ],
       "last_article": "https://research.google/blog/toward-provably-private-learning-from-federated-data/"
+    },
+    "dbt": {
+      "name": "dbt",
+      "what": "A tool that turns a folder of SQL SELECT statements into a tested, version-controlled pipeline that runs inside the warehouse in dependency order.",
+      "aliases": [
+        "data build tool",
+        "analytics engineering"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-09",
+      "last_seen": "2026-10-09",
+      "channels": [],
+      "origins": [
+        "learn"
+      ],
+      "last_article": "https://www.reddit.com/r/dataengineering/comments/11s8x0q/im_not_getting_itwhats_the_point_of_dbt/",
+      "learn_request": true
     },
     "dns-tunnelling": {
       "name": "DNS tunnelling",
@@ -253,7 +273,7 @@
       "origins": [
         "slack"
       ],
-      "last_article": "https://argoproj.github.io/cd/"
+      "last_article": "https://medium.com/kotaicode/gitops-in-production-what-nobody-tells-you-about-argocd-d5a780f9820f"
     },
     "headless-browser-detection": {
       "name": "Headless browser detection",
@@ -296,7 +316,7 @@
       "origins": [
         "slack"
       ],
-      "last_article": "https://nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.1201-fm.html"
+      "last_article": "https://aws.amazon.com/builders-library/using-load-shedding-to-avoid-overload/"
     },
     "model-context-protocol": {
       "name": "Model Context Protocol",
@@ -444,6 +464,27 @@
       ],
       "last_article": "https://www.postgresql.org/docs/current/indexes-partial.html"
     },
+    "penetration-testing": {
+      "name": "Penetration testing",
+      "what": "An authorised, scoped simulated attack: testers chain small weaknesses toward a goal and report the path and fixes.",
+      "aliases": [
+        "pentest",
+        "red team",
+        "internal pentest"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-09",
+      "last_seen": "2026-10-09",
+      "channels": [],
+      "origins": [
+        "learn"
+      ],
+      "last_article": "https://lorikeetsecurity.com/blog/domain-user-to-domain-admin",
+      "learn_request": true
+    },
     "prompt-caching": {
       "name": "Prompt caching",
       "what": "Reusing the computed attention state of a repeated prompt prefix across requests, cutting both latency and token cost; explicit breakpoints make the cache something you design rather than infer.",
@@ -506,7 +547,7 @@
       "origins": [
         "slack"
       ],
-      "last_article": "https://www.chainguard.dev/supply-chain-security-101/what-is-slsa"
+      "last_article": "https://research.swtch.com/xz-timeline"
     },
     "small-language-models": {
       "name": "Small language models",
@@ -610,7 +651,7 @@
         "slack",
         "foundations"
       ],
-      "last_article": "https://learntla.com/"
+      "last_article": "https://www.hillelwayne.com/post/tla-golang/"
     },
     "traffic-replay": {
       "name": "Traffic capture and replay",

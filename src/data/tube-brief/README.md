@@ -22,9 +22,11 @@ Hand-edit a `familiarity` + `rated_at` here to rate something. The automation ne
 
 ```
 { date, through_line, sections[{key,title,sub}],
-  items[{ id, section, concept_label, title, url, summary,
+  items[{ id, section, concept_label, title, url, summary, also[{title,url}],
           provenance, read_time, published, undated, concepts[] }],
   bank_summary, source_ledger, source_ledger_text }
 ```
+
+Sections, in order: `learn` (topics from the Learn box on my Notion home — always first), `work`, `shipping`, `reading`, `foundations`. Concepts that came from the Learn box carry `learn_request: true` and origin `learn` in the bank.
 
 `id` is stable per URL; an item that already has a rating is never shown again.

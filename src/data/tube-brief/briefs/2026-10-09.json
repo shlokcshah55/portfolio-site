@@ -3,6 +3,11 @@
   "through_line": "Making trust checkable. Three posts this week replace \"just trust us\" with something you can verify: signed time (Meta's NTS), attested server code (Google's TEE-based federated learning) and model-found bugs with proofs of concept (Anthropic's OSS Scanner). #toolshed also brought up dependency security.",
   "sections": [
     {
+      "key": "learn",
+      "title": "You asked to learn",
+      "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+    },
+    {
       "key": "work",
       "title": "Came up at work",
       "sub": "Terms people used this week as if everyone already knew them."
@@ -23,6 +28,48 @@
   ],
   "items": [
     {
+      "id": "dbt001",
+      "section": "learn",
+      "concept_label": "dbt",
+      "title": "\"I'm not getting it… what's the point of dbt?\"",
+      "url": "https://www.reddit.com/r/dataengineering/comments/11s8x0q/im_not_getting_itwhats_the_point_of_dbt/",
+      "summary": "Start with the honest version. Someone asks what dbt is actually for, and working data engineers answer: it's a Jinja templater that runs your SQL SELECTs in dependency order. It also gives you Git, tests, environments and lineage for free, and it doesn't do extraction or orchestration. Then read how incident.io itself runs it: Fivetran into BigQuery, dbt run by CircleCI, and incremental models that cut costs by about 20%.",
+      "also": [
+        {
+          "title": "incident.io: Data stack 2024",
+          "url": "https://incident.io/blog/data-stack-3"
+        }
+      ],
+      "provenance": "Learn box · r/dataengineering",
+      "read_time": "~10 min + ~8 min",
+      "published": "2023",
+      "undated": false,
+      "concepts": [
+        "dbt"
+      ]
+    },
+    {
+      "id": "pen001",
+      "section": "learn",
+      "concept_label": "Penetration testing",
+      "title": "A real internal pentest: domain user to domain admin in four hours",
+      "url": "https://lorikeetsecurity.com/blog/domain-user-to-domain-admin",
+      "summary": "An anonymised, step-by-step account of an engagement: starting from one ordinary login, enumerating Active Directory, cracking a weak service-account password, finding credentials left on a file share, and getting full admin. It shows what testers actually do all day and why the report reads as a chain of small misconfigurations rather than one dramatic exploit. The second link is a 30-minute war story with the same shape.",
+      "also": [
+        {
+          "title": "Domain admin in 30 minutes (war story)",
+          "url": "https://hunter2.gitbook.io/darthsidious/other/war-stories/domain-admin-in-30-minutes"
+        }
+      ],
+      "provenance": "Learn box · practitioner write-up",
+      "read_time": "~12 min",
+      "published": null,
+      "undated": true,
+      "concepts": [
+        "penetration-testing"
+      ]
+    },
+    {
       "id": "hdls01",
       "section": "work",
       "concept_label": "Headless browser detection",
@@ -35,67 +82,72 @@
       "undated": false,
       "concepts": [
         "headless-browser-detection"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "gtop01",
       "section": "work",
       "concept_label": "GitOps (Argo CD)",
-      "title": "Argo CD: Git as the source of truth for deploys",
-      "url": "https://argoproj.github.io/cd/",
-      "summary": "When Argo CD went down this week, deploys stopped. A controller inside the cluster keeps comparing live Kubernetes state with what's declared in Git and syncs any difference. It's pull-based, so CI never holds cluster credentials, and a rollback is a git revert. Worth knowing why it's the reconciler, not the CI pipeline, that sits on the deploy path.",
+      "title": "GitOps in production: what Argo CD won't tell you",
+      "url": "https://medium.com/kotaicode/gitops-in-production-what-nobody-tells-you-about-argocd-d5a780f9820f",
+      "summary": "When Argo CD went down this week, deploys stopped. This is a practitioner's account of running it for real. It covers app-of-apps, sync waves, secrets, and a Friday when Git said 2 replicas while the cluster ran 5, because self-heal was off and someone had scaled by hand.",
       "provenance": "#engineering · Thursday",
-      "read_time": "~6 min",
+      "read_time": "~10 min",
       "published": null,
       "undated": false,
       "concepts": [
         "gitops"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "hook01",
       "section": "work",
       "concept_label": "Agent hooks",
-      "title": "Claude Code hooks: deterministic guardrails around an agent",
-      "url": "https://code.claude.com/docs/en/hooks-guide",
-      "summary": "There was a proposal to have a hook check known bot-review findings before the agent pushes. Hooks are shell commands that run at fixed points in the tool-call lifecycle. A PreToolUse hook can allow, deny, ask or rewrite a call, and exiting with code 2 blocks it. This is how you turn \"please remember to\" into something the agent can't skip.",
+      "title": "How one developer automated their Claude Code workflow with hooks",
+      "url": "https://dev.to/ji_ai/how-i-automated-my-entire-claude-code-workflow-with-hooks-5cp8",
+      "summary": "There was a proposal to have a hook check known bot-review findings before the agent pushes. This is one developer's actual setup: PostToolUse to format and lint after every edit, PreToolUse as a gate that blocks writes to .env and sensitive paths, and Notification hooks so they can walk away while it works.",
       "provenance": "#engineering-nits · Thursday",
-      "read_time": "~10 min",
+      "read_time": "~7 min",
       "published": null,
       "undated": false,
       "concepts": [
         "agent-hooks"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "slsa01",
       "section": "work",
-      "concept_label": "SLSA / supply-chain provenance",
-      "title": "SLSA levels: proving how an artifact was built",
-      "url": "https://www.chainguard.dev/supply-chain-security-101/what-is-slsa",
-      "summary": "Local-dev dependency security came up. SLSA is the shared vocabulary for it. Build level 1 means provenance exists, level 2 means it's signed by a hosted builder, and level 3 means hermetic, ephemeral, tamper-resistant builds. A separate source track covers review and history integrity. It pairs with today's OSS Scanner item.",
+      "concept_label": "Software supply chain security",
+      "title": "The xz backdoor, day by day",
+      "url": "https://research.swtch.com/xz-timeline",
+      "summary": "Local-dev dependency security came up. The best way to understand why supply-chain provenance matters is the xz attack. A fake maintainer spent two years earning commit rights, then shipped a backdoor only in release tarballs, not in Git. Russ Cox's timeline shows each move. SLSA's levels are essentially a list of the gaps it used.",
       "provenance": "#toolshed · Thursday",
-      "read_time": "~9 min",
+      "read_time": "~15 min",
       "published": null,
       "undated": false,
       "concepts": [
         "slsa"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "apol01",
       "section": "work",
-      "concept_label": "Priority scheduling and load shedding",
-      "title": "The 1201/1202 alarms: load shedding that saved Apollo 11",
-      "url": "https://nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.1201-fm.html",
-      "summary": "Margaret Hamilton was in the news. During the descent, a misconfigured radar switch flooded the guidance computer with work. The Executive ran out of core sets, restarted, and used phase tables to bring back only guidance, navigation and autopilot jobs, dropping everything else. It's the original case of priority-based shedding under overload, the same idea behind modern admission control.",
+      "concept_label": "Load shedding",
+      "title": "Load shedding: rejecting work so you can finish work",
+      "url": "https://aws.amazon.com/builders-library/using-load-shedding-to-avoid-overload/",
+      "summary": "Margaret Hamilton's Apollo 11 code was in the news. During the landing it survived overload by dropping low-priority jobs. Amazon's Builders' Library explains the same idea in modern services: why an overloaded server that accepts everything ends up serving nobody before their timeout, how to prioritise health checks, and how to cap concurrency.",
       "provenance": "#random-eng · Thursday",
-      "read_time": "~12 min",
+      "read_time": "~18 min",
       "published": null,
       "undated": false,
       "concepts": [
         "load-shedding"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "cybr01",
@@ -111,7 +163,8 @@
       "concepts": [
         "ai-vulnerability-discovery",
         "slsa"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "mldr01",
@@ -126,7 +179,8 @@
       "undated": false,
       "concepts": [
         "on-device-inference"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "haik01",
@@ -141,7 +195,8 @@
       "undated": false,
       "concepts": [
         "small-language-models"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "nts001",
@@ -156,7 +211,8 @@
       "undated": false,
       "concepts": [
         "network-time-security"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "abnb01",
@@ -171,7 +227,8 @@
       "undated": false,
       "concepts": [
         "traffic-replay"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "gfl001",
@@ -187,22 +244,24 @@
       "concepts": [
         "confidential-computing",
         "federated-learning"
-      ]
+      ],
+      "also": []
     },
     {
       "id": "tla001",
       "section": "foundations",
       "concept_label": "TLA+ · your gap",
-      "title": "Learn TLA+ — Hillel Wayne's free, hands-on course",
-      "url": "https://learntla.com/",
-      "summary": "You rated TLA+ a 2. This course starts from zero with PlusCal and model checking, so you write a spec and watch TLC find a race, instead of reading about Amazon doing it. Read the first two chapters on the train and run the model at your desk.",
-      "provenance": "learntla.com · 2022",
-      "read_time": "~20 min for the opening chapters",
-      "published": "2022",
+      "title": "Finding goroutine bugs with TLA+",
+      "url": "https://www.hillelwayne.com/post/tla-golang/",
+      "summary": "You rated TLA+ a 2. Rather than another course, here's a concrete case. Hillel Wayne takes a real Go concurrency bug from someone else's blog, writes a short spec, and has the model checker produce the exact interleaving that deadlocks. It's the clearest demonstration of why people bother.",
+      "provenance": "Hillel Wayne · 2020",
+      "read_time": "~15 min",
+      "published": "2020",
       "undated": false,
       "concepts": [
         "tla-plus"
-      ]
+      ],
+      "also": []
     }
   ],
   "bank_summary": {
@@ -215,7 +274,11 @@
     "recently_closed": [
       "nats"
     ],
-    "most_met_unrated": "confidential-computing"
+    "most_met_unrated": "confidential-computing",
+    "learning_requests": [
+      "dbt",
+      "penetration-testing"
+    ]
   },
   "source_ledger_text": "Fresh: Meta Eng (6 Oct) · Google Research (7 Oct) · Google Developers (8 Oct) · Anthropic news (8 Oct) · OpenAI (8 Oct; nothing strong enough to make the cut, and DevDay on 29 Sep is outside the 7-day window) · Airbnb (6 Oct) · ElevenLabs (9 Oct; launches and offices only, cut). Quiet: Monzo, nothing since 21 Sep · Anthropic engineering, nothing since 23 Apr, excluded as stale · Granola, no engineering posts found · Meta AI blog, no dated posts found. Failed: Ramp (no content rendered; second failure) · Google Cloud (not checked) · Gmail needs reconnecting, so AlphaSignal and Levels.fyi were skipped. Slack: 11 of 12 channels read; #team-ai not found.",
   "source_ledger": {
