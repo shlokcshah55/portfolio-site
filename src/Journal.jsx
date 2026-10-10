@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./Journal.css";
+import journal from "./data/journal/entries.json";
 
 const ART = "/bookshelf/trim";
 
@@ -44,168 +45,29 @@ const DISPLAY = { src: `${ART}/book3full.png`, ar: 231 / 546 };
    `bg`/`ink` are the entry's own two colours. They wash across the room
    as the book passes the centre of the rail, and the reading view is
    painted entirely in them. */
-const BOOKS = [
-  {
-    id: "long-way-round",
-    spine: "book2",
-    n: 21,
-    lean: "0deg",
-    tint: "hue-rotate(-6deg) saturate(1.05)",
-    title: "The Long Way Round",
-    date: "Aug 2026",
-    blurb: "Three weeks, no fixed route, one very patient rental car.",
-    bg: "#2f2a1c",
-    ink: "#e6d6a8",
-    body: [
-      "I left with a full tank and a vague idea that the coast road went all the way north, which turned out to be true in the way most things are true on a map and not on the ground.",
-      "What I remember is not the driving. It is the specific quiet of a petrol station at four in the afternoon in a town whose name I never learned, eating crisps, entirely unreachable.",
-    ],
-  },
-  {
-    id: "kitchen-notes",
-    spine: "book1",
-    n: 19,
-    lean: "0deg",
-    tint: "hue-rotate(28deg) saturate(0.95) brightness(1.04)",
-    title: "Kitchen Notes",
-    date: "Jul 2026",
-    blurb: "What I learned rewriting the same dal fourteen times.",
-    bg: "#2b3520",
-    ink: "#dfe8c0",
-    body: [
-      "Fourteen attempts, and the one that worked was the one where I stopped adding things. The recipe got shorter every week until it was four ingredients and a temperature.",
-      "This is a lesson about food and it is obviously not only about food, which is why it took fourteen tries to hear it.",
-    ],
-  },
-  {
-    id: "on-shipping",
-    spine: "book4",
-    n: 22.5,
-    lean: "0deg",
-    tint: "hue-rotate(-52deg) saturate(1.1)",
-    title: "On Shipping Before You're Ready",
-    date: "May 2026",
-    blurb: "An argument with myself about scope, in four parts.",
-    bg: "#1e2a3a",
-    ink: "#cfe0f0",
-    body: [
-      "Part one is that you are never ready. Part two is that the thing you would have added was wrong anyway. Parts three and four are just those two again, louder.",
-      "I still lose this argument roughly half the time, which I have decided is the correct hit rate for an argument worth having.",
-    ],
-  },
-  {
-    id: "field-recordings",
-    spine: "book3",
-    n: 18,
-    lean: "-4.5deg",
-    tint: "hue-rotate(14deg) saturate(0.9)",
-    title: "Field Recordings",
-    date: "Mar 2026",
-    blurb: "Collecting sound instead of photographs for a month.",
-    bg: "#243230",
-    ink: "#cfe6dd",
-    body: [
-      "A photograph decides where to look for you. A recording refuses to, and hands you back the room exactly as loud and as boring as it was.",
-      "Thirty days of files, and the best one is ninety seconds of rain on a skylight with somebody upstairs moving a chair.",
-    ],
-  },
-  {
-    id: "small-hours",
-    spine: "book2",
-    n: 20,
-    lean: "0deg",
-    tint: "hue-rotate(112deg) saturate(0.72) brightness(0.96)",
-    title: "The Small Hours",
-    date: "Feb 2026",
-    blurb: "On the particular clarity of working at 2am.",
-    bg: "#1b1b2c",
-    ink: "#d2cfe8",
-    body: [
-      "Nothing is actually clearer at two in the morning. What changes is that nothing else is asking for anything, and the difference between those two feelings is very hard to detect from the inside.",
-      "I have written some of my best work then, and also sent some of my worst emails. The record is not as one-sided as it feels at the time.",
-    ],
-  },
-  {
-    id: "borrowed-light",
-    spine: "book4",
-    n: 21.5,
-    lean: "0deg",
-    tint: "hue-rotate(-88deg) saturate(1.05)",
-    title: "Borrowed Light",
-    date: "Nov 2025",
-    blurb: "Shooting a short film with one lamp and a bedsheet.",
-    bg: "#33222a",
-    ink: "#f0d3cf",
-    body: [
-      "One lamp, one bedsheet, and a great deal of moving both around the room until the wall stopped looking like a wall.",
-      "The constraint did the directing. Every shot we got is a shot that was possible, which is a narrower and much more useful set than every shot we wanted.",
-    ],
-  },
-  {
-    id: "a-year-of-drafts",
-    spine: "book1",
-    n: 19.5,
-    lean: "0deg",
-    tint: "hue-rotate(-38deg) saturate(1.18)",
-    title: "A Year of Drafts",
-    date: "Sep 2025",
-    blurb: "Everything I started and did not finish, catalogued.",
-    bg: "#3a2b1c",
-    ink: "#f0dcb4",
-    body: [
-      "Sixty-one starts. Nine finishes. Written out as a list it looks like a failure, and read in order it looks like a method.",
-      "The abandoned ones are not waste. They are the part where I found out what the finished ones were going to be about.",
-    ],
-  },
-  {
-    id: "north-of-here",
-    spine: "book3",
-    n: 17.5,
-    lean: "3.5deg",
-    tint: "hue-rotate(-24deg) saturate(1.2)",
-    title: "North of Here",
-    date: "Jun 2025",
-    blurb: "Trains, ferries, and a week without a working phone.",
-    bg: "#1f2c34",
-    ink: "#cfe4ee",
-    body: [
-      "The phone died on the second morning and I made a decision not to fix it, which I would like to claim was principled and was in fact mostly inertia.",
-      "By day four I was asking strangers for directions and getting them, badly, and arriving anyway. It is astonishing how much slack the world has in it.",
-    ],
-  },
-  {
-    id: "against-the-grid",
-    spine: "book2",
-    n: 20.5,
-    lean: "0deg",
-    tint: "hue-rotate(56deg) saturate(0.8)",
-    title: "Against the Grid",
-    date: "Apr 2025",
-    blurb: "Why the layouts I like least are the ones I trust most.",
-    bg: "#2c2135",
-    ink: "#e2d0ee",
-    body: [
-      "A grid is a promise that everything is the same kind of thing. Most of what I want to put on a page is not the same kind of thing.",
-      "So I break it, and then I spend a week putting back exactly as much of it as the page needs to stay readable. That week is the actual design work.",
-    ],
-  },
-];
+/* Entries are synced weekly from the Writing database in Notion into
+   src/data/journal/entries.json (newest first). Each entry carries its
+   own spine, size, tint and colours under `style`, assigned once at
+   first sync so a book never changes look between syncs.
 
-/* Propped face-out at the end of the row, the way a bookshop turns one
-   title toward the room. */
-const DISPLAY_BOOK = {
-  id: "the-index",
-  n: 19,
-  title: "The Index",
-  date: "Jan 2025",
-  blurb: "Where all of this started — a note to myself, kept.",
-  bg: "#33251a",
-  ink: "#f2ddb8",
-  body: [
-    "The first entry was a note reminding me to keep notes, which is either very tidy or very stupid depending on how the week is going.",
-    "Everything on this shelf grew out of it. I have not gone back and edited it, and I am not going to.",
-  ],
-};
+   The newest entry is propped face-out at the end of the row, the way a
+   bookshop turns one title toward the room; the rest stand as spines. */
+const ENTRIES = journal.entries.map(({ style, ...entry }) => ({
+  ...style,
+  ...entry,
+}));
+
+const [NEWEST, ...OLDER] = ENTRIES;
+
+const BOOKS = OLDER;
+
+const DISPLAY_BOOK = NEWEST
+  ? {
+      ...NEWEST,
+      spine: undefined,
+      n: journal.display?.n ?? 19,
+    }
+  : null;
 
 /* Decor. Everything here stands in the row and rests on the plank, like
    the books do. Nothing is placed in front of them: an object floating
@@ -239,11 +101,17 @@ const SHELF_ROW = [
   ...BOOKS.slice(3, 6).map((b) => ({ kind: "book", ...b })),
   { kind: "decor", ...SHELF_DECOR.trinket },
   ...BOOKS.slice(6).map((b) => ({ kind: "book", ...b })),
-  { kind: "display", ...DISPLAY_BOOK },
+  ...(DISPLAY_BOOK ? [{ kind: "display", ...DISPLAY_BOOK }] : []),
   { kind: "decor", ...SHELF_DECOR.headphones },
 ];
 
-const ALL_ENTRIES = [...BOOKS, DISPLAY_BOOK];
+const NUMBER_WORDS = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+const YEARS = [...new Set(ENTRIES.map((e) => e.date.slice(-4)))].sort();
+const RAIL_HINT = `${NUMBER_WORDS[ENTRIES.length] ?? ENTRIES.length} ${
+  ENTRIES.length === 1 ? "entry" : "entries"
+}${YEARS.length ? ` \u00b7 ${YEARS[0]}${YEARS.length > 1 ? `\u2013${YEARS.at(-1)}` : ""}` : ""}`;
+
+const ALL_ENTRIES = DISPLAY_BOOK ? [DISPLAY_BOOK, ...BOOKS] : BOOKS;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
@@ -512,9 +380,9 @@ function JournalEntry({ entry, from, onBack }) {
           <span className="entry__date">{entry.date}</span>
           <h2 className="entry__title">{entry.title}</h2>
           <div className="entry__rule" aria-hidden="true" />
-          <p className="entry__blurb">{entry.blurb}</p>
-          {entry.body?.map((para) => (
-            <p key={para.slice(0, 24)} className="entry__para">
+          {entry.blurb && <p className="entry__blurb">{entry.blurb}</p>}
+          {entry.body?.map((para, i) => (
+            <p key={i} className="entry__para">
               {para}
             </p>
           ))}
@@ -606,7 +474,7 @@ export default function Journal({ onClose, closing, style }) {
 
           <div className="rail__hint" aria-hidden="true">
             <span className="rail__hint-line" />
-            Ten entries &middot; 2025&ndash;2026
+            {RAIL_HINT}
             <span className="rail__hint-line" />
           </div>
         </div>
@@ -623,7 +491,9 @@ export default function Journal({ onClose, closing, style }) {
               >
                 <span className="journal-index__date">{entry.date}</span>
                 <span className="journal-index__name">{entry.title}</span>
-                <span className="journal-index__blurb">{entry.blurb}</span>
+                {entry.blurb && (
+                  <span className="journal-index__blurb">{entry.blurb}</span>
+                )}
               </button>
             </li>
           ))}

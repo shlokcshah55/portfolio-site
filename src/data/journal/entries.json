@@ -1,0 +1,79 @@
+{
+  "synced_at": "2026-10-10",
+  "source": "collection://9135eac4-5c71-4d53-9ea6-385c63843d5a",
+  "entries": [
+    {
+      "id": "my-first-working-day",
+      "notion_id": "3f5a92bc4fe5808bafd3d82738466551",
+      "title": "My first working day",
+      "date": "Oct 2026",
+      "added": "2026-10-10T14:53:23.964Z",
+      "notion_edited": "2026-10-10T14:53:29.748Z",
+      "blurb": "",
+      "body": [
+        "I am currently on the tube on the way to old street for the first time as a fully working individual. Well working might be pushing it considering I am on the way to dishoom for breakfast and not the office. How am I feeling ? To be honest, not bad. There is much less air of uncertainty than I have previously had before starting an internship, I am entering something somewhat familiar but something that is probably going to be a lot more different than I expected and probably when I write this out tomorrow I will say it has changed a lot.",
+        "The part that makes me nervous is defining the goals that I should have. There isn’t a series of laid out checkpoints, I can sprint or crawl and no one will tell me anything and that itself is quite scary. What do I want truly? The first thing that comes to mind is I want to be someone who is trusted across the org, whether that be in leading a new project, scoping out what exactly a customer needs, or even in helping out other parts in hiring or something adjacent. I want to be on call as soon as possible and I want to be more confident in the role I am doing. What I am also thinking though, is engineering something I want to be doing for the rest of my life, I’m unsure. Do what if I were to spend the first 12 months attempting to be the absolute best engineer I can be, that means getting a good amount of exposure on the reliability aspect, AI engineering, etc etc",
+        "I am excited for the new people, to navigate a growing org and see how I can stand out. I think those answers will be more clear only later on though",
+        "The first day that I had was quite different to the one that I had expected to have. It was a lot less “less”. No hand holding and just crack on with onboarding, I guess it’s hard to do this as you scale and keep that 1 on 1 approach. I guess also a quieter day so a bit different."
+      ],
+      "style": {
+        "spine": "book4",
+        "n": 22.5,
+        "lean": "0deg",
+        "tint": "hue-rotate(-52deg) saturate(1.1)",
+        "bg": "#1e2a3a",
+        "ink": "#cfe0f0"
+      }
+    },
+    {
+      "id": "why-has-pinit-taken-so-long-to-build",
+      "notion_id": "3f5a92bc4fe5805090d3f71c75672aa2",
+      "title": "Why has pinit taken so long to build",
+      "date": "Oct 2026",
+      "added": "2026-10-10T14:52:39.460Z",
+      "notion_edited": "2026-10-10T14:53:14.635Z",
+      "blurb": "",
+      "body": [
+        "If you know me, you probably know about Pinit. It’s the longest project I have taken on and one I talk about incessantly. The idea formed when I was in my first-year accommodation, doomscrolling hungover in North Acton. I saw yet another cool restaurant (outside of my student budget) that I pressed save on knowing full well I haven’t looked at my saved folder for a whole year. This is when I thought, surely there has to be a better way of keeping all of these places saved. If you could share the video to a separate app that would notify you when you are nearby this would be great",
+        "I sat on this idea for a long time, thinking about how it could be done, but waited till the summer to do a deeper dive into its feasibility. I scoured the Meta and TikTok APIs and concluded (incorrectly) that it was not possible. TikTok's official API didn't allow me to scrape any meaningful data from videos unless I was doing it for a research project, and Meta’s API docs were surface-level, making it hard to reliably extract the location. Looking back, I gave up far too early and I think the lack of appeal of learning swift just to produce a mobile app on a laptop that was struggling to load a iOS simulator was a big part of it.",
+        "I was still really interested in the idea because even if no one used it, it was a huge problem for me, and so I found myself still thinking about how this could be done, and I discussed this with one of my good friends, Sri, who loved it. We spent a couple of hours in the library cafe, when we should have been revising, sketching out what other features would be in this app and came up with an idea of something we thought could be huge. We still had a problem, the main feature to us was still “not possible.” Looking back, we spent far too much time increasing the breadth of the app before refining and seeing if our main feature was possible",
+        "To give you some reference for what time period we are talking about, this is from October 2023. GPT-4 is a few months old, Anthropic has released just 2 models, and Google’s only model is Bard (Gemini doesn’t exist). These models aren’t bootstrapped to be coding agents in the way we know them today, but they are still powerful.",
+        "I realised that using these models to extract the location from these places would be quite straightforward but in my head this was still only solving half of the problem, there was no legal way for me to extract the details from these reels and tiktoks and so I kept sitting on this idea until I started my internship at incident.io in my third year.",
+        "I was given a much more powerful computer, learnt how to develop scalable software, learnt how to bootstrap these models to produce competent and reliable AI agents, learnt how to use GCP, and generally learnt how to produce software that would hold its own when thousands of users would use it. So, after a two-year hiatus from really looking into the problem, on a bored afternoon, seeing other applications that must be getting this data somehow, I discovered this third-party API that would let me grab all these details, and that’s when I realised this is actually very possible to produce. This is when the switch in our head flicked and we clocked this could be a product",
+        "It is now March 2025, and both Sri and I are doing full-time internships and have been working on creating an MVP for a while. We decided on Flutter to develop this, and the coding agents were good enough that we could focus on backend development without really learning the intricacies of Flutter, while still producing a functional frontend.  I focused on the Tiktok/Instagram sharing feature, and Sri worked hard on the recommendation algorithm. The idea was that as users share more places to the app, we get an idea of what places they like, and from that we can give recommendations based on those data points. I will write a whole entry about that but this is how we started to develop"
+      ],
+      "style": {
+        "spine": "book1",
+        "n": 19,
+        "lean": "0deg",
+        "tint": "hue-rotate(28deg) saturate(0.95) brightness(1.04)",
+        "bg": "#2b3520",
+        "ink": "#dfe8c0"
+      }
+    },
+    {
+      "id": "why-i-want-to-do-hyrox",
+      "notion_id": "3f5a92bc4fe5800490c7ed4f8b2d911b",
+      "title": "Why I want to do Hyrox",
+      "date": "Oct 2026",
+      "added": "2026-10-10T14:50:33.659Z",
+      "notion_edited": "2026-10-10T14:52:45.158Z",
+      "blurb": "",
+      "body": [
+        "I decided to do a hyrox on a whim during a 12 hour bus ride from one town in Guatemala to the famous lake atitlan with a very good friend of mine.",
+        "I have mentally toyed around the idea of doing a hyrox and over the last few months I have been running slightly more than I previously did (which is 0) and so when the idea was floated again during this journey I just said yes. Between talking about it and our tickets being booked there was about 10 minutes of conversation. So cool we had signed up and mentally forgot about it for the remainder of our trip as we continued to eat pure carbs and drink pretty much every day.",
+        "Landing back to the UK we had exactly 16 weeks left for the hyrox and I haven’t been in the gym in over 2 months and even when I had been I was quite irregular. I was out of shape, not only cardio wise but I was weak and slightly injured in my shoulder, but once I committed to do this I was definitely going to give it my all.",
+        "Claude cooked me up a plan and I was ready to take it on and I stared quite blankly at it seeing the fact I had to run 3 times a week. I want to make it so explicitly clear,  I HATE running and genuinely that is a large part of the reason I want to do this, because I hate it so much I want to train my mind to be okay doing things I hate if they are good for me. There is one reel that I saw a long time back that stuck with me that the biggest indicator of how long someone lives is how much cardio they can endure. It might seem obvious but it was eye opening for me because although I had put on a decent amount of muscle I was never peak in cardio. The work football tournament on the offsite showed me that. Throwing up after 1 game of football for 15 minutes when you are the youngest person there is just plain embarrassing.",
+        "So I’ve started this program consisting of 16km a week of running and 3 strength training sessions, let’s see how it goes I will continue this in 4 weeks and update you as to how I’m actually feeling"
+      ],
+      "style": {
+        "spine": "book2",
+        "n": 21,
+        "lean": "0deg",
+        "tint": "hue-rotate(-6deg) saturate(1.05)",
+        "bg": "#2f2a1c",
+        "ink": "#e6d6a8"
+      }
+    }
+  ]
+}
