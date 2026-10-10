@@ -1,6 +1,9 @@
-/* Daily report — a single sheet of newsprint on a dark desk. The
-   masthead and headline are set in Anton to echo the newspaper tile;
-   body copy is Fraunces for an inky, printed feel. */
+/* Daily report — a broadsheet on a dark desk. The masthead and
+   headlines are Anton to echo the newspaper tile and the name on the
+   home page; running copy is Fraunces for an inky, printed feel; the
+   rules, kickers and meta lines are Inter small caps, like the tile
+   labels. The site red is the only colour on the page: it fills the
+   rating strip and nothing else. */
 
 .report-view {
   position: fixed;
@@ -82,12 +85,19 @@
   padding: clamp(4.5rem, 10vh, 6rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 8vh, 5rem);
 }
 
+/* ---------------------------------------------------------------- */
+/* The sheet                                                         */
+/* ---------------------------------------------------------------- */
+
 .paper {
   --ink: #1d1a15;
-  --rule: color-mix(in srgb, var(--ink) 70%, transparent);
-  width: min(100%, 52rem);
+  --soft: color-mix(in srgb, var(--ink) 62%, transparent);
+  --rule: color-mix(in srgb, var(--ink) 65%, transparent);
+  --faint: color-mix(in srgb, var(--ink) 22%, transparent);
+  --red: #af240f;
+  width: min(100%, 66rem);
   margin: 0 auto;
-  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3.25rem) clamp(2rem, 5vw, 3.5rem);
   color: var(--ink);
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.02), transparent 12%),
@@ -97,14 +107,21 @@
     0 2px 0 rgba(255, 255, 255, 0.25) inset;
   font-family: "Fraunces", Georgia, serif;
   font-size: 1rem;
-  line-height: 1.55;
+  line-height: 1.5;
 }
+
+.paper a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Masthead */
 
 .paper__masthead {
   text-align: center;
   border-bottom: 3px double var(--rule);
   padding-bottom: 0.9rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.4rem;
 }
 
 .paper__ears {
@@ -125,7 +142,7 @@
   margin: 0;
   font-family: "Anton", Impact, sans-serif;
   font-weight: 400;
-  font-size: clamp(2.6rem, 8vw, 5rem);
+  font-size: clamp(2.6rem, 8vw, 5.4rem);
   line-height: 0.95;
   letter-spacing: 0.01em;
   text-transform: uppercase;
@@ -140,75 +157,242 @@
   text-transform: uppercase;
 }
 
-.paper__headline {
-  margin: 0 0 0.5rem;
-  font-family: "Anton", Impact, sans-serif;
-  font-weight: 400;
-  font-size: clamp(1.7rem, 4.5vw, 2.8rem);
-  line-height: 1.05;
-  text-transform: uppercase;
+/* Lede */
+
+.paper__lede {
+  padding-bottom: 1.2rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 .paper__standfirst {
-  margin: 0 0 1rem;
-  font-style: italic;
-  font-size: 1.1rem;
+  margin: 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.4;
+  text-wrap: pretty;
 }
 
-.paper__columns {
-  column-count: 2;
-  column-gap: 1.75rem;
-  column-rule: 1px solid var(--rule);
-}
-
-.paper__columns p {
-  margin: 0 0 0.85rem;
-  break-inside: avoid;
-}
-
-.paper__columns p:first-child::first-letter {
+.paper__standfirst::first-letter {
   float: left;
-  margin: 0.08em 0.3rem 0 0;
+  margin: 0.06em 0.35rem 0 0;
   font-family: "Anton", Impact, sans-serif;
-  font-size: 3.1em;
+  font-size: 3.4em;
   line-height: 0.8;
 }
 
-.paper__briefs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.75rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--rule);
-}
-
-.brief p {
-  margin: 0 0 0.6rem;
-  font-size: 0.94rem;
-}
-
-.brief__date {
+.paper__readtime {
+  margin: 0.6rem 0 0;
   font-family: "Inter", sans-serif;
-  font-size: 0.64rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.7;
+  color: var(--soft);
 }
 
-.brief__headline {
-  margin: 0.2rem 0 0.4rem;
+/* Sections */
+
+.paper__section {
+  padding-top: 1.4rem;
+}
+
+.paper__section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.paper__section-title {
+  margin: 0;
   font-family: "Anton", Impact, sans-serif;
   font-weight: 400;
-  font-size: 1.3rem;
-  line-height: 1.1;
+  font-size: 1.35rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-@media (max-width: 600px) {
-  .paper__columns {
-    column-count: 1;
+.paper__section-sub {
+  margin: 0;
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+/* Stories sit in two newsprint columns in reading order (left, right,
+   left...). A grid rather than CSS multicol so a tall story never
+   leaves half a column empty; the column rule is painted down the
+   middle of the container. */
+.paper__stories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  background: linear-gradient(var(--faint), var(--faint)) center / 1px 100% no-repeat;
+}
+
+.story {
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1px solid var(--faint);
+}
+
+.story__kicker {
+  margin: 0 0 0.3rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.story__headline {
+  margin: 0 0 0.5rem;
+  font-family: "Anton", Impact, sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  line-height: 1.08;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.story__headline a {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.12em;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.story__headline a:hover,
+.story__headline a:focus-visible {
+  text-decoration-color: var(--red);
+}
+
+.story__body {
+  margin: 0 0 0.6rem;
+  font-size: 0.97rem;
+  text-wrap: pretty;
+}
+
+.story__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 0.75rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+/* Rating strip */
+
+.rate__strip {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 3px;
+}
+
+.rate__step {
+  min-width: 0;
+  padding: 0.38rem 0;
+  font-family: "Inter", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--soft);
+  background: transparent;
+  border: 1px solid var(--faint);
+  border-radius: 3px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.rate__step:hover,
+.rate__step:focus-visible {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.rate__step.is-on {
+  color: #faf3ec;
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.rate__ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.3rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+/* Back page */
+
+.paper__back {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1.5rem 2.5rem;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 3px double var(--rule);
+}
+
+.paper__note .paper__section-title {
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.bank {
+  margin: 0;
+}
+
+.bank__row {
+  margin-bottom: 0.7rem;
+  font-size: 0.92rem;
+}
+
+.bank dt {
+  font-family: "Inter", sans-serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.bank dd {
+  margin: 0.1rem 0 0;
+}
+
+.paper__sources {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+  text-wrap: pretty;
+}
+
+@media (max-width: 640px) {
+  .paper__stories {
+    grid-template-columns: minmax(0, 1fr);
+    background: none;
   }
 }
 
