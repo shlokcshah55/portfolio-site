@@ -33,6 +33,11 @@ body.is-zooming {
   overflow: clip;
 }
 
+/* The phone menu is a fixed sheet; the page under it stays put. */
+body.is-menu-open {
+  overflow: hidden;
+}
+
 #root {
   min-height: 100vh;
 }

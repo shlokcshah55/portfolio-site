@@ -822,12 +822,31 @@
 
   .journal-index {
     display: block;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
   }
 
+  /* Ten entries run past one phone screen, so the index scrolls. */
   .journal-scroll {
     display: block;
-    overflow-y: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding-bottom: 0;
+  }
+
+  .journal-head {
+    padding-top: 1.25rem;
+  }
+
+  /* Held-up book is scaled down so the copy arrives on the first
+     screen rather than a scroll below it. */
+  .entry__left .book-figure {
+    --h: min(calc(var(--n) * var(--unit) * 2.2), 30vh);
+  }
+
+  .entry__body {
+    justify-content: flex-start;
+    padding-top: 1rem;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
   }
 }
 

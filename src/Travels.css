@@ -56,6 +56,7 @@
   display: flex;
   align-items: center;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   padding: clamp(4.5rem, 9vh, 6rem) 0 clamp(2rem, 6vh, 4rem);
 }
@@ -523,6 +524,39 @@
 
   .travels-index {
     display: block;
+    width: 100%;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Stacked instead of beside each other: the list of places first,
+     then the index cards beneath it. */
+  .travels-scroll {
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: 4.75rem;
+  }
+
+  .travels-stats {
+    order: 1;
+    width: 100%;
+    margin-top: 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .stat-card {
+    flex: 1 1 100%;
+    max-width: 22rem;
+  }
+
+  .travels-reader {
+    padding: 1rem;
+    align-items: end;
+  }
+
+  .travels-reader__sheet {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
   }
 }
 

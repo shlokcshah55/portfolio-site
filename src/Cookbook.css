@@ -1,0 +1,674 @@
+/* Cookbook — an open book on a dark worktop. The left page is the
+   photo; the right page carries the occasion, the ingredients and the
+   method. Turning a page rotates a real leaf around the spine, so the
+   next dish arrives on the back of the page you just lifted. */
+
+.cookbook-view {
+  --ink: #2a211a;
+  --ink-soft: #6b5d50;
+  --paper: #e7e0cf;
+  --paper-deep: #d4c8b2;
+  --cream: #f3ead9;
+  --accent: #b7472a;
+  /* Must match TURN_MS in Cookbook.jsx. */
+  --turn: 900ms;
+  /* The art is a 500x500 PNG with the book filling only the middle
+     band (alpha bounds y: 128-355, x: 44-456), so the box is sized by
+     width and the frame below clips the empty bands above and below. */
+  --book-w: min(92vw, 130vh, 80rem);
+
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--cream);
+  background:
+    radial-gradient(110% 80% at 50% 25%, #4a3629 0%, #2c201a 55%, #160f0b 100%);
+  font-family: "Inter", sans-serif;
+  transform-origin: var(--zx, 50%) var(--zy, 50%);
+  animation: cookbook-in var(--zoom-in) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.cookbook-view.is-closing {
+  animation: cookbook-out var(--zoom-out) cubic-bezier(0.6, 0, 0.3, 1) both;
+  pointer-events: none;
+}
+
+@keyframes cookbook-in {
+  from {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes cookbook-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+}
+
+.cookbook-back {
+  position: absolute;
+  top: clamp(1rem, 3vh, 2rem);
+  left: clamp(1rem, 3vw, 2.5rem);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: rgba(20, 14, 10, 0.35);
+  backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, var(--cream) 35%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cookbook-back:hover,
+.cookbook-back:focus-visible {
+  color: #15100c;
+  background: var(--cream);
+  border-color: var(--cream);
+}
+
+.cookbook-head {
+  padding: clamp(4.5rem, 10vh, 6rem) clamp(1.5rem, 6vw, 4rem) 0;
+  text-align: center;
+}
+
+.cookbook-title {
+  margin: 0;
+  font-family: "Anton", Impact, sans-serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.cookbook-sub {
+  margin: 0.5rem 0 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  opacity: 0.7;
+}
+
+/* ---- The book ---------------------------------------------------- */
+
+.cookbook-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  min-height: 0;
+  padding: 0 clamp(0.5rem, 3vw, 2rem);
+}
+
+.cb-book-frame {
+  position: relative;
+  flex: 0 1 auto;
+  width: var(--book-w);
+  /* Visible band of the art is 45% of its height; a touch extra keeps
+     the leaf's cast shadow from being clipped. */
+  height: calc(var(--book-w) * 0.5);
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+}
+
+.cb-book-frame:active {
+  cursor: grabbing;
+}
+
+.cb-book {
+  position: absolute;
+  left: 0;
+  top: calc(var(--book-w) * -0.235);
+  width: 100%;
+  aspect-ratio: 1;
+  perspective: calc(var(--book-w) * 2.2);
+  perspective-origin: 50% 50%;
+  /* Everything on the pages is sized in em off this, so the type
+     scales with the book rather than the viewport. */
+  font-size: calc(var(--book-w) * 0.0125);
+}
+
+.cb-book__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2.5em 3em rgba(0, 0, 0, 0.55));
+  pointer-events: none;
+}
+
+/* Page slots run from the outer margin to the spine (x: 13%-50% and
+   50%-87% of the art), so a leaf rotated 180deg about the spine lands
+   exactly on the opposite slot. The gutter is padding inside .cb-page. */
+.cb-page-slot,
+.cb-leaf {
+  position: absolute;
+  top: 28.5%;
+  width: 37%;
+  height: 39.5%;
+}
+
+.cb-page-slot--left {
+  left: 13%;
+}
+
+.cb-page-slot--right {
+  left: 50%;
+}
+
+.cb-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.cb-page--photo {
+  padding: 0.7em 1.9em 0.9em 1.2em;
+}
+
+.cb-page--recipe {
+  padding: 0.7em 1.2em 0.6em 1.9em;
+}
+
+/* ---- Photo page -------------------------------------------------- */
+
+/* A print glued onto the page: thin white border, slight tilt, the
+   image cropped to fill whatever shape the page gives it. */
+.cb-print {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0.45em 0.45em 0.5em;
+  background: #fbf7ee;
+  box-shadow:
+    0 0.1em 0.3em rgba(40, 25, 10, 0.18),
+    0 0.9em 1.6em -0.6em rgba(40, 25, 10, 0.4);
+  transform: rotate(-1.2deg);
+}
+
+/* A strip of tape over the top edge. */
+.cb-print::before {
+  content: "";
+  position: absolute;
+  top: -0.55em;
+  left: 50%;
+  width: 5em;
+  height: 1.2em;
+  background: rgba(238, 222, 180, 0.65);
+  transform: translateX(-50%) rotate(2deg);
+  box-shadow: 0 0.05em 0.15em rgba(0, 0, 0, 0.08);
+}
+
+.cb-print img,
+.cb-print__placeholder {
+  display: block;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: cover;
+  background: #ddd2bd;
+}
+
+.cb-print__placeholder {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(80% 90% at 30% 20%, #e6c9a7 0%, #c99a74 55%, #a8734f 100%);
+}
+
+.cb-print__placeholder span {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: 4em;
+  color: rgba(255, 248, 236, 0.75);
+}
+
+.cb-print__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6em;
+  margin-top: 0.45em;
+  font-size: 0.62em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ---- Recipe page ------------------------------------------------- */
+
+/* The whole page scrolls when a recipe runs long; the scrollbar is
+   hidden so it still reads as paper, and a soft fade marks that there
+   is more below. */
+.cb-recipe {
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 1em;
+  overflow-y: auto;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4em), transparent);
+}
+
+.cb-recipe::-webkit-scrollbar {
+  display: none;
+}
+
+.cb-recipe__title {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: 1.6em;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.cb-recipe__meta {
+  display: flex;
+  gap: 1.2em;
+  margin: 0.4em 0 0;
+  font-size: 0.6em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.cb-recipe__occasion {
+  margin: 0.7em 0 0;
+  padding-left: 0.8em;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: 0.86em;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.cb-recipe__heading {
+  margin: 1em 0 0.3em;
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cb-recipe__ingredients {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.15em 1em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.74em;
+  line-height: 1.35;
+}
+
+.cb-recipe__ingredients li {
+  padding-left: 0.9em;
+  text-indent: -0.9em;
+}
+
+.cb-recipe__ingredients li::before {
+  content: "\00B7";
+  display: inline-block;
+  width: 0.9em;
+  text-indent: 0;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.cb-recipe__steps {
+  margin: 0;
+  padding: 0 0.2em 0 1.4em;
+  font-size: 0.76em;
+  line-height: 1.38;
+}
+
+.cb-recipe__steps li {
+  margin-bottom: 0.35em;
+  padding-left: 0.25em;
+}
+
+.cb-recipe__steps li::marker {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ---- Page turn --------------------------------------------------- */
+
+.cb-leaf {
+  z-index: 3;
+  transform-style: preserve-3d;
+  will-change: transform;
+  animation-duration: var(--turn);
+  animation-timing-function: cubic-bezier(0.55, 0.05, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.cb-leaf--next {
+  left: 50%;
+  transform-origin: left center;
+  animation-name: leaf-next;
+}
+
+.cb-leaf--prev {
+  left: 13%;
+  transform-origin: right center;
+  animation-name: leaf-prev;
+}
+
+@keyframes leaf-next {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-180deg);
+  }
+}
+
+@keyframes leaf-prev {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(180deg);
+  }
+}
+
+.cb-leaf__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: var(--paper);
+  /* Soft curl darkening toward the spine, plus a hairline edge so the
+     flat leaf still reads as paper against the painted page. */
+  box-shadow: inset 0 0 0 1px rgba(60, 40, 20, 0.08);
+}
+
+.cb-leaf--next .cb-leaf__face--front,
+.cb-leaf--prev .cb-leaf__face--back {
+  /* Right-hand faces: spine on the left. */
+  background: linear-gradient(90deg, var(--paper-deep) 0%, var(--paper) 14%, var(--paper) 100%);
+}
+
+.cb-leaf--next .cb-leaf__face--back,
+.cb-leaf--prev .cb-leaf__face--front {
+  /* Left-hand faces: spine on the right. */
+  background: linear-gradient(270deg, var(--paper-deep) 0%, var(--paper) 14%, var(--paper) 100%);
+}
+
+.cb-leaf__face--back {
+  transform: rotateY(180deg);
+}
+
+/* Shadow the leaf throws onto the page it is about to cover. */
+.cb-leaf::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(30, 18, 8, 0.16);
+  opacity: 0;
+  animation: leaf-shade var(--turn) ease-in-out both;
+}
+
+@keyframes leaf-shade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---- Controls ---------------------------------------------------- */
+
+.cb-turn {
+  flex: 0 0 auto;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  font: inherit;
+  font-size: 1.25rem;
+  color: var(--cream);
+  background: rgba(20, 14, 10, 0.35);
+  border: 1px solid color-mix(in srgb, var(--cream) 35%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cb-turn:hover:not(:disabled),
+.cb-turn:focus-visible {
+  color: #15100c;
+  background: var(--cream);
+  transform: translateY(-2px);
+}
+
+.cb-turn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.cookbook-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0 1rem clamp(1.25rem, 4vh, 2.5rem);
+  text-align: center;
+}
+
+.cookbook-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.cookbook-hint {
+  font-size: 0.72rem;
+  opacity: 0.45;
+}
+
+/* ---- Phones ------------------------------------------------------ */
+
+/* The open spread is unreadable at phone width, so below 720px the
+   book art and the right-hand page go, and the recipe page becomes a
+   single sheet of paper filling the screen. Cookbook.jsx skips the
+   leaf turn here and slides the page instead; the turn buttons drop
+   down to flank the page count. */
+@media (max-width: 720px) {
+  .cookbook-head {
+    padding-top: 4.25rem;
+  }
+
+  .cookbook-stage {
+    display: block;
+    padding: 0.9rem 1rem 0;
+  }
+
+  .cb-book-frame {
+    width: 100%;
+    height: 100%;
+    cursor: default;
+  }
+
+  .cb-book {
+    position: absolute;
+    inset: 0;
+    top: 0;
+    aspect-ratio: auto;
+    perspective: none;
+    /* Type now scales with the viewport width, not the book. */
+    font-size: clamp(0.9rem, 3.8vw, 1.05rem);
+  }
+
+  .cb-book__art,
+  .cb-page-slot--right,
+  .cb-leaf {
+    display: none;
+  }
+
+  .cb-page-slot--left {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(90deg, var(--paper-deep) 0%, var(--paper) 6%, var(--paper) 100%);
+    border-radius: 0.35rem;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.35) inset,
+      0 1.5rem 2.5rem -0.75rem rgba(0, 0, 0, 0.6);
+  }
+
+  .cb-page-slot--left[data-slide="next"] {
+    animation: page-slide-next 0.42s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  }
+
+  .cb-page-slot--left[data-slide="prev"] {
+    animation: page-slide-prev 0.42s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  }
+
+  /* One sheet: the print sits on top at a fixed shape, the written
+     part runs on beneath it, and the whole sheet scrolls. */
+  .cb-page--sheet {
+    padding: 1.1em 1.1em 1.25em;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cb-print {
+    flex: none;
+    height: auto;
+    margin: 0.4em 0 1.1em;
+    transform: rotate(-1deg);
+  }
+
+  .cb-print img,
+  .cb-print__placeholder {
+    flex: none;
+    aspect-ratio: 3 / 2;
+  }
+
+  .cb-recipe {
+    flex: none;
+    overflow: visible;
+    mask-image: none;
+    padding-bottom: 0;
+  }
+
+  .cb-recipe__ingredients {
+    font-size: 0.86em;
+    line-height: 1.45;
+  }
+
+  .cb-recipe__steps {
+    font-size: 0.9em;
+    line-height: 1.5;
+  }
+
+  .cb-recipe__steps li {
+    margin-bottom: 0.5em;
+  }
+
+  .cb-turn {
+    position: absolute;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    z-index: 6;
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.1rem;
+  }
+
+  .cb-turn--prev {
+    left: 1rem;
+  }
+
+  .cb-turn--next {
+    right: 1rem;
+  }
+
+  .cookbook-foot {
+    padding: 1rem 4.5rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@keyframes page-slide-next {
+  from {
+    opacity: 0;
+    transform: translateX(14%) rotate(1.5deg);
+  }
+}
+
+@keyframes page-slide-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-14%) rotate(-1.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookbook-view,
+  .cookbook-view.is-closing,
+  .cb-leaf,
+  .cb-leaf::after {
+    animation: none;
+  }
+
+  .cb-leaf,
+  .cb-page-slot--left[data-slide] {
+    animation: none;
+  }
+
+  .cb-leaf {
+    display: none;
+  }
+}

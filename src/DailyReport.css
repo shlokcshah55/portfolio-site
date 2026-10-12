@@ -394,6 +394,35 @@
     grid-template-columns: minmax(0, 1fr);
     background: none;
   }
+
+  .report-scroll {
+    padding: 4.5rem 0.75rem calc(2rem + env(safe-area-inset-bottom, 0px));
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .paper {
+    padding: 1.5rem 1.1rem 2rem;
+  }
+
+  .paper__ears {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem 1rem;
+  }
+
+  .story__meta {
+    flex-wrap: wrap;
+    gap: 0.2rem 1rem;
+  }
+
+  .rate__strip {
+    gap: 2px;
+  }
+
+  .rate__step {
+    padding: 0.45rem 0;
+    font-size: 0.62rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

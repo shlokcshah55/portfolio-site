@@ -238,6 +238,24 @@
   color: #d8b071;
 }
 
+@media (max-width: 720px) {
+  .finances-safe {
+    --safe-w: min(20rem, 84vw);
+  }
+
+  .lock__input {
+    width: min(12rem, 50vw);
+  }
+
+  .ledger__row {
+    grid-template-columns: 4rem 1fr;
+  }
+
+  .ledger__value {
+    grid-column: 2;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .finances-view,
   .finances-view.is-closing,
