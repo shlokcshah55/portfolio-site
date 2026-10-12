@@ -1,0 +1,299 @@
+{
+  "date": "2026-10-12",
+  "through_line": "Checking work you didn't write. Comprehension debt is the cost of code nobody reads, Depot had an agent draft a TLA+ spec and the model checker found a race, and Google's AQuA uses an agent to review another agent. Each one is a way to trust output you didn't write yourself.",
+  "sections": [
+    {
+      "key": "learn",
+      "title": "You asked to learn",
+      "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+    },
+    {
+      "key": "work",
+      "title": "Came up at work",
+      "sub": "Terms people used this week as if everyone already knew them."
+    },
+    {
+      "key": "shipping",
+      "title": "Shipping now"
+    },
+    {
+      "key": "reading",
+      "title": "Worth reading"
+    },
+    {
+      "key": "foundations",
+      "title": "Foundations",
+      "sub": "Background reading, not news. Shown with the year it was published."
+    }
+  ],
+  "items": [
+    {
+      "id": "d2d2d7",
+      "section": "learn",
+      "concept_label": "dbt",
+      "title": "How dbt incremental models actually work, and quietly drift",
+      "url": "https://adriennevermorel.com/notes/incremental-models-in-dbt/",
+      "summary": "Step two: how it actually works. A working analytics engineer explains what the is_incremental() switch does, compares merge, delete+insert, insert_overwrite and microbatch, and explains why late-arriving data makes tables slowly drift from the source. The numbers help: one model drops from 45 minutes and 2TB scanned to 2 minutes and 20GB, and a 3-day lookback window plus occasional full refreshes keep it honest. Watch for the warning about insert_overwrite on Snowflake.",
+      "also": [],
+      "provenance": "Learn box · Adrienne Vermorel",
+      "read_time": "~6 min",
+      "published": "2026-03-26",
+      "undated": false,
+      "concepts": [
+        "dbt"
+      ]
+    },
+    {
+      "id": "c53ff5",
+      "section": "learn",
+      "concept_label": "Penetration testing",
+      "title": "What a pentest looks like from the client's side",
+      "url": "https://7asecurity.com/blog/2026/08/what-to-expect-from-a-penetration-test/",
+      "summary": "This answers your question directly, after last time's war story. It walks through an engagement end to end: a scoping call, test accounts at several privilege levels, agreed testing windows so the blue team doesn't treat it as a real attack, then a report where every finding has an ID, a severity, a working proof of concept and a fix. It ends with a retest of only what you fixed. It's written by a testing firm, so skip the sales lines. The second link is a new tester's first week (take notes, ask questions, most findings are boring misconfigurations), and the third is the firm's archive of real published reports.",
+      "also": [
+        {
+          "title": "Lessons learned from my first week as a penetration tester",
+          "url": "https://blog.securityinnovation.com/lessons-learned-as-a-penetration-tester"
+        },
+        {
+          "title": "7ASecurity: published pentest reports",
+          "url": "https://7asecurity.com/publications"
+        }
+      ],
+      "provenance": "Learn box · 7ASecurity blog",
+      "read_time": "~5 min + ~4 min",
+      "published": "2026-08-07",
+      "undated": false,
+      "concepts": [
+        "penetration-testing"
+      ]
+    },
+    {
+      "id": "a2510c",
+      "section": "work",
+      "concept_label": "Comprehension debt",
+      "title": "Comprehension debt: the code nobody on the team understands",
+      "url": "https://oreillyradar.substack.com/p/comprehension-debt-the-hidden-cost",
+      "summary": "Addy Osmani on the gap between how much code you have and how much of it anyone understands. He cites a randomised trial where engineers who used AI help scored 50% on a follow-up quiz against 67% without it, with the biggest drop in debugging. He also argues that neither tests nor specs close the gap, because you can't test behaviour nobody thought to specify.",
+      "also": [],
+      "provenance": "#ai-chat · Monday",
+      "read_time": "~9 min",
+      "published": "2026-04-13",
+      "undated": false,
+      "concepts": [
+        "comprehension-debt"
+      ]
+    },
+    {
+      "id": "ea9cbf",
+      "section": "work",
+      "concept_label": "CI pipeline tracing",
+      "title": "Turning every CI run into a trace with one webhook",
+      "url": "https://www.cncf.io/blog/2026/09/08/distributed-tracing-for-ci-pipelines-without-touching-a-single-workflow-file/",
+      "summary": "How to get CI traces without editing any pipelines. One org-wide webhook feeds an OpenTelemetry Collector, which turns each workflow, job and step into nested spans. Trace IDs are derived from the run IDs, so a step can attach its own custom spans to the same trace. There's also a sensible way to size the data volume before anyone asks what it'll cost.",
+      "also": [],
+      "provenance": "#engineering · Friday",
+      "read_time": "~7 min",
+      "published": "2026-09-08",
+      "undated": false,
+      "concepts": [
+        "ci-pipeline-tracing"
+      ]
+    },
+    {
+      "id": "6229f1",
+      "section": "shipping",
+      "concept_label": "Decision models",
+      "title": "Cloudflare's Clef-omni: a model that scores rather than writes",
+      "url": "https://blog.cloudflare.com/clef-faster-cheaper-multimodal/",
+      "summary": "This is the Jev-style 'decision model' again, now taking audio and video. It runs one prefill pass and scores schema options from internal embeddings without generating any tokens. It was trained with LoRA on a frozen Qwen3 mixture-of-experts backbone, with Brier-score calibration. Text decisions come back in about 130ms, and moving serving to SGLang roughly halved Clef's median latency.",
+      "also": [],
+      "provenance": "#random-eng · Friday · Cloudflare blog",
+      "read_time": "~7 min",
+      "published": "2026-10-09",
+      "undated": false,
+      "concepts": [
+        "system-one-models"
+      ]
+    },
+    {
+      "id": "78c286",
+      "section": "shipping",
+      "concept_label": "Agent quality monitoring",
+      "title": "Google's AQuA: an agent that reviews your production agent",
+      "url": "https://developers.googleblog.com/the-outer-loop-insights-first-an-ambient-quality-agent-that-diagnoses-your-production-agent/",
+      "summary": "This is a worked example of the outer loop in agent quality: sample sessions, review them against a checklist, cluster the failures, check each cluster against full transcripts, then track it as new, recurring or resolved. In the demo, 42 findings became 9 clusters, 3 false positives were thrown out, and two one-line prompt fixes cut one failure by 87%, at about 12 cents per session.",
+      "also": [],
+      "provenance": "Google Developers",
+      "read_time": "~14 min",
+      "published": "2026-10-08",
+      "undated": false,
+      "concepts": [
+        "agent-quality-monitoring"
+      ]
+    },
+    {
+      "id": "b0363c",
+      "section": "shipping",
+      "concept_label": "RL environments",
+      "title": "OpenAI trains computer use on graded contract workflows",
+      "url": "https://openai.com/index/advancing-computer-use-with-ironclad/",
+      "summary": "This one is short, but it shows the template behind RL post-training on real work: turn 11 real workflows into tasks, score each against 8 to 50 rubric criteria inside a hosted product, then train. The score rose from 41.6% to 55.0% and time per attempt nearly halved. There's little detail on method.",
+      "also": [],
+      "provenance": "OpenAI",
+      "read_time": "~4 min",
+      "published": "2026-10-06",
+      "undated": false,
+      "concepts": [
+        "rl-post-training"
+      ]
+    },
+    {
+      "id": "304b9e",
+      "section": "reading",
+      "concept_label": "Hybrid search",
+      "title": "Fusing vector and keyword search inside Postgres with RRF",
+      "url": "https://cloud.google.com/blog/products/databases/simplify-ai-search-with-alloydb-hybrid-search-and-rrf",
+      "summary": "Why Reciprocal Rank Fusion merges results by rank position, which avoids the fragile step of normalising vector and BM25 scores against each other. It also explains why RUM indexes beat GIN for ranked phrase search: they store word positions, so there's no trip back to the table. Ignore the product pitch and keep the technique.",
+      "also": [],
+      "provenance": "Google Cloud",
+      "read_time": "~8 min",
+      "published": "2026-10-06",
+      "undated": false,
+      "concepts": [
+        "hybrid-search-rrf"
+      ]
+    },
+    {
+      "id": "c3d669",
+      "section": "reading",
+      "concept_label": "Contextual integrity",
+      "title": "Privacy for agents as 'appropriate information flow'",
+      "url": "https://research.google/blog/open-and-emergent-problems-in-agentic-privacy-and-security-a-contextual-angle/",
+      "summary": "A workshop report from more than 50 researchers on why agents break traditional security models: ambiguous inputs, probabilistic control flow, and delegation that wears people down with confirmations. Its main proposal is a supervisor layer that checks every outbound data flow against a policy generated for that context. This frames the problem; it doesn't build anything.",
+      "also": [],
+      "provenance": "Google Research",
+      "read_time": "~6 min",
+      "published": "2026-10-05",
+      "undated": false,
+      "concepts": [
+        "contextual-integrity"
+      ]
+    },
+    {
+      "id": "f10a05",
+      "section": "reading",
+      "concept_label": "Matryoshka embeddings",
+      "title": "EmbeddingGemma 2: one vector space across text, image and audio",
+      "url": "https://developers.googleblog.com/embeddinggemma-2-the-developer-guide/",
+      "summary": "You load only the encoders you need (270M parameters for text, up to 740M for every modality), and all of them share one 768-dimension space, so adding a modality later means no re-embedding. The useful numbers concern truncation: a million vectors take about 1.5GB at 768 dimensions and about 250MB at 128. At 128, text keeps about 90% of its quality but image and audio retrieval falls to about 75%.",
+      "also": [],
+      "provenance": "Google Developers",
+      "read_time": "~6 min",
+      "published": "2026-10-06",
+      "undated": false,
+      "concepts": [
+        "matryoshka-embeddings"
+      ]
+    },
+    {
+      "id": "af15d3",
+      "section": "foundations",
+      "concept_label": "TLA+",
+      "title": "TLA+ catches a garbage-collection race that deletes live data",
+      "url": "https://depot.dev/blog/tla-verification",
+      "summary": "A real bug that tests and code review missed: a garbage collector checks that a blob has no references while a push re-uploads the same blob, and the delete lands after the push. The fix is to use S3 versioning as a 'delete fence'. The post also shows how an invariant like 'never undercount references' becomes one line of TLA+, and how an agent drafting the spec made checking 14 million states affordable.",
+      "also": [],
+      "provenance": "Gap · Depot engineering",
+      "read_time": "~14 min",
+      "published": "2026-07-20",
+      "undated": false,
+      "concepts": [
+        "tla-plus"
+      ]
+    }
+  ],
+  "bank_summary": {
+    "open_gaps": [
+      "tla-plus"
+    ],
+    "learning": [
+      "partial-indexes"
+    ],
+    "recently_closed": [
+      "nats"
+    ],
+    "most_met_unrated": "system-one-models",
+    "learning_requests": [
+      "dbt",
+      "penetration-testing"
+    ]
+  },
+  "source_ledger": {
+    "meta_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-06",
+      "note": "Only the NTS post, already covered"
+    },
+    "google_research": {
+      "status": "fresh",
+      "newest": "2026-10-07"
+    },
+    "google_developers": {
+      "status": "fresh",
+      "newest": "2026-10-08"
+    },
+    "google_cloud": {
+      "status": "fresh",
+      "newest": "2026-10-09",
+      "note": "RSS was cut off, so the blog listing was used"
+    },
+    "airbnb": {
+      "status": "fresh",
+      "newest": "2026-10-06",
+      "note": "Only the replay post, already covered"
+    },
+    "openai": {
+      "status": "fresh",
+      "newest": "2026-10-08"
+    },
+    "anthropic_news": {
+      "status": "fresh",
+      "newest": "2026-10-08",
+      "note": "Announcements only"
+    },
+    "anthropic_engineering": {
+      "status": "stale",
+      "newest": "2026-05-25"
+    },
+    "meta_ai": {
+      "status": "stale",
+      "newest": "2026-07-27"
+    },
+    "monzo": {
+      "status": "stale",
+      "newest": "2026-09-21"
+    },
+    "elevenlabs": {
+      "status": "quiet",
+      "newest": "2026-09-30"
+    },
+    "granola": {
+      "status": "stale",
+      "newest": "2026-09-02"
+    },
+    "ramp": {
+      "status": "failed",
+      "note": "JS-rendered, no content"
+    },
+    "gmail": {
+      "status": "failed",
+      "note": "Connector needs reconnecting with more permissions; AlphaSignal and Levels.fyi skipped"
+    },
+    "slack": {
+      "status": "ok",
+      "note": "11/12 channels over 72h; #team-ai not found; most channels quiet over the weekend"
+    }
+  },
+  "source_ledger_text": "Fresh: Google Developers (8 Oct) · Google Research (7 Oct) · Google Cloud (9 Oct; RSS cut off, used the listing) · OpenAI (8 Oct) · Anthropic news (8 Oct; announcements only, cut) · Meta Eng and Airbnb (6 Oct; already covered). Quiet or stale: ElevenLabs, nothing technical since 30 Sep · Monzo, nothing since 21 Sep · Granola, since 2 Sep · Meta AI, since 27 Jul · Anthropic engineering, since 25 May (excluded). Failed: Ramp (no content rendered) · Gmail needs reconnecting, so AlphaSignal and Levels.fyi were skipped. Slack: 11 of 12 channels read over 72h; #team-ai not found; one shared link (a Medium post on debugging code you no longer understand) couldn't be opened, so a related piece is linked instead."
+}

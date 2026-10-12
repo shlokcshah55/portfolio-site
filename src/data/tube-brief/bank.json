@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-10",
+  "updated_at": "2026-10-12",
   "concepts": {
     "agent-context-engineering": {
       "name": "Agent context engineering",
@@ -45,6 +45,26 @@
         "slack"
       ],
       "last_article": "https://dev.to/ji_ai/how-i-automated-my-entire-claude-code-workflow-with-hooks-5cp8"
+    },
+    "agent-quality-monitoring": {
+      "name": "Agent quality monitoring",
+      "what": "Continuously sampling and reviewing a production agent's sessions, clustering failures and tracking whether fixes stick.",
+      "aliases": [
+        "outer loop",
+        "ambient quality agent",
+        "AQuA"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-12",
+      "last_seen": "2026-10-12",
+      "channels": [],
+      "origins": [
+        "blogs"
+      ],
+      "last_article": "https://developers.googleblog.com/the-outer-loop-insights-first-an-ambient-quality-agent-that-diagnoses-your-production-agent/"
     },
     "ai-vulnerability-discovery": {
       "name": "AI vulnerability discovery",
@@ -128,6 +148,47 @@
       ],
       "last_article": "https://developers.googleblog.com/reproducing-olmo-3-7b-pre-training-in-maxtext-case-study-of-large-scale-training-on-tpus/"
     },
+    "ci-pipeline-tracing": {
+      "name": "CI pipeline tracing",
+      "what": "Emitting CI workflows, jobs and steps as nested OpenTelemetry spans, so slow or flaky builds can be inspected like application traces.",
+      "aliases": [
+        "CI observability",
+        "build traces"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-12",
+      "last_seen": "2026-10-12",
+      "channels": [
+        "#engineering"
+      ],
+      "origins": [
+        "slack"
+      ],
+      "last_article": "https://www.cncf.io/blog/2026/09/08/distributed-tracing-for-ci-pipelines-without-touching-a-single-workflow-file/"
+    },
+    "comprehension-debt": {
+      "name": "Comprehension debt",
+      "what": "The growing gap between how much code a system contains and how much of it any person actually understands, made worse when code is generated faster than it can be reviewed.",
+      "aliases": [
+        "cognitive debt"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-12",
+      "last_seen": "2026-10-12",
+      "channels": [
+        "#ai-chat"
+      ],
+      "origins": [
+        "slack"
+      ],
+      "last_article": "https://oreillyradar.substack.com/p/comprehension-debt-the-hidden-cost"
+    },
     "confidential-computing": {
       "name": "Confidential computing",
       "what": "Executing workloads inside hardware-attested encrypted VMs so even the infrastructure operator cannot read the data being processed — extending a device's trust boundary into the data centre.",
@@ -149,6 +210,25 @@
       ],
       "last_article": "https://research.google/blog/toward-provably-private-learning-from-federated-data/"
     },
+    "contextual-integrity": {
+      "name": "Contextual integrity",
+      "what": "A privacy framework that treats privacy as whether an information flow is appropriate for its context, now being applied to AI agents.",
+      "aliases": [
+        "CI privacy framework",
+        "appropriate information flow"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-12",
+      "last_seen": "2026-10-12",
+      "channels": [],
+      "origins": [
+        "blogs"
+      ],
+      "last_article": "https://research.google/blog/open-and-emergent-problems-in-agentic-privacy-and-security-a-contextual-angle/"
+    },
     "dbt": {
       "name": "dbt",
       "what": "A tool that turns a folder of SQL SELECT statements into a tested, version-controlled pipeline that runs inside the warehouse in dependency order.",
@@ -159,14 +239,14 @@
       "familiarity": null,
       "status": "unrated",
       "rated_at": null,
-      "times_seen": 1,
+      "times_seen": 2,
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
+      "last_seen": "2026-10-12",
       "channels": [],
       "origins": [
         "learn"
       ],
-      "last_article": "https://www.reddit.com/r/dataengineering/comments/11s8x0q/im_not_getting_itwhats_the_point_of_dbt/",
+      "last_article": "https://adriennevermorel.com/notes/incremental-models-in-dbt/",
       "learn_request": true
     },
     "dns-tunnelling": {
@@ -296,6 +376,26 @@
       ],
       "last_article": "https://datadome.co/threat-research/how-new-headless-chrome-the-cdp-signal-are-impacting-bot-detection/"
     },
+    "hybrid-search-rrf": {
+      "name": "Hybrid search and Reciprocal Rank Fusion",
+      "what": "Combining vector and keyword (BM25) retrieval by merging ranked lists on position rather than raw scores.",
+      "aliases": [
+        "RRF",
+        "hybrid retrieval",
+        "BM25"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-12",
+      "last_seen": "2026-10-12",
+      "channels": [],
+      "origins": [
+        "blogs"
+      ],
+      "last_article": "https://cloud.google.com/blog/products/databases/simplify-ai-search-with-alloydb-hybrid-search-and-rrf"
+    },
     "load-shedding": {
       "name": "Priority scheduling and load shedding",
       "what": "Under overload, deliberately drop low-priority work so critical work keeps meeting its deadlines.",
@@ -317,6 +417,25 @@
         "slack"
       ],
       "last_article": "https://aws.amazon.com/builders-library/using-load-shedding-to-avoid-overload/"
+    },
+    "matryoshka-embeddings": {
+      "name": "Matryoshka embeddings",
+      "what": "Embeddings trained so a prefix of the vector is still useful, which lets you truncate dimensions to trade quality for storage.",
+      "aliases": [
+        "MRL",
+        "embedding truncation"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-12",
+      "last_seen": "2026-10-12",
+      "channels": [],
+      "origins": [
+        "blogs"
+      ],
+      "last_article": "https://developers.googleblog.com/embeddinggemma-2-the-developer-guide/"
     },
     "model-context-protocol": {
       "name": "Model Context Protocol",
@@ -475,14 +594,14 @@
       "familiarity": null,
       "status": "unrated",
       "rated_at": null,
-      "times_seen": 1,
+      "times_seen": 2,
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
+      "last_seen": "2026-10-12",
       "channels": [],
       "origins": [
         "learn"
       ],
-      "last_article": "https://lorikeetsecurity.com/blog/domain-user-to-domain-admin",
+      "last_article": "https://7asecurity.com/blog/2026/08/what-to-expect-from-a-penetration-test/",
       "learn_request": true
     },
     "prompt-caching": {
@@ -518,16 +637,16 @@
       "familiarity": null,
       "status": "unrated",
       "rated_at": null,
-      "times_seen": 1,
+      "times_seen": 2,
       "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
+      "last_seen": "2026-10-12",
       "channels": [
         "#ai-chat"
       ],
       "origins": [
         "slack"
       ],
-      "last_article": "https://huggingface.co/blog/rlhf"
+      "last_article": "https://openai.com/index/advancing-computer-use-with-ironclad/"
     },
     "slsa": {
       "name": "SLSA (supply-chain provenance)",
@@ -619,16 +738,17 @@
       "familiarity": null,
       "status": "unrated",
       "rated_at": null,
-      "times_seen": 1,
+      "times_seen": 2,
       "first_seen": "2026-09-28",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-10-12",
       "channels": [
-        "#ai-chat"
+        "#ai-chat",
+        "#random-eng"
       ],
       "origins": [
         "slack"
       ],
-      "last_article": "https://towardsdatascience.com/jev-vs-llms-when-ai-moves-from-generation-to-decision-making/"
+      "last_article": "https://blog.cloudflare.com/clef-faster-cheaper-multimodal/"
     },
     "tla-plus": {
       "name": "TLA+",
@@ -641,9 +761,9 @@
       "familiarity": 2,
       "status": "gap",
       "rated_at": "2026-09-28",
-      "times_seen": 3,
+      "times_seen": 4,
       "first_seen": "2026-09-25",
-      "last_seen": "2026-10-09",
+      "last_seen": "2026-10-12",
       "channels": [
         "#engineering"
       ],
@@ -651,7 +771,7 @@
         "slack",
         "foundations"
       ],
-      "last_article": "https://www.hillelwayne.com/post/tla-golang/"
+      "last_article": "https://depot.dev/blog/tla-verification"
     },
     "traffic-replay": {
       "name": "Traffic capture and replay",
