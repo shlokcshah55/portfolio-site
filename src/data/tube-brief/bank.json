@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-10-12",
+  "updated_at": "2026-10-13",
   "concepts": {
     "agent-context-engineering": {
       "name": "Agent context engineering",
@@ -239,14 +239,14 @@
       "familiarity": null,
       "status": "unrated",
       "rated_at": null,
-      "times_seen": 2,
+      "times_seen": 3,
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "channels": [],
       "origins": [
         "learn"
       ],
-      "last_article": "https://adriennevermorel.com/notes/incremental-models-in-dbt/",
+      "last_article": "https://incident.io/blog/how-our-data-team-handles-incidents",
       "learn_request": true
     },
     "dns-tunnelling": {
@@ -407,9 +407,9 @@
       "familiarity": null,
       "status": "unrated",
       "rated_at": null,
-      "times_seen": 1,
+      "times_seen": 2,
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
+      "last_seen": "2026-10-13",
       "channels": [
         "#random-eng"
       ],
@@ -492,14 +492,15 @@
       "familiarity": null,
       "status": "unrated",
       "rated_at": null,
-      "times_seen": 1,
+      "times_seen": 2,
       "first_seen": "2026-09-28",
-      "last_seen": "2026-09-28",
+      "last_seen": "2026-10-13",
       "channels": [],
       "origins": [
-        "blogs"
+        "blogs",
+        "alphasignal"
       ],
-      "last_article": "https://research.google/blog/coherent-long-form-video-generation/"
+      "last_article": "https://mixed-news.com/en/claude-managed-agents-dynamic-workflows-1000-agents-permission-policies/"
     },
     "nats": {
       "name": "NATS",
@@ -594,14 +595,14 @@
       "familiarity": null,
       "status": "unrated",
       "rated_at": null,
-      "times_seen": 2,
+      "times_seen": 3,
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "channels": [],
       "origins": [
         "learn"
       ],
-      "last_article": "https://7asecurity.com/blog/2026/08/what-to-expect-from-a-penetration-test/",
+      "last_article": "https://www.netspi.com/blog/technical-blog/web-application-pentesting/uncovering-a-critical-vulnerability-through-chained-findings/",
       "learn_request": true
     },
     "prompt-caching": {
@@ -761,9 +762,9 @@
       "familiarity": 2,
       "status": "gap",
       "rated_at": "2026-09-28",
-      "times_seen": 4,
+      "times_seen": 5,
       "first_seen": "2026-09-25",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "channels": [
         "#engineering"
       ],
@@ -771,7 +772,7 @@
         "slack",
         "foundations"
       ],
-      "last_article": "https://depot.dev/blog/tla-verification"
+      "last_article": "https://brooker.co.za/blog/2024/04/17/formal.html"
     },
     "traffic-replay": {
       "name": "Traffic capture and replay",
@@ -791,6 +792,107 @@
         "blogs"
       ],
       "last_article": "https://airbnb.tech/infrastructure/beyond-synthetic-testing-capturing-and-replaying-real-database-workloads-at-airbnb/"
+    },
+    "human-in-the-loop-approvals": {
+      "name": "Human-in-the-loop approvals",
+      "what": "Pausing an agent before a consequential tool call so a person can approve, reject or edit it.",
+      "aliases": [
+        "HITL",
+        "tool approval",
+        "approval gates"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-13",
+      "last_seen": "2026-10-13",
+      "channels": [
+        "#team-nexus"
+      ],
+      "origins": [
+        "slack"
+      ],
+      "last_article": "https://ysecurity.io/blog/human-in-the-loop-is-going-away/"
+    },
+    "step-up-authentication": {
+      "name": "Step-up authentication",
+      "what": "Requiring a fresh, stronger proof of identity before a sensitive action, without ending the existing session.",
+      "aliases": [
+        "sudo mode",
+        "re-authentication",
+        "max_age"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-13",
+      "last_seen": "2026-10-13",
+      "channels": [
+        "#team-nexus"
+      ],
+      "origins": [
+        "slack"
+      ],
+      "last_article": "https://workos.com/blog/step-up-authentication"
+    },
+    "media-over-quic": {
+      "name": "Media over QUIC",
+      "what": "An emerging IETF protocol that carries live and real-time media as tracks over QUIC, with relays that cache and fan out without parsing the media.",
+      "aliases": [
+        "MoQ"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-13",
+      "last_seen": "2026-10-13",
+      "channels": [],
+      "origins": [
+        "blogs"
+      ],
+      "last_article": "https://engineering.fb.com/2026/10/12/video-engineering/shipping-media-over-quic-at-meta-scale-for-instagram-live-ingest/"
+    },
+    "elastic-inference-capacity": {
+      "name": "Elastic inference capacity",
+      "what": "Running optional, preemptible work on idle accelerators and shedding it instantly when the capacity is reclaimed.",
+      "aliases": [
+        "opportunistic capacity",
+        "preemptible inference"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-13",
+      "last_seen": "2026-10-13",
+      "channels": [],
+      "origins": [
+        "blogs"
+      ],
+      "last_article": "https://engineering.fb.com/2026/10/12/ml-applications/turning-opportunistic-ai-inference-capacity-into-better-ads-recommendations/"
+    },
+    "kv-cache-sharing": {
+      "name": "KV cache sharing",
+      "what": "Reusing or transferring a model's attention key/value cache between requests, agents or even models, so shared context isn't recomputed.",
+      "aliases": [
+        "prefix caching",
+        "cache-to-cache",
+        "KV handoff"
+      ],
+      "familiarity": null,
+      "status": "unrated",
+      "rated_at": null,
+      "times_seen": 1,
+      "first_seen": "2026-10-13",
+      "last_seen": "2026-10-13",
+      "channels": [],
+      "origins": [
+        "alphasignal"
+      ],
+      "last_article": "https://labs.ramp.com/research/latent-briefing-kv-cache/"
     }
   }
 }

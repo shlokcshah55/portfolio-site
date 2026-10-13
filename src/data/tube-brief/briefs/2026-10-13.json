@@ -1,0 +1,282 @@
+{
+  "date": "2026-10-13",
+  "through_line": "Who gets to say yes. The team is designing approvals for agent actions, and the reads disagree on how. One argues people stop reading approval prompts by the third click. Step-up auth asks for fresh proof only on the risky action. And Claude's new 1,000-agent workflows apply permission checks to the tools each agent calls, but not to starting the run.",
+  "sections": [
+    {
+      "key": "learn",
+      "title": "You asked to learn",
+      "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+    },
+    {
+      "key": "work",
+      "title": "Came up at work",
+      "sub": "Terms people used this week as if everyone already knew them."
+    },
+    {
+      "key": "shipping",
+      "title": "Shipping now"
+    },
+    {
+      "key": "reading",
+      "title": "Worth reading"
+    },
+    {
+      "key": "foundations",
+      "title": "Foundations",
+      "sub": "Background reading, not news. Shown with the year it was published."
+    }
+  ],
+  "items": [
+    {
+      "id": "a79c2c",
+      "section": "learn",
+      "concept_label": "dbt",
+      "title": "What happens when a dbt run fails at incident.io",
+      "url": "https://incident.io/blog/how-our-data-team-handles-incidents",
+      "summary": "Step three: the real world, and how it fails. Our own data team runs dbt hourly on CircleCI, and a failed model or test fires an HTTP alert that opens an incident. A weekly Data Responder owns it, test warnings included. The useful part is the routing: the same dbt run powers customer-facing Insights, so overnight failures with customer impact page engineering, while internal ones wait for working hours.",
+      "also": [],
+      "provenance": "Learn box · incident.io blog",
+      "read_time": "~7 min",
+      "published": "2024-07-26",
+      "undated": false,
+      "concepts": [
+        "dbt"
+      ]
+    },
+    {
+      "id": "ac95d1",
+      "section": "learn",
+      "concept_label": "Penetration testing",
+      "title": "How a pentester turned an 'informational' finding into server takeover",
+      "url": "https://www.netspi.com/blog/technical-blog/web-application-pentesting/uncovering-a-critical-vulnerability-through-chained-findings/",
+      "summary": "Step three: how it actually works, through one real engagement. Three apps share a hostname on different ports, so they share cookies. One app's session cookie lacks HttpOnly, another has reflected XSS, and a third needs admin for a file-upload RCE. The tester chains them, with a 5-second setTimeout as the trick that finally worked. You'll see why reports rate chains, not single bugs, and why scanners miss them.",
+      "also": [],
+      "provenance": "Learn box · NetSPI technical blog",
+      "read_time": "~6 min",
+      "published": "2024-12-10",
+      "undated": false,
+      "concepts": [
+        "penetration-testing"
+      ]
+    },
+    {
+      "id": "17c04d",
+      "section": "work",
+      "concept_label": "Human-in-the-loop approvals",
+      "title": "Why the 'approve this action?' button fails as a safety control",
+      "url": "https://ysecurity.io/blog/human-in-the-loop-is-going-away/",
+      "summary": "A security lead argues that approval prompts for agent actions decay into reflex. Microsoft found Vista users approved 89% of UAC prompts, and 47% of Chrome users who clicked through a certificate warning did so within 1.5 seconds. His answer is to scope what an agent can reach rather than ask a human at every step. It's long, but each section stands alone, so the first three are enough for one ride.",
+      "also": [
+        {
+          "title": "HITL approvals compared: tool approval, durable execution, wait-for-event",
+          "url": "https://cadenya.com/other-content/human-in-the-loop-approvals-for-ai-agents"
+        }
+      ],
+      "provenance": "#team-nexus · Monday",
+      "read_time": "~55 min (sections stand alone)",
+      "published": "2026-09-23",
+      "undated": false,
+      "concepts": [
+        "human-in-the-loop-approvals"
+      ]
+    },
+    {
+      "id": "922264",
+      "section": "work",
+      "concept_label": "Step-up authentication",
+      "title": "Making users prove it's still them before a dangerous action",
+      "url": "https://workos.com/blog/step-up-authentication",
+      "summary": "A login from eight hours ago shouldn't let someone revoke API keys. This walks through the mechanics: an auth_time claim on the token, an OIDC max_age parameter that forces fresh verification, and a session ID that survives the re-auth. GitHub's 'sudo mode' post is the original, shorter take on the same pattern.",
+      "also": [
+        {
+          "title": "Introducing GitHub Sudo Mode",
+          "url": "https://github.blog/news-insights/introducing-github-sudo-mode/"
+        }
+      ],
+      "provenance": "#team-nexus · Monday",
+      "read_time": "~4 min",
+      "published": "2026-07-02",
+      "undated": false,
+      "concepts": [
+        "step-up-authentication"
+      ]
+    },
+    {
+      "id": "0403b7",
+      "section": "shipping",
+      "concept_label": "Multi-agent orchestration",
+      "title": "Claude can now start runs of up to 1,000 agents by itself",
+      "url": "https://mixed-news.com/en/claude-managed-agents-dynamic-workflows-1000-agents-permission-policies/",
+      "summary": "With dynamic workflows, a lead agent writes a program that runs worker agents in phases and merges what they find. In Anthropic's bug-hunt test, one agent found 27 of 70 seeded bugs and the swarm found 66. Read it for the operational fine print: permission policies cover the tools workers call but not the decision to start a run, the budget can overshoot by one request per thread, and 64 threads run at once.",
+      "also": [],
+      "provenance": "AlphaSignal · Monday",
+      "read_time": "~4 min",
+      "published": "2026-10-11",
+      "undated": false,
+      "concepts": [
+        "multi-agent-orchestration"
+      ]
+    },
+    {
+      "id": "551b97",
+      "section": "shipping",
+      "concept_label": "Media over QUIC",
+      "title": "Meta swaps Instagram Live's video transport without anyone noticing",
+      "url": "https://engineering.fb.com/2026/10/12/video-engineering/shipping-media-over-quic-at-meta-scale-for-instagram-live-ingest/",
+      "summary": "Instagram Live ingest now runs on MoQ, an IETF protocol built on QUIC where relays cache and fan out media without parsing it. Most of the post is a migration playbook. A shim at the edge translates MoQ into the old protocol so nothing downstream changes, server-side routing lets them resize the rollout in minutes, and the TCP fallback copes with networks that block UDP. The target was parity, and they hit it.",
+      "also": [],
+      "provenance": "Meta Engineering · 12 Oct",
+      "read_time": "~9 min",
+      "published": "2026-10-12",
+      "undated": false,
+      "concepts": [
+        "media-over-quic"
+      ]
+    },
+    {
+      "id": "bb6ab8",
+      "section": "reading",
+      "concept_label": "Elastic inference capacity",
+      "title": "Meta turns idle GPUs into optional work it can drop in milliseconds",
+      "url": "https://engineering.fb.com/2026/10/12/ml-applications/turning-opportunistic-ai-inference-capacity-into-better-ads-recommendations/",
+      "summary": "An inference fleet can be short of capacity overall while pockets of it sit idle. Meta runs optional work in that slack: ranking more candidates and sending some requests to a bigger model. A PID controller keyed on tail latency sets how much optional work to accept, and value-aware load shedding on both client and server covers the minutes before the controller catches up.",
+      "also": [],
+      "provenance": "Meta Engineering · 12 Oct",
+      "read_time": "~11 min",
+      "published": "2026-10-12",
+      "undated": false,
+      "concepts": [
+        "elastic-inference-capacity",
+        "load-shedding"
+      ]
+    },
+    {
+      "id": "a748d6",
+      "section": "reading",
+      "concept_label": "KV cache sharing",
+      "title": "Passing memory between agents as KV cache instead of text",
+      "url": "https://labs.ramp.com/research/latent-briefing-kv-cache/",
+      "summary": "Sunday's AlphaSignal deep dive covered handing an agent's KV cache to another model instead of re-reading everything, which cut a 32k-token handoff from about 7 seconds to 278ms. Ramp's write-up is the hands-on version. It compacts the orchestrator's KV cache down to what the worker's task attends to, saving 42-57% of worker tokens at slightly higher accuracy. The SwarmKV post is a funny practitioner build of 'prefill once, fan out'.",
+      "also": [
+        {
+          "title": "Prefill Once, Fan Out: KV snapshot sharing for multi-agent pipelines",
+          "url": "https://towardsdatascience.com/kv-cache-reuse-for-multi-agent-llm-inference-i-built-a-c-orchestrator-so-my-gpu-would-stop-reading-the-same-document-twice/"
+        }
+      ],
+      "provenance": "AlphaSignal deep dive · Sunday",
+      "read_time": "~9 min",
+      "published": "2026-04-10",
+      "undated": false,
+      "concepts": [
+        "kv-cache-sharing"
+      ]
+    },
+    {
+      "id": "d5f48f",
+      "section": "foundations",
+      "concept_label": "TLA+ · your gap",
+      "title": "Marc Brooker: formal methods make you faster, not slower",
+      "url": "https://brooker.co.za/blog/2024/04/17/formal.html",
+      "summary": "Brooker, an AWS engineer, makes the economic case: software lets you start building before the design is done, so design mistakes turn into rewrites, and Hyrum's Law makes shipped behaviour expensive to change. He's specific about where it pays off (distributed and low-level systems) and where it doesn't (UIs and pricing logic). The best line is from an AWS team whose TLA+ spec 'verified an aggressive optimization'.",
+      "also": [],
+      "provenance": "Foundations · Marc Brooker (2024)",
+      "read_time": "~6 min",
+      "published": "2024-04-17",
+      "undated": false,
+      "concepts": [
+        "tla-plus"
+      ]
+    }
+  ],
+  "bank_summary": {
+    "open_gaps": [
+      "tla-plus"
+    ],
+    "learning": [
+      "partial-indexes"
+    ],
+    "recently_closed": [
+      "nats"
+    ],
+    "most_met_unrated": "system-one-models",
+    "learning_requests": [
+      "dbt",
+      "penetration-testing"
+    ]
+  },
+  "source_ledger": {
+    "meta_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-12",
+      "note": "Three posts on 12 Oct; MoQ and opportunistic inference used, OCP networking summit cut as a hardware roundup"
+    },
+    "google_research": {
+      "status": "fresh",
+      "newest": "2026-10-07",
+      "note": "Nothing new since the last brief"
+    },
+    "google_developers": {
+      "status": "fresh",
+      "newest": "2026-10-08",
+      "note": "Nothing new since the last brief"
+    },
+    "google_cloud": {
+      "status": "unchecked",
+      "note": "Not re-checked this run"
+    },
+    "airbnb": {
+      "status": "unchecked",
+      "newest": "2026-10-06",
+      "note": "Not re-checked this run"
+    },
+    "openai": {
+      "status": "fresh",
+      "newest": "2026-10-08",
+      "note": "Only customer stories and product news, all cut"
+    },
+    "anthropic_news": {
+      "status": "fresh",
+      "newest": "2026-10-08",
+      "note": "Nothing new since 8 Oct"
+    },
+    "anthropic_engineering": {
+      "status": "stale",
+      "newest": "2026-05-25"
+    },
+    "meta_ai": {
+      "status": "stale",
+      "newest": "2026-07-27",
+      "note": "Carried over, not re-checked"
+    },
+    "monzo": {
+      "status": "stale",
+      "newest": "2026-09-21",
+      "note": "Carried over, not re-checked"
+    },
+    "elevenlabs": {
+      "status": "unchecked",
+      "newest": "2026-09-30",
+      "note": "Not re-checked this run"
+    },
+    "granola": {
+      "status": "stale",
+      "newest": "2026-09-02",
+      "note": "Carried over, not re-checked"
+    },
+    "ramp": {
+      "status": "stale",
+      "newest": "2026-04-10",
+      "note": "Main blog is JS-rendered; a Ramp Labs post was reached through search"
+    },
+    "gmail": {
+      "status": "ok",
+      "newest": "2026-10-12",
+      "note": "AlphaSignal read: the 12 Oct roundup and the 11 Oct Sunday deep dive"
+    },
+    "slack": {
+      "status": "ok",
+      "note": "24h window. All 5 core channels read (quiet Monday). Secondary channels: 4 read, #pointless-debates timed out, the other 4 were skipped after the timeout"
+    }
+  },
+  "source_ledger_text": "Fresh: Meta Eng (12 Oct, 2 used) · AlphaSignal (12 Oct roundup plus the 11 Oct deep dive; Gmail works again) · OpenAI and Anthropic news (nothing technical since 8 Oct) · Google Research and Developers (nothing new). Not re-checked: Google Cloud, Airbnb, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Anthropic engineering since 25 May. Ramp's main blog doesn't render, so a Ramp Labs post was used instead. Slack: all 5 core channels read but quiet. 4 secondary channels read; one timed out and the rest were skipped. A secondary-channel mention of a kernel WAF was skipped as too thin. 7 items after Learn, under the usual 8-12, because nothing else was strong enough."
+}
