@@ -1,0 +1,269 @@
+{
+ "date": "2026-10-14",
+ "through_line": "Small fast deciders, bigger slow thinkers. Today's Learn paper gives routine search decisions to a cheap, calibrated model and saves the reasoning model for hard calls. Meta's ads stack does the same thing: one huge model passes its knowledge down to fast rankers. And Anthropic rebuilt source control because agents now make most of its changes.",
+ "sections": [
+  {
+   "key": "learn",
+   "title": "You asked to learn",
+   "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+  },
+  {
+   "key": "work",
+   "title": "Came up at work",
+   "sub": "Terms people used this week as if everyone already knew them."
+  },
+  {
+   "key": "shipping",
+   "title": "Shipping now"
+  },
+  {
+   "key": "reading",
+   "title": "Worth reading"
+  },
+  {
+   "key": "foundations",
+   "title": "Foundations",
+   "sub": "Background reading, not news. Shown with the year it was published."
+  }
+ ],
+ "items": [
+  {
+   "id": "164f08",
+   "section": "learn",
+   "concept_label": "System One models",
+   "title": "The SearchJev paper: a fast System 1 brain for search agents",
+   "url": "https://arxiv.org/abs/2610.05107",
+   "summary": "Step one: what it is and why. Instead of asking a chat model to write out every small search decision (is this relevant, do I have enough evidence, search again?), a small model scores the allowed options directly and passes only uncertain calls up to a slower reasoning model. The numbers to remember: decisions about 5x faster, calibration error down 41-74%, and the two-model agent gets more answers right (45% to 54%) while searching about 4x faster.",
+   "also": [
+    {
+     "title": "Readable HTML version of the paper",
+     "url": "https://arxiv.org/html/2610.05107v1"
+    }
+   ],
+   "provenance": "Learn box · arXiv paper",
+   "read_time": "~35 min (abstract and intro in 8)",
+   "published": "2026-10-04",
+   "undated": false,
+   "concepts": [
+    "system-one-models"
+   ]
+  },
+  {
+   "id": "4f894c",
+   "section": "learn",
+   "concept_label": "dbt",
+   "title": "A year of moving Intercom onto dbt: the good and the annoying",
+   "url": "https://medium.com/intercom-rad/to-dbt-or-not-to-dbt-4e2d04f27d3a",
+   "summary": "Step four: an opinionated verdict. A data team that adopted dbt on top of a big existing SQL codebase lists what paid off (ref-based lineage, snapshots for history tables, cheap tests that caught real bugs) and what still hurts (Jinja you cannot paste into a SQL client, YAML boilerplate). It ends with a migration plan you could copy: pick one painful report and rebuild its whole tree in dbt first.",
+   "also": [],
+   "provenance": "Learn box · Intercom data blog",
+   "read_time": "~10 min",
+   "published": "2023-10-10",
+   "undated": false,
+   "concepts": [
+    "dbt"
+   ]
+  },
+  {
+   "id": "2af34d",
+   "section": "learn",
+   "concept_label": "Penetration testing",
+   "title": "Follow a web pentest from port scan to running code on the server",
+   "url": "https://medium.com/@akshat161181/tryhackme-guided-pentest-web-walkthrough-b59d113a8b92",
+   "summary": "Step four: hands-on. A step-by-step run through a practice recruiting app, with the real commands: nmap and gobuster to map it, an IDOR that leaks the admin email, a password-reset flaw that takes over the admin account, then an upload filter beaten with a .phtml file. Each small flaw only matters because it unlocks the next one, which is the whole job.",
+   "also": [],
+   "provenance": "Learn box · practitioner write-up",
+   "read_time": "~13 min",
+   "published": "2026-05-27",
+   "undated": false,
+   "concepts": [
+    "penetration-testing"
+   ]
+  },
+  {
+   "id": "8c17f1",
+   "section": "work",
+   "concept_label": "Agent-scale source control",
+   "title": "Why Anthropic replaced git once agents merged 30,000 changes a day",
+   "url": "https://www.anthropic.com/engineering/redesigning-source-control",
+   "summary": "Git assumes every clone is a full offline copy. That breaks with a 100 GB history and 25 million CI checkouts a day. Scion flips it: an always-online server answers diff and blame questions over an API, commits are cheap entries in a log, and clients fetch only the trees and blobs they need through tiered caches. The result is 200x less infra and checkouts in seconds. It also argues that a strict merge queue makes no sense at agent scale.",
+   "also": [
+    {
+     "title": "Simon Willison on Scion, adversarial review and a release-annotated chart",
+     "url": "https://simonwillison.net/2026/Oct/13/redesigning-source-control-at-anthropic/"
+    }
+   ],
+   "provenance": "#ai-chat · Tuesday",
+   "read_time": "~14 min",
+   "published": "2026-10-13",
+   "undated": false,
+   "concepts": [
+    "monorepo-source-control"
+   ]
+  },
+  {
+   "id": "180103",
+   "section": "work",
+   "concept_label": "Break-glass access",
+   "title": "Building an emergency way into prod that is not a backdoor",
+   "url": "https://mattgoodrich.com/posts/break-glass-without-the-backdoor/",
+   "summary": "A security lead sets four tests for emergency access: it does nothing until used, it pages people when used, it expires on its own, and every use gets reviewed. He covers two tiers, a just-in-time role for normal incidents and a sealed two-person credential for when the identity system itself is down. There is a short AWS policy showing how to make every other role unable to do the dangerous things.",
+   "also": [],
+   "provenance": "#engineering · Tuesday",
+   "read_time": "~8 min",
+   "published": "2026-06-15",
+   "undated": false,
+   "concepts": [
+    "break-glass-access",
+    "step-up-authentication"
+   ]
+  },
+  {
+   "id": "6f4742",
+   "section": "shipping",
+   "concept_label": "Recommendation foundation models",
+   "title": "Meta's ads model learns scaling laws the way LLMs do",
+   "url": "https://engineering.fb.com/2026/10/13/ml-applications/metas-generative-ads-model-gem-scaling-the-central-model-and-compute-engine-for-frontier-ads-ai/",
+   "summary": "One central recommendation model now serves every surface, and it finally shows LLM-style scaling: ranking quality follows a power law in how much user history it reads. Two good tricks: speculative precomputation, which works out user-ad embeddings just before a request needs them, and splitting training efficiency into per-GPU use times scaling ratio, which doubled MFU to 20-25%.",
+   "also": [],
+   "provenance": "Meta Engineering · Tuesday",
+   "read_time": "~16 min",
+   "published": "2026-10-13",
+   "undated": false,
+   "concepts": [
+    "recsys-foundation-models",
+    "model-flops-utilisation"
+   ]
+  },
+  {
+   "id": "6fb6bf",
+   "section": "reading",
+   "concept_label": "Synthetic training data",
+   "title": "Training a search model before anyone has searched",
+   "url": "https://airbnb.tech/ai-ml/castle-training-natural-language-search-before-the-first-real-query/",
+   "summary": "Cold start for natural-language search, solved with booking data. When someone books one listing over others they viewed, that choice is a free relevance label. An LLM writes queries for those pairs, steered by about 500 real seed queries. The synthetic queries matched real ones 9x better than earlier methods, and experts agreed with the labels 91-93% of the time. This connects to the SearchJev paper: both are about cheap, reliable signals for search decisions.",
+   "also": [],
+   "provenance": "Airbnb Engineering · Tuesday",
+   "read_time": "~8 min",
+   "published": "2026-10-13",
+   "undated": false,
+   "concepts": [
+    "synthetic-training-data"
+   ]
+  },
+  {
+   "id": "adc2bb",
+   "section": "foundations",
+   "concept_label": "TLA+",
+   "title": "Where LLMs help with TLA+, and where they make things worse",
+   "url": "https://buttondown.com/hillelwayne/archive/ai-is-a-gamechanger-for-tla-users/",
+   "summary": "A TLA+ teacher tests an agent on the parts beginners find hardest. It is good at fixing syntax, explaining 20-step error traces and writing UNCHANGED boilerplate. It is dangerous at fixing specs, because it often 'fixes' a race by declaring that races never happen. If cryptic syntax has kept you from trying TLA+, this is the case for starting now.",
+   "also": [],
+   "provenance": "Foundations · Hillel Wayne (2025)",
+   "read_time": "~9 min",
+   "published": "2025-06-05",
+   "undated": false,
+   "concepts": [
+    "tla-plus"
+   ]
+  }
+ ],
+ "bank_summary": {
+  "open_gaps": [
+   "tla-plus"
+  ],
+  "learning": [
+   "partial-indexes"
+  ],
+  "recently_closed": [
+   "nats"
+  ],
+  "most_met_unrated": "confidential-computing",
+  "learning_requests": [
+   "dbt",
+   "penetration-testing",
+   "system-one-models"
+  ]
+ },
+ "source_ledger": {
+  "meta_engineering": {
+   "status": "fresh",
+   "newest": "2026-10-13",
+   "note": "GEM scaling post used"
+  },
+  "google_research": {
+   "status": "fresh",
+   "newest": "2026-10-07",
+   "note": "Nothing new since the last brief"
+  },
+  "google_developers": {
+   "status": "unchecked",
+   "newest": "2026-10-08",
+   "note": "Not re-checked this run"
+  },
+  "google_cloud": {
+   "status": "unchecked",
+   "note": "Not re-checked this run"
+  },
+  "airbnb": {
+   "status": "fresh",
+   "newest": "2026-10-13",
+   "note": "CASTLE post used"
+  },
+  "openai": {
+   "status": "fresh",
+   "newest": "2026-10-08",
+   "note": "Only funding, safety and customer stories, all cut"
+  },
+  "anthropic_news": {
+   "status": "fresh",
+   "newest": "2026-10-08",
+   "note": "Nothing new since 8 Oct"
+  },
+  "anthropic_engineering": {
+   "status": "fresh",
+   "newest": "2026-10-13",
+   "note": "First post since May; it also came up in #ai-chat"
+  },
+  "meta_ai": {
+   "status": "stale",
+   "newest": "2026-07-27",
+   "note": "Carried over, not re-checked"
+  },
+  "monzo": {
+   "status": "stale",
+   "newest": "2026-09-21",
+   "note": "Carried over, not re-checked"
+  },
+  "elevenlabs": {
+   "status": "unchecked",
+   "newest": "2026-09-30",
+   "note": "Not re-checked this run"
+  },
+  "granola": {
+   "status": "stale",
+   "newest": "2026-09-02",
+   "note": "Carried over, not re-checked"
+  },
+  "ramp": {
+   "status": "stale",
+   "newest": "2026-04-10",
+   "note": "JS-rendered; not re-checked"
+  },
+  "gmail": {
+   "status": "ok",
+   "newest": "2026-10-13",
+   "note": "AlphaSignal 13 Oct read; nothing used. Its featured voice model shipped in January and the rest was promotion"
+  },
+  "slack": {
+   "status": "ok",
+   "note": "24h window. All 5 core channels read. Secondary: #engineering-nits, #ai-tooling, #database-questions and #observability-chat read (quiet); the other 5 were skipped"
+  },
+  "arxiv": {
+   "status": "ok",
+   "newest": "2026-10-04",
+   "note": "Learn-box paper abstract fetched; the HTML version hit a fetch rate limit and was not checked"
+  }
+ },
+ "source_ledger_text": "Fresh: Anthropic engineering (13 Oct, its first post since May) · Meta Eng (13 Oct) · Airbnb (13 Oct) · AlphaSignal (13 Oct, nothing used) · OpenAI and Anthropic news (nothing technical since 8 Oct) · Google Research (nothing new). Not re-checked: Google Developers, Google Cloud, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack: all 5 core channels read, but most messages were project chat, so only two general concepts came out. 4 secondary channels read, 5 skipped. New in the Learn box: an arXiv paper, filed under the existing System One models concept. 5 items after Learn, under the usual 8-12, because nothing else was strong enough."
+}

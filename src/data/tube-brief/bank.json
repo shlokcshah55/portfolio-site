@@ -1,898 +1,989 @@
 {
-  "version": 1,
-  "updated_at": "2026-10-13",
-  "concepts": {
-    "agent-context-engineering": {
-      "name": "Agent context engineering",
-      "what": "Deciding what an agent's context window actually holds — including whether to mount knowledge as a filesystem it reads on demand versus pre-rendering it into the system prompt, trading tokens against tool calls.",
-      "aliases": [
-        "context window curation",
-        "filesystem-mounted context",
-        "compaction",
-        "tool clearing"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-09-28",
-      "channels": [
-        "#team-ai"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
-    },
-    "agent-hooks": {
-      "name": "Agent hooks",
-      "what": "Deterministic scripts that fire at fixed points in a coding agent's tool-call lifecycle to allow, block or steer actions.",
-      "aliases": [
-        "Claude Code hooks",
-        "PreToolUse"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [
-        "#engineering-nits"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://dev.to/ji_ai/how-i-automated-my-entire-claude-code-workflow-with-hooks-5cp8"
-    },
-    "agent-quality-monitoring": {
-      "name": "Agent quality monitoring",
-      "what": "Continuously sampling and reviewing a production agent's sessions, clustering failures and tracking whether fixes stick.",
-      "aliases": [
-        "outer loop",
-        "ambient quality agent",
-        "AQuA"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://developers.googleblog.com/the-outer-loop-insights-first-an-ambient-quality-agent-that-diagnoses-your-production-agent/"
-    },
-    "ai-vulnerability-discovery": {
-      "name": "AI vulnerability discovery",
-      "what": "Using frontier models to scan code for exploitable bugs, with proofs of concept and suggested patches, in the style of OSS-Fuzz.",
-      "aliases": [
-        "OSS Scanner",
-        "coordinated vulnerability disclosure"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://www.anthropic.com/news/anthropic-cyber-mission"
-    },
-    "asr-vocabulary-biasing": {
-      "name": "ASR vocabulary biasing",
-      "what": "Supplying domain terms and proper nouns to a speech-to-text pipeline so it stops substituting phonetically similar, more common words.",
-      "aliases": [
-        "keyword boosting",
-        "glossary biasing",
-        "prompt conditioning for ASR"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-09-28",
-      "channels": [
-        "#engineering"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://platform.openai.com/docs/guides/speech-to-text"
-    },
-    "assignment-problems": {
-      "name": "Assignment problems",
-      "what": "The optimisation class behind 'which shard on which host' — matching items to slots at minimum cost, solved with Hungarian-algorithm or min-cost-flow style methods.",
-      "aliases": [
-        "bipartite matching",
-        "min-cost flow",
-        "Hungarian algorithm"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://engineering.fb.com/2026/09/21/open-source/rebalancer-generic-high-performance-library-assignment-problems/"
-    },
-    "attention-head-shapes": {
-      "name": "Attention head shapes",
-      "what": "How you split a fixed attention budget between head count and head dimension — mathematically equivalent configurations can differ sharply in throughput depending on the accelerator's matrix-multiply dimensions.",
-      "aliases": [
-        "head dim",
-        "num heads",
-        "MXU tiling",
-        "hardware-aware architecture"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-09-28",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://developers.googleblog.com/reproducing-olmo-3-7b-pre-training-in-maxtext-case-study-of-large-scale-training-on-tpus/"
-    },
-    "ci-pipeline-tracing": {
-      "name": "CI pipeline tracing",
-      "what": "Emitting CI workflows, jobs and steps as nested OpenTelemetry spans, so slow or flaky builds can be inspected like application traces.",
-      "aliases": [
-        "CI observability",
-        "build traces"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
-      "channels": [
-        "#engineering"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://www.cncf.io/blog/2026/09/08/distributed-tracing-for-ci-pipelines-without-touching-a-single-workflow-file/"
-    },
-    "comprehension-debt": {
-      "name": "Comprehension debt",
-      "what": "The growing gap between how much code a system contains and how much of it any person actually understands, made worse when code is generated faster than it can be reviewed.",
-      "aliases": [
-        "cognitive debt"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
-      "channels": [
-        "#ai-chat"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://oreillyradar.substack.com/p/comprehension-debt-the-hidden-cost"
-    },
-    "confidential-computing": {
-      "name": "Confidential computing",
-      "what": "Executing workloads inside hardware-attested encrypted VMs so even the infrastructure operator cannot read the data being processed — extending a device's trust boundary into the data centre.",
-      "aliases": [
-        "confidential VMs",
-        "TEE",
-        "trusted execution environment",
-        "remote attestation"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 2,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-10-09",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://research.google/blog/toward-provably-private-learning-from-federated-data/"
-    },
-    "contextual-integrity": {
-      "name": "Contextual integrity",
-      "what": "A privacy framework that treats privacy as whether an information flow is appropriate for its context, now being applied to AI agents.",
-      "aliases": [
-        "CI privacy framework",
-        "appropriate information flow"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://research.google/blog/open-and-emergent-problems-in-agentic-privacy-and-security-a-contextual-angle/"
-    },
-    "dbt": {
-      "name": "dbt",
-      "what": "A tool that turns a folder of SQL SELECT statements into a tested, version-controlled pipeline that runs inside the warehouse in dependency order.",
-      "aliases": [
-        "data build tool",
-        "analytics engineering"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 3,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-13",
-      "channels": [],
-      "origins": [
-        "learn"
-      ],
-      "last_article": "https://incident.io/blog/how-our-data-team-handles-incidents",
-      "learn_request": true
-    },
-    "dns-tunnelling": {
-      "name": "DNS tunnelling",
-      "what": "Encoding data into DNS queries to move it past egress controls that only inspect HTTP — the canonical escape route from a network-isolated sandbox.",
-      "aliases": [
-        "DNS exfiltration",
-        "DNS C2",
-        "T1071.004"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-09-28",
-      "channels": [
-        "#ai-chat"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://attack.mitre.org/techniques/T1071/004/"
-    },
-    "evaluation-benchmarks": {
-      "name": "Evaluation benchmarks",
-      "what": "Constructing a scored set of realistic cases with an explicit rubric, so a model or prompt change can be measured rather than guessed at — eval coverage is what sets your change velocity.",
-      "aliases": [
-        "evals",
-        "rubric grading",
-        "backtesting",
-        "regression set"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-09-28",
-      "channels": [
-        "#team-ai",
-        "#engineering"
-      ],
-      "origins": [
-        "blogs",
-        "slack"
-      ],
-      "last_article": "https://openai.com/index/introducing-mentalhealthbench"
-    },
-    "feature-stores": {
-      "name": "Feature stores",
-      "what": "Infrastructure that computes, stores and serves ML features consistently between training and inference, so a model sees the same feature definition in both.",
-      "aliases": [
-        "Chronon",
-        "Feast",
-        "training-serving skew"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://airbnb.tech/ai-ml/the-guest-journey-updated-in-real-time-extending-airbnbs-sequence-recommender-with-chronon/"
-    },
-    "federated-learning": {
-      "name": "Federated learning",
-      "what": "Training models on data that stays on user devices, with only privatised updates leaving the device.",
-      "aliases": [
-        "FL"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://research.google/blog/toward-provably-private-learning-from-federated-data/"
-    },
-    "gitops": {
-      "name": "GitOps",
-      "what": "Deployment model where Git holds desired state and an in-cluster controller (e.g. Argo CD) continuously reconciles live state to it.",
-      "aliases": [
-        "Argo CD",
-        "pull-based deployment"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [
-        "#engineering"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://medium.com/kotaicode/gitops-in-production-what-nobody-tells-you-about-argocd-d5a780f9820f"
-    },
-    "headless-browser-detection": {
-      "name": "Headless browser detection",
-      "what": "Telling automated (headless, CDP-driven) browsers from real users via API, rendering, network and HTTP/2 fingerprints.",
-      "aliases": [
-        "bot detection",
-        "browser fingerprinting"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [
-        "#ai-chat"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://datadome.co/threat-research/how-new-headless-chrome-the-cdp-signal-are-impacting-bot-detection/"
-    },
-    "hybrid-search-rrf": {
-      "name": "Hybrid search and Reciprocal Rank Fusion",
-      "what": "Combining vector and keyword (BM25) retrieval by merging ranked lists on position rather than raw scores.",
-      "aliases": [
-        "RRF",
-        "hybrid retrieval",
-        "BM25"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://cloud.google.com/blog/products/databases/simplify-ai-search-with-alloydb-hybrid-search-and-rrf"
-    },
-    "load-shedding": {
-      "name": "Priority scheduling and load shedding",
-      "what": "Under overload, deliberately drop low-priority work so critical work keeps meeting its deadlines.",
-      "aliases": [
-        "Apollo 1202 alarm",
-        "graceful degradation",
-        "admission control"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 2,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-13",
-      "channels": [
-        "#random-eng"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://aws.amazon.com/builders-library/using-load-shedding-to-avoid-overload/"
-    },
-    "matryoshka-embeddings": {
-      "name": "Matryoshka embeddings",
-      "what": "Embeddings trained so a prefix of the vector is still useful, which lets you truncate dimensions to trade quality for storage.",
-      "aliases": [
-        "MRL",
-        "embedding truncation"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://developers.googleblog.com/embeddinggemma-2-the-developer-guide/"
-    },
-    "model-context-protocol": {
-      "name": "Model Context Protocol",
-      "what": "An open protocol giving LLM agents a standard server interface for discovering and calling external tools and data sources.",
-      "aliases": [
-        "MCP",
-        "MCP server"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
-      "channels": [
-        "#engineering",
-        "#team-ai",
-        "#ai-tooling"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://modelcontextprotocol.io/introduction"
-    },
-    "model-flops-utilisation": {
-      "name": "Model FLOPs utilisation",
-      "what": "The fraction of an accelerator's theoretical peak FLOPs a training run actually achieves — the headline efficiency number for large-scale training, and the thing hardware-aware architecture choices move.",
-      "aliases": [
-        "MFU",
-        "hardware utilisation",
-        "arithmetic intensity"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-09-28",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://developers.googleblog.com/reproducing-olmo-3-7b-pre-training-in-maxtext-case-study-of-large-scale-training-on-tpus/"
-    },
-    "multi-agent-orchestration": {
-      "name": "Multi-agent orchestration",
-      "what": "Coordinating several specialised models behind a controller that allocates work and scores results — often with a judge model supplying the reward and a persistent memory holding shared state.",
-      "aliases": [
-        "orchestrator",
-        "MLLM judge",
-        "factored reward",
-        "agent handoff"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 2,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-10-13",
-      "channels": [],
-      "origins": [
-        "blogs",
-        "alphasignal"
-      ],
-      "last_article": "https://mixed-news.com/en/claude-managed-agents-dynamic-workflows-1000-agents-permission-policies/"
-    },
-    "nats": {
-      "name": "NATS",
-      "what": "A lightweight, very high-throughput pub/sub messaging system using subject-based addressing rather than queues and exchanges.",
-      "aliases": [
-        "NATS JetStream"
-      ],
-      "familiarity": 8,
-      "status": "known",
-      "rated_at": "2026-09-28",
-      "times_seen": 1,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
-      "channels": [
-        "#engineering"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://docs.nats.io/nats-concepts/what-is-nats"
-    },
-    "network-time-security": {
-      "name": "Network Time Security (NTS)",
-      "what": "RFC 8915: a TLS key exchange plus authenticated NTP packets, so clients can verify where their time came from.",
-      "aliases": [
-        "RFC 8915",
-        "authenticated NTP"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://engineering.fb.com/2026/10/06/production-engineering/nts-authenticated-time-at-meta/"
-    },
-    "on-device-inference": {
-      "name": "On-device inference",
-      "what": "Running a model locally rather than calling a hosted API — enabling cloud-planner / local-executor splits where token-heavy work stays on the machine.",
-      "aliases": [
-        "local models",
-        "edge inference",
-        "LiteRT",
-        "Ollama",
-        "vLLM"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 2,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-10-09",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://developers.googleblog.com/ml-drift-next-gen-gpu-aiml-inference-at-the-edge/"
-    },
-    "partial-indexes": {
-      "name": "Partial indexes",
-      "what": "A Postgres index carrying a WHERE clause so it covers only matching rows — smaller, cheaper to write, and often the fix for one slow filtered query.",
-      "aliases": [
-        "filtered index",
-        "conditional index"
-      ],
-      "familiarity": 4,
-      "status": "learning",
-      "rated_at": "2026-09-28",
-      "times_seen": 1,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
-      "channels": [
-        "#engineering"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://www.postgresql.org/docs/current/indexes-partial.html"
-    },
-    "penetration-testing": {
-      "name": "Penetration testing",
-      "what": "An authorised, scoped simulated attack: testers chain small weaknesses toward a goal and report the path and fixes.",
-      "aliases": [
-        "pentest",
-        "red team",
-        "internal pentest"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 3,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-13",
-      "channels": [],
-      "origins": [
-        "learn"
-      ],
-      "last_article": "https://www.netspi.com/blog/technical-blog/web-application-pentesting/uncovering-a-critical-vulnerability-through-chained-findings/",
-      "learn_request": true
-    },
-    "prompt-caching": {
-      "name": "Prompt caching",
-      "what": "Reusing the computed attention state of a repeated prompt prefix across requests, cutting both latency and token cost; explicit breakpoints make the cache something you design rather than infer.",
-      "aliases": [
-        "KV cache reuse",
-        "cache breakpoints",
-        "prefix caching"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://openai.com/index/better-prompt-caching-for-gpt-6"
-    },
-    "rl-post-training": {
-      "name": "RL post-training",
-      "what": "Training a model against a reward signal rather than labelled answers, to instil behaviour you can describe but not specify.",
-      "aliases": [
-        "RLHF",
-        "RLAIF",
-        "GRPO",
-        "reward modelling",
-        "RL environments"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 2,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-10-12",
-      "channels": [
-        "#ai-chat"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://openai.com/index/advancing-computer-use-with-ironclad/"
-    },
-    "slsa": {
-      "name": "SLSA (supply-chain provenance)",
-      "what": "Graded framework for proving how a software artifact was built: signed provenance, hosted and hermetic builds.",
-      "aliases": [
-        "software supply chain security"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [
-        "#toolshed"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://research.swtch.com/xz-timeline"
-    },
-    "small-language-models": {
-      "name": "Small language models",
-      "what": "Cheaper, faster model tiers traded off against frontier models for high-volume work and routing.",
-      "aliases": [
-        "model tiers",
-        "Haiku"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://www.anthropic.com/claude-haiku-5-5"
-    },
-    "storage-compute-separation": {
-      "name": "Storage–compute separation",
-      "what": "Decoupling a database's query compute from its durable storage layer so each scales independently, enabling scale-to-zero compute and non-contending analytical reads.",
-      "aliases": [
-        "disaggregated storage",
-        "shared-storage architecture"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://cloud.google.com/blog/products/databases/alloydbs-agentic-database-architecture/"
-    },
-    "streaming-feature-pipelines": {
-      "name": "Streaming feature pipelines",
-      "what": "Moving feature computation from batch refresh to near-real-time push, so behaviour from seconds ago can influence the next prediction.",
-      "aliases": [
-        "near-real-time features",
-        "push mode",
-        "NRT transform"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-09-25",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://airbnb.tech/ai-ml/the-guest-journey-updated-in-real-time-extending-airbnbs-sequence-recommender-with-chronon/"
-    },
-    "system-one-models": {
-      "name": "System One models (Jev)",
-      "what": "Schema-constrained models that return typed decisions and calibrated probabilities rather than text — built for classification, routing and gating, where they cannot answer outside the schema you define.",
-      "aliases": [
-        "Jev",
-        "TypeSafe AI",
-        "decision-only models",
-        "typed decision backend"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 2,
-      "first_seen": "2026-09-28",
-      "last_seen": "2026-10-12",
-      "channels": [
-        "#ai-chat",
-        "#random-eng"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://blog.cloudflare.com/clef-faster-cheaper-multimodal/"
-    },
-    "tla-plus": {
-      "name": "TLA+",
-      "what": "A formal specification language and model checker for concurrent and distributed systems — you state an invariant and it searches the state space for a sequence that violates it.",
-      "aliases": [
-        "temporal logic of actions",
-        "PlusCal",
-        "TLC"
-      ],
-      "familiarity": 2,
-      "status": "gap",
-      "rated_at": "2026-09-28",
-      "times_seen": 5,
-      "first_seen": "2026-09-25",
-      "last_seen": "2026-10-13",
-      "channels": [
-        "#engineering"
-      ],
-      "origins": [
-        "slack",
-        "foundations"
-      ],
-      "last_article": "https://brooker.co.za/blog/2024/04/17/formal.html"
-    },
-    "traffic-replay": {
-      "name": "Traffic capture and replay",
-      "what": "Recording real production queries and replaying them offline to load-test, capacity-plan and de-risk upgrades.",
-      "aliases": [
-        "workload replay",
-        "shadow traffic"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-09",
-      "last_seen": "2026-10-09",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://airbnb.tech/infrastructure/beyond-synthetic-testing-capturing-and-replaying-real-database-workloads-at-airbnb/"
-    },
-    "human-in-the-loop-approvals": {
-      "name": "Human-in-the-loop approvals",
-      "what": "Pausing an agent before a consequential tool call so a person can approve, reject or edit it.",
-      "aliases": [
-        "HITL",
-        "tool approval",
-        "approval gates"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-13",
-      "last_seen": "2026-10-13",
-      "channels": [
-        "#team-nexus"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://ysecurity.io/blog/human-in-the-loop-is-going-away/"
-    },
-    "step-up-authentication": {
-      "name": "Step-up authentication",
-      "what": "Requiring a fresh, stronger proof of identity before a sensitive action, without ending the existing session.",
-      "aliases": [
-        "sudo mode",
-        "re-authentication",
-        "max_age"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-13",
-      "last_seen": "2026-10-13",
-      "channels": [
-        "#team-nexus"
-      ],
-      "origins": [
-        "slack"
-      ],
-      "last_article": "https://workos.com/blog/step-up-authentication"
-    },
-    "media-over-quic": {
-      "name": "Media over QUIC",
-      "what": "An emerging IETF protocol that carries live and real-time media as tracks over QUIC, with relays that cache and fan out without parsing the media.",
-      "aliases": [
-        "MoQ"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-13",
-      "last_seen": "2026-10-13",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://engineering.fb.com/2026/10/12/video-engineering/shipping-media-over-quic-at-meta-scale-for-instagram-live-ingest/"
-    },
-    "elastic-inference-capacity": {
-      "name": "Elastic inference capacity",
-      "what": "Running optional, preemptible work on idle accelerators and shedding it instantly when the capacity is reclaimed.",
-      "aliases": [
-        "opportunistic capacity",
-        "preemptible inference"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-13",
-      "last_seen": "2026-10-13",
-      "channels": [],
-      "origins": [
-        "blogs"
-      ],
-      "last_article": "https://engineering.fb.com/2026/10/12/ml-applications/turning-opportunistic-ai-inference-capacity-into-better-ads-recommendations/"
-    },
-    "kv-cache-sharing": {
-      "name": "KV cache sharing",
-      "what": "Reusing or transferring a model's attention key/value cache between requests, agents or even models, so shared context isn't recomputed.",
-      "aliases": [
-        "prefix caching",
-        "cache-to-cache",
-        "KV handoff"
-      ],
-      "familiarity": null,
-      "status": "unrated",
-      "rated_at": null,
-      "times_seen": 1,
-      "first_seen": "2026-10-13",
-      "last_seen": "2026-10-13",
-      "channels": [],
-      "origins": [
-        "alphasignal"
-      ],
-      "last_article": "https://labs.ramp.com/research/latent-briefing-kv-cache/"
-    }
+ "version": 1,
+ "updated_at": "2026-10-14",
+ "concepts": {
+  "agent-context-engineering": {
+   "name": "Agent context engineering",
+   "what": "Deciding what an agent's context window actually holds — including whether to mount knowledge as a filesystem it reads on demand versus pre-rendering it into the system prompt, trading tokens against tool calls.",
+   "aliases": [
+    "context window curation",
+    "filesystem-mounted context",
+    "compaction",
+    "tool clearing"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-09-28",
+   "channels": [
+    "#team-ai"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+  },
+  "agent-hooks": {
+   "name": "Agent hooks",
+   "what": "Deterministic scripts that fire at fixed points in a coding agent's tool-call lifecycle to allow, block or steer actions.",
+   "aliases": [
+    "Claude Code hooks",
+    "PreToolUse"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [
+    "#engineering-nits"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://dev.to/ji_ai/how-i-automated-my-entire-claude-code-workflow-with-hooks-5cp8"
+  },
+  "agent-quality-monitoring": {
+   "name": "Agent quality monitoring",
+   "what": "Continuously sampling and reviewing a production agent's sessions, clustering failures and tracking whether fixes stick.",
+   "aliases": [
+    "outer loop",
+    "ambient quality agent",
+    "AQuA"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-12",
+   "last_seen": "2026-10-12",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://developers.googleblog.com/the-outer-loop-insights-first-an-ambient-quality-agent-that-diagnoses-your-production-agent/"
+  },
+  "ai-vulnerability-discovery": {
+   "name": "AI vulnerability discovery",
+   "what": "Using frontier models to scan code for exploitable bugs, with proofs of concept and suggested patches, in the style of OSS-Fuzz.",
+   "aliases": [
+    "OSS Scanner",
+    "coordinated vulnerability disclosure"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://www.anthropic.com/news/anthropic-cyber-mission"
+  },
+  "asr-vocabulary-biasing": {
+   "name": "ASR vocabulary biasing",
+   "what": "Supplying domain terms and proper nouns to a speech-to-text pipeline so it stops substituting phonetically similar, more common words.",
+   "aliases": [
+    "keyword boosting",
+    "glossary biasing",
+    "prompt conditioning for ASR"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-09-28",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://platform.openai.com/docs/guides/speech-to-text"
+  },
+  "assignment-problems": {
+   "name": "Assignment problems",
+   "what": "The optimisation class behind 'which shard on which host' — matching items to slots at minimum cost, solved with Hungarian-algorithm or min-cost-flow style methods.",
+   "aliases": [
+    "bipartite matching",
+    "min-cost flow",
+    "Hungarian algorithm"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-09-25",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://engineering.fb.com/2026/09/21/open-source/rebalancer-generic-high-performance-library-assignment-problems/"
+  },
+  "attention-head-shapes": {
+   "name": "Attention head shapes",
+   "what": "How you split a fixed attention budget between head count and head dimension — mathematically equivalent configurations can differ sharply in throughput depending on the accelerator's matrix-multiply dimensions.",
+   "aliases": [
+    "head dim",
+    "num heads",
+    "MXU tiling",
+    "hardware-aware architecture"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-09-28",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://developers.googleblog.com/reproducing-olmo-3-7b-pre-training-in-maxtext-case-study-of-large-scale-training-on-tpus/"
+  },
+  "ci-pipeline-tracing": {
+   "name": "CI pipeline tracing",
+   "what": "Emitting CI workflows, jobs and steps as nested OpenTelemetry spans, so slow or flaky builds can be inspected like application traces.",
+   "aliases": [
+    "CI observability",
+    "build traces"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-12",
+   "last_seen": "2026-10-12",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://www.cncf.io/blog/2026/09/08/distributed-tracing-for-ci-pipelines-without-touching-a-single-workflow-file/"
+  },
+  "comprehension-debt": {
+   "name": "Comprehension debt",
+   "what": "The growing gap between how much code a system contains and how much of it any person actually understands, made worse when code is generated faster than it can be reviewed.",
+   "aliases": [
+    "cognitive debt"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-12",
+   "last_seen": "2026-10-12",
+   "channels": [
+    "#ai-chat"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://oreillyradar.substack.com/p/comprehension-debt-the-hidden-cost"
+  },
+  "confidential-computing": {
+   "name": "Confidential computing",
+   "what": "Executing workloads inside hardware-attested encrypted VMs so even the infrastructure operator cannot read the data being processed — extending a device's trust boundary into the data centre.",
+   "aliases": [
+    "confidential VMs",
+    "TEE",
+    "trusted execution environment",
+    "remote attestation"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 2,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-10-09",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://research.google/blog/toward-provably-private-learning-from-federated-data/"
+  },
+  "contextual-integrity": {
+   "name": "Contextual integrity",
+   "what": "A privacy framework that treats privacy as whether an information flow is appropriate for its context, now being applied to AI agents.",
+   "aliases": [
+    "CI privacy framework",
+    "appropriate information flow"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-12",
+   "last_seen": "2026-10-12",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://research.google/blog/open-and-emergent-problems-in-agentic-privacy-and-security-a-contextual-angle/"
+  },
+  "dbt": {
+   "name": "dbt",
+   "what": "A tool that turns a folder of SQL SELECT statements into a tested, version-controlled pipeline that runs inside the warehouse in dependency order.",
+   "aliases": [
+    "data build tool",
+    "analytics engineering"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 4,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-14",
+   "channels": [],
+   "origins": [
+    "learn"
+   ],
+   "last_article": "https://medium.com/intercom-rad/to-dbt-or-not-to-dbt-4e2d04f27d3a",
+   "learn_request": true
+  },
+  "dns-tunnelling": {
+   "name": "DNS tunnelling",
+   "what": "Encoding data into DNS queries to move it past egress controls that only inspect HTTP — the canonical escape route from a network-isolated sandbox.",
+   "aliases": [
+    "DNS exfiltration",
+    "DNS C2",
+    "T1071.004"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-09-28",
+   "channels": [
+    "#ai-chat"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://attack.mitre.org/techniques/T1071/004/"
+  },
+  "evaluation-benchmarks": {
+   "name": "Evaluation benchmarks",
+   "what": "Constructing a scored set of realistic cases with an explicit rubric, so a model or prompt change can be measured rather than guessed at — eval coverage is what sets your change velocity.",
+   "aliases": [
+    "evals",
+    "rubric grading",
+    "backtesting",
+    "regression set"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-09-28",
+   "channels": [
+    "#team-ai",
+    "#engineering"
+   ],
+   "origins": [
+    "blogs",
+    "slack"
+   ],
+   "last_article": "https://openai.com/index/introducing-mentalhealthbench"
+  },
+  "feature-stores": {
+   "name": "Feature stores",
+   "what": "Infrastructure that computes, stores and serves ML features consistently between training and inference, so a model sees the same feature definition in both.",
+   "aliases": [
+    "Chronon",
+    "Feast",
+    "training-serving skew"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-09-25",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://airbnb.tech/ai-ml/the-guest-journey-updated-in-real-time-extending-airbnbs-sequence-recommender-with-chronon/"
+  },
+  "federated-learning": {
+   "name": "Federated learning",
+   "what": "Training models on data that stays on user devices, with only privatised updates leaving the device.",
+   "aliases": [
+    "FL"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://research.google/blog/toward-provably-private-learning-from-federated-data/"
+  },
+  "gitops": {
+   "name": "GitOps",
+   "what": "Deployment model where Git holds desired state and an in-cluster controller (e.g. Argo CD) continuously reconciles live state to it.",
+   "aliases": [
+    "Argo CD",
+    "pull-based deployment"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://medium.com/kotaicode/gitops-in-production-what-nobody-tells-you-about-argocd-d5a780f9820f"
+  },
+  "headless-browser-detection": {
+   "name": "Headless browser detection",
+   "what": "Telling automated (headless, CDP-driven) browsers from real users via API, rendering, network and HTTP/2 fingerprints.",
+   "aliases": [
+    "bot detection",
+    "browser fingerprinting"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [
+    "#ai-chat"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://datadome.co/threat-research/how-new-headless-chrome-the-cdp-signal-are-impacting-bot-detection/"
+  },
+  "hybrid-search-rrf": {
+   "name": "Hybrid search and Reciprocal Rank Fusion",
+   "what": "Combining vector and keyword (BM25) retrieval by merging ranked lists on position rather than raw scores.",
+   "aliases": [
+    "RRF",
+    "hybrid retrieval",
+    "BM25"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-12",
+   "last_seen": "2026-10-12",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://cloud.google.com/blog/products/databases/simplify-ai-search-with-alloydb-hybrid-search-and-rrf"
+  },
+  "load-shedding": {
+   "name": "Priority scheduling and load shedding",
+   "what": "Under overload, deliberately drop low-priority work so critical work keeps meeting its deadlines.",
+   "aliases": [
+    "Apollo 1202 alarm",
+    "graceful degradation",
+    "admission control"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 2,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-13",
+   "channels": [
+    "#random-eng"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://aws.amazon.com/builders-library/using-load-shedding-to-avoid-overload/"
+  },
+  "matryoshka-embeddings": {
+   "name": "Matryoshka embeddings",
+   "what": "Embeddings trained so a prefix of the vector is still useful, which lets you truncate dimensions to trade quality for storage.",
+   "aliases": [
+    "MRL",
+    "embedding truncation"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-12",
+   "last_seen": "2026-10-12",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://developers.googleblog.com/embeddinggemma-2-the-developer-guide/"
+  },
+  "model-context-protocol": {
+   "name": "Model Context Protocol",
+   "what": "An open protocol giving LLM agents a standard server interface for discovering and calling external tools and data sources.",
+   "aliases": [
+    "MCP",
+    "MCP server"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-09-25",
+   "channels": [
+    "#engineering",
+    "#team-ai",
+    "#ai-tooling"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://modelcontextprotocol.io/introduction"
+  },
+  "model-flops-utilisation": {
+   "name": "Model FLOPs utilisation",
+   "what": "The fraction of an accelerator's theoretical peak FLOPs a training run actually achieves — the headline efficiency number for large-scale training, and the thing hardware-aware architecture choices move.",
+   "aliases": [
+    "MFU",
+    "hardware utilisation",
+    "arithmetic intensity"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 2,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-10-14",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://developers.googleblog.com/reproducing-olmo-3-7b-pre-training-in-maxtext-case-study-of-large-scale-training-on-tpus/"
+  },
+  "multi-agent-orchestration": {
+   "name": "Multi-agent orchestration",
+   "what": "Coordinating several specialised models behind a controller that allocates work and scores results — often with a judge model supplying the reward and a persistent memory holding shared state.",
+   "aliases": [
+    "orchestrator",
+    "MLLM judge",
+    "factored reward",
+    "agent handoff"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 2,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-10-13",
+   "channels": [],
+   "origins": [
+    "blogs",
+    "alphasignal"
+   ],
+   "last_article": "https://mixed-news.com/en/claude-managed-agents-dynamic-workflows-1000-agents-permission-policies/"
+  },
+  "nats": {
+   "name": "NATS",
+   "what": "A lightweight, very high-throughput pub/sub messaging system using subject-based addressing rather than queues and exchanges.",
+   "aliases": [
+    "NATS JetStream"
+   ],
+   "familiarity": 8,
+   "status": "known",
+   "rated_at": "2026-09-28",
+   "times_seen": 1,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-09-25",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://docs.nats.io/nats-concepts/what-is-nats"
+  },
+  "network-time-security": {
+   "name": "Network Time Security (NTS)",
+   "what": "RFC 8915: a TLS key exchange plus authenticated NTP packets, so clients can verify where their time came from.",
+   "aliases": [
+    "RFC 8915",
+    "authenticated NTP"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://engineering.fb.com/2026/10/06/production-engineering/nts-authenticated-time-at-meta/"
+  },
+  "on-device-inference": {
+   "name": "On-device inference",
+   "what": "Running a model locally rather than calling a hosted API — enabling cloud-planner / local-executor splits where token-heavy work stays on the machine.",
+   "aliases": [
+    "local models",
+    "edge inference",
+    "LiteRT",
+    "Ollama",
+    "vLLM"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 2,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-10-09",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://developers.googleblog.com/ml-drift-next-gen-gpu-aiml-inference-at-the-edge/"
+  },
+  "partial-indexes": {
+   "name": "Partial indexes",
+   "what": "A Postgres index carrying a WHERE clause so it covers only matching rows — smaller, cheaper to write, and often the fix for one slow filtered query.",
+   "aliases": [
+    "filtered index",
+    "conditional index"
+   ],
+   "familiarity": 4,
+   "status": "learning",
+   "rated_at": "2026-09-28",
+   "times_seen": 1,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-09-25",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://www.postgresql.org/docs/current/indexes-partial.html"
+  },
+  "penetration-testing": {
+   "name": "Penetration testing",
+   "what": "An authorised, scoped simulated attack: testers chain small weaknesses toward a goal and report the path and fixes.",
+   "aliases": [
+    "pentest",
+    "red team",
+    "internal pentest"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 4,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-14",
+   "channels": [],
+   "origins": [
+    "learn"
+   ],
+   "last_article": "https://medium.com/@akshat161181/tryhackme-guided-pentest-web-walkthrough-b59d113a8b92",
+   "learn_request": true
+  },
+  "prompt-caching": {
+   "name": "Prompt caching",
+   "what": "Reusing the computed attention state of a repeated prompt prefix across requests, cutting both latency and token cost; explicit breakpoints make the cache something you design rather than infer.",
+   "aliases": [
+    "KV cache reuse",
+    "cache breakpoints",
+    "prefix caching"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-09-25",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://openai.com/index/better-prompt-caching-for-gpt-6"
+  },
+  "rl-post-training": {
+   "name": "RL post-training",
+   "what": "Training a model against a reward signal rather than labelled answers, to instil behaviour you can describe but not specify.",
+   "aliases": [
+    "RLHF",
+    "RLAIF",
+    "GRPO",
+    "reward modelling",
+    "RL environments"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 2,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-10-12",
+   "channels": [
+    "#ai-chat"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://openai.com/index/advancing-computer-use-with-ironclad/"
+  },
+  "slsa": {
+   "name": "SLSA (supply-chain provenance)",
+   "what": "Graded framework for proving how a software artifact was built: signed provenance, hosted and hermetic builds.",
+   "aliases": [
+    "software supply chain security"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [
+    "#toolshed"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://research.swtch.com/xz-timeline"
+  },
+  "small-language-models": {
+   "name": "Small language models",
+   "what": "Cheaper, faster model tiers traded off against frontier models for high-volume work and routing.",
+   "aliases": [
+    "model tiers",
+    "Haiku"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://www.anthropic.com/claude-haiku-5-5"
+  },
+  "storage-compute-separation": {
+   "name": "Storage–compute separation",
+   "what": "Decoupling a database's query compute from its durable storage layer so each scales independently, enabling scale-to-zero compute and non-contending analytical reads.",
+   "aliases": [
+    "disaggregated storage",
+    "shared-storage architecture"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-09-25",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://cloud.google.com/blog/products/databases/alloydbs-agentic-database-architecture/"
+  },
+  "streaming-feature-pipelines": {
+   "name": "Streaming feature pipelines",
+   "what": "Moving feature computation from batch refresh to near-real-time push, so behaviour from seconds ago can influence the next prediction.",
+   "aliases": [
+    "near-real-time features",
+    "push mode",
+    "NRT transform"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-09-25",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://airbnb.tech/ai-ml/the-guest-journey-updated-in-real-time-extending-airbnbs-sequence-recommender-with-chronon/"
+  },
+  "system-one-models": {
+   "name": "System One models (Jev)",
+   "what": "Schema-constrained models that return typed decisions and calibrated probabilities rather than text — built for classification, routing and gating, where they cannot answer outside the schema you define.",
+   "aliases": [
+    "Jev",
+    "SearchJev",
+    "TypeSafe AI",
+    "decision-only models",
+    "dual-system agents",
+    "typed decision backend"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 3,
+   "first_seen": "2026-09-28",
+   "last_seen": "2026-10-14",
+   "channels": [
+    "#ai-chat",
+    "#random-eng"
+   ],
+   "origins": [
+    "slack",
+    "learn"
+   ],
+   "last_article": "https://arxiv.org/abs/2610.05107",
+   "learn_request": true
+  },
+  "tla-plus": {
+   "name": "TLA+",
+   "what": "A formal specification language and model checker for concurrent and distributed systems — you state an invariant and it searches the state space for a sequence that violates it.",
+   "aliases": [
+    "temporal logic of actions",
+    "PlusCal",
+    "TLC"
+   ],
+   "familiarity": 2,
+   "status": "gap",
+   "rated_at": "2026-09-28",
+   "times_seen": 6,
+   "first_seen": "2026-09-25",
+   "last_seen": "2026-10-14",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack",
+    "foundations"
+   ],
+   "last_article": "https://buttondown.com/hillelwayne/archive/ai-is-a-gamechanger-for-tla-users/"
+  },
+  "traffic-replay": {
+   "name": "Traffic capture and replay",
+   "what": "Recording real production queries and replaying them offline to load-test, capacity-plan and de-risk upgrades.",
+   "aliases": [
+    "workload replay",
+    "shadow traffic"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-09",
+   "last_seen": "2026-10-09",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://airbnb.tech/infrastructure/beyond-synthetic-testing-capturing-and-replaying-real-database-workloads-at-airbnb/"
+  },
+  "human-in-the-loop-approvals": {
+   "name": "Human-in-the-loop approvals",
+   "what": "Pausing an agent before a consequential tool call so a person can approve, reject or edit it.",
+   "aliases": [
+    "HITL",
+    "tool approval",
+    "approval gates"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-13",
+   "last_seen": "2026-10-13",
+   "channels": [
+    "#team-nexus"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://ysecurity.io/blog/human-in-the-loop-is-going-away/"
+  },
+  "step-up-authentication": {
+   "name": "Step-up authentication",
+   "what": "Requiring a fresh, stronger proof of identity before a sensitive action, without ending the existing session.",
+   "aliases": [
+    "sudo mode",
+    "re-authentication",
+    "max_age"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 2,
+   "first_seen": "2026-10-13",
+   "last_seen": "2026-10-14",
+   "channels": [
+    "#team-nexus"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://workos.com/blog/step-up-authentication"
+  },
+  "media-over-quic": {
+   "name": "Media over QUIC",
+   "what": "An emerging IETF protocol that carries live and real-time media as tracks over QUIC, with relays that cache and fan out without parsing the media.",
+   "aliases": [
+    "MoQ"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-13",
+   "last_seen": "2026-10-13",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://engineering.fb.com/2026/10/12/video-engineering/shipping-media-over-quic-at-meta-scale-for-instagram-live-ingest/"
+  },
+  "elastic-inference-capacity": {
+   "name": "Elastic inference capacity",
+   "what": "Running optional, preemptible work on idle accelerators and shedding it instantly when the capacity is reclaimed.",
+   "aliases": [
+    "opportunistic capacity",
+    "preemptible inference"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-13",
+   "last_seen": "2026-10-13",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://engineering.fb.com/2026/10/12/ml-applications/turning-opportunistic-ai-inference-capacity-into-better-ads-recommendations/"
+  },
+  "kv-cache-sharing": {
+   "name": "KV cache sharing",
+   "what": "Reusing or transferring a model's attention key/value cache between requests, agents or even models, so shared context isn't recomputed.",
+   "aliases": [
+    "prefix caching",
+    "cache-to-cache",
+    "KV handoff"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-13",
+   "last_seen": "2026-10-13",
+   "channels": [],
+   "origins": [
+    "alphasignal"
+   ],
+   "last_article": "https://labs.ramp.com/research/latent-briefing-kv-cache/"
+  },
+  "monorepo-source-control": {
+   "name": "Agent-scale source control",
+   "what": "Version control built around an always-online server that answers history queries by API and serves sparse checkouts from caches, instead of every client holding a full git clone.",
+   "aliases": [
+    "Scion",
+    "centralised VCS",
+    "virtual checkouts",
+    "Piper",
+    "Sapling"
+   ],
+   "channels": [
+    "#ai-chat"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-14",
+   "last_seen": "2026-10-14",
+   "last_article": "https://www.anthropic.com/engineering/redesigning-source-control"
+  },
+  "break-glass-access": {
+   "name": "Break-glass access",
+   "what": "A pre-arranged emergency path to elevated access that grants nothing until used, alerts people when used, expires on its own and is reviewed after.",
+   "aliases": [
+    "emergency access",
+    "four-eyes review",
+    "two-person rule",
+    "JIT elevation"
+   ],
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-14",
+   "last_seen": "2026-10-14",
+   "last_article": "https://mattgoodrich.com/posts/break-glass-without-the-backdoor/"
+  },
+  "recsys-foundation-models": {
+   "name": "Recommendation foundation models",
+   "what": "One large central model trained on all of a platform's engagement data, whose knowledge is passed down to the small, fast models that do real-time ranking.",
+   "aliases": [
+    "GEM",
+    "RecSys scaling laws",
+    "knowledge transfer"
+   ],
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-14",
+   "last_seen": "2026-10-14",
+   "last_article": "https://engineering.fb.com/2026/10/13/ml-applications/metas-generative-ads-model-gem-scaling-the-central-model-and-compute-engine-for-frontier-ads-ai/"
+  },
+  "synthetic-training-data": {
+   "name": "Synthetic training data",
+   "what": "Training examples generated by a model, often grounded in real behaviour logs, used when there is no real labelled data yet.",
+   "aliases": [
+    "cold start",
+    "InPars",
+    "LLM-generated labels"
+   ],
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-14",
+   "last_seen": "2026-10-14",
+   "last_article": "https://airbnb.tech/ai-ml/castle-training-natural-language-search-before-the-first-real-query/"
   }
+ }
 }
