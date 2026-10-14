@@ -9,6 +9,12 @@
     <string>/bin/sh</string>
     <string>/Users/shlok/Documents/portfolio/scripts/tube-brief-push.sh</string>
   </array>
+  <!-- launchd's own errors (e.g. macOS blocking access to ~/Documents) land here. -->
+  <key>StandardOutPath</key>
+  <string>/tmp/tube-brief-push.launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/tube-brief-push.launchd.log</string>
+  <!-- Tube Brief commits at ~06:00; push half an hour later. -->
   <key>StartCalendarInterval</key>
   <dict>
     <key>Hour</key>

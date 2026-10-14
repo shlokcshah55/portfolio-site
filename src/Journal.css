@@ -764,6 +764,114 @@
   opacity: 0.78;
 }
 
+/* A locked entry asks for its password where the copy would be, in
+   the entry's own two colours. The field is a rule the reader types
+   on rather than a box, so it sits with the typography above it. */
+.entry__lock {
+  display: grid;
+  gap: 1rem;
+  max-width: 34rem;
+}
+
+.entry__lock-note {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  font-style: italic;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+.entry__lock-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 22rem;
+}
+
+.entry__lock-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.55rem 0;
+  font: inherit;
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+  border-radius: 0;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.entry__lock-input:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+.entry__lock-button {
+  flex: none;
+  padding: 0.55rem 1.15rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: inherit;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.entry__lock-button:hover,
+.entry__lock-button:focus-visible {
+  color: var(--bg);
+  background: var(--ink);
+}
+
+.entry__lock-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.entry__lock-error {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  opacity: 0.78;
+}
+
+.entry__lock.is-wrong .entry__lock-input {
+  animation: lock-shake 0.4s ease;
+}
+
+@keyframes lock-shake {
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+.journal-index__lock {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

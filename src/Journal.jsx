@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./Journal.css";
-import journal from "./data/journal/entries.json";
+/* entries.json, with locked entries swapped for ciphertext by the
+   journal-lock plugin in vite.config.js. */
+import journal from "virtual:journal";
 
 const ART = "/bookshelf/trim";
 
@@ -112,6 +114,64 @@ const RAIL_HINT = `${NUMBER_WORDS[ENTRIES.length] ?? ENTRIES.length} ${
 }${YEARS.length ? ` \u00b7 ${YEARS[0]}${YEARS.length > 1 ? `\u2013${YEARS.at(-1)}` : ""}` : ""}`;
 
 const ALL_ENTRIES = DISPLAY_BOOK ? [DISPLAY_BOOK, ...BOOKS] : BOOKS;
+
+/* Locked entries. A locked entry ships without its words: `locked`
+   holds AES-GCM ciphertext written by scripts/journal-lock.mjs, and the
+   key is derived from the password here in the browser. Both live in
+   this module-level vault for the page session only, so a reader is
+   asked once per visit rather than once per book, and nothing is kept
+   across a reload. */
+const LOCK = journal.lock ?? null;
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
+const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+const vault = { key: null, texts: new Map() };
+
+async function deriveKey(password) {
+  const material = await crypto.subtle.importKey(
+    "raw",
+    textEncoder.encode(password),
+    "PBKDF2",
+    false,
+    ["deriveKey"],
+  );
+  return crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      hash: "SHA-256",
+      salt: unb64(LOCK.salt),
+      iterations: LOCK.iterations,
+    },
+    material,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"],
+  );
+}
+
+async function decryptEntry(key, entry) {
+  const plain = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: unb64(entry.locked.iv) },
+    key,
+    unb64(entry.locked.data),
+  );
+  return JSON.parse(textDecoder.decode(plain));
+}
+
+/* A wrong password fails the GCM tag check and throws, which is the
+   only "is it right" test there is. Once one entry opens the rest are
+   opened too, since they share the key. */
+async function unlock(password, entry) {
+  const key = await deriveKey(password);
+  vault.texts.set(entry.id, await decryptEntry(key, entry));
+  vault.key = key;
+  for (const other of ALL_ENTRIES) {
+    if (other.locked && !vault.texts.has(other.id)) {
+      vault.texts.set(other.id, await decryptEntry(key, other));
+    }
+  }
+}
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
@@ -247,11 +307,70 @@ const SPIN_LIMIT = 55;
    and the text arriving a beat later — press.stripe.com holds its copy
    back half a second so the book lands first, and the pause is most of
    why the transition reads as composed rather than fast. */
-function JournalEntry({ entry, from, onBack }) {
+function LockForm({ entry, onUnlock }) {
+  const [password, setPassword] = useState("");
+  const [state, setState] = useState("idle");
+  const inputRef = useRef(null);
+
+  const submit = async (event) => {
+    event.preventDefault();
+    if (!password || state === "busy") return;
+    setState("busy");
+    try {
+      await unlock(password, entry);
+      onUnlock();
+    } catch {
+      setState("wrong");
+      setPassword("");
+      inputRef.current?.focus();
+    }
+  };
+
+  return (
+    <form
+      className={`entry__lock ${state === "wrong" ? "is-wrong" : ""}`}
+      onSubmit={submit}
+    >
+      <p className="entry__lock-note">This one is kept under a password.</p>
+      <div className="entry__lock-row">
+        <input
+          ref={inputRef}
+          className="entry__lock-input"
+          type="password"
+          value={password}
+          onChange={(event) => {
+            setPassword(event.target.value);
+            if (state === "wrong") setState("idle");
+          }}
+          aria-label="Password"
+          autoComplete="off"
+          autoFocus
+        />
+        <button
+          type="submit"
+          className="entry__lock-button"
+          disabled={state === "busy"}
+        >
+          {state === "busy" ? "Opening" : "Open"}
+        </button>
+      </div>
+      {state === "wrong" && (
+        <p className="entry__lock-error" role="alert">
+          That isn&rsquo;t it.
+        </p>
+      )}
+    </form>
+  );
+}
+
+function JournalEntry({ entry, from, onBack, onUnlock }) {
   const flyRef = useRef(null);
   const bookRef = useRef(null);
   const [landed, setLanded] = useState(false);
   const spin = useRef(REST_SPIN);
+  const [text, setText] = useState(() => vault.texts.get(entry.id) ?? null);
+  const isLocked = Boolean(entry.locked) && !text;
+  const copy = text ?? entry;
 
   /* FLIP: the book is laid out where it belongs, then offset back to
      the rect it was clicked at and released. Measuring after layout is
@@ -380,12 +499,24 @@ function JournalEntry({ entry, from, onBack }) {
           <span className="entry__date">{entry.date}</span>
           <h2 className="entry__title">{entry.title}</h2>
           <div className="entry__rule" aria-hidden="true" />
-          {entry.blurb && <p className="entry__blurb">{entry.blurb}</p>}
-          {entry.body?.map((para, i) => (
-            <p key={i} className="entry__para">
-              {para}
-            </p>
-          ))}
+          {isLocked ? (
+            <LockForm
+              entry={entry}
+              onUnlock={() => {
+                setText(vault.texts.get(entry.id));
+                onUnlock?.();
+              }}
+            />
+          ) : (
+            <>
+              {copy.blurb && <p className="entry__blurb">{copy.blurb}</p>}
+              {copy.body?.map((para, i) => (
+                <p key={i} className="entry__para">
+                  {para}
+                </p>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </section>
@@ -398,6 +529,9 @@ export default function Journal({ onClose, closing, style }) {
   const spaceRef = useRef(null);
   const trackRef = useRef(null);
   const [active, setActive] = useState(null);
+  /* Only so the index below can show blurbs once the password has
+     been given; the vault itself outlives this component. */
+  const [unlocked, setUnlocked] = useState(vault.key !== null);
 
   useFitShelf(railRef, spaceRef, trackRef, !closing);
 
@@ -491,8 +625,14 @@ export default function Journal({ onClose, closing, style }) {
               >
                 <span className="journal-index__date">{entry.date}</span>
                 <span className="journal-index__name">{entry.title}</span>
-                {entry.blurb && (
-                  <span className="journal-index__blurb">{entry.blurb}</span>
+                {entry.locked && !unlocked ? (
+                  <span className="journal-index__lock">Locked</span>
+                ) : (
+                  (vault.texts.get(entry.id)?.blurb ?? entry.blurb) && (
+                    <span className="journal-index__blurb">
+                      {vault.texts.get(entry.id)?.blurb ?? entry.blurb}
+                    </span>
+                  )
                 )}
               </button>
             </li>
@@ -506,6 +646,7 @@ export default function Journal({ onClose, closing, style }) {
           entry={active.entry}
           from={active.from}
           onBack={() => setActive(null)}
+          onUnlock={() => setUnlocked(true)}
         />
       )}
     </div>
