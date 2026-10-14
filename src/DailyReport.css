@@ -280,6 +280,35 @@
   text-wrap: pretty;
 }
 
+/* Secondary links the automation attaches to a story: a readable
+   version of a paper, the repo behind a post. */
+.story__also {
+  margin: -0.35rem 0 0.75rem;
+  padding: 0 0 0 1rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.story__also li {
+  margin: 0;
+}
+
+.story__also li::marker {
+  color: var(--soft);
+}
+
+.story__also a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 0.15em;
+}
+
+.story__also a:hover {
+  text-decoration-color: currentColor;
+}
+
 .story__meta {
   display: flex;
   justify-content: space-between;
