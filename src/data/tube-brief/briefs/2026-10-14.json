@@ -1,6 +1,6 @@
 {
  "date": "2026-10-14",
- "through_line": "Small fast deciders, bigger slow thinkers. Today's Learn paper gives routine search decisions to a cheap, calibrated model and saves the reasoning model for hard calls. Meta's ads stack does the same thing: one huge model passes its knowledge down to fast rankers. And Anthropic rebuilt source control because agents now make most of its changes.",
+ "through_line": "Small fast deciders, bigger slow thinkers. Today's Learn paper gives routine search decisions to a cheap, calibrated model and saves the reasoning model for hard calls. Meta's ads stack does the same thing: one huge model passes its knowledge down to fast rankers. And Anthropic rebuilt source control because agents now make most of its changes. Liquid AI's new model does the same inside one network: 24B parameters, but only 2B work on each token.",
  "sections": [
   {
    "key": "learn",
@@ -119,6 +119,27 @@
    ]
   },
   {
+   "id": "a36be9",
+   "section": "work",
+   "concept_label": "Postgres lock queue",
+   "title": "How one slow query plus one ALTER TABLE freezes a table",
+   "summary": "A walkthrough you can replay in psql: a long SELECT holds a weak lock, the ALTER TABLE waits for an exclusive one, and every read and write after it queues behind the ALTER. It shows how to see the blocking tree with pg_blocking_pids, why migrations should set lock_timeout under about 2 seconds, and why that only works with backoff and retry.",
+   "url": "https://xata.io/blog/migrations-and-exclusive-locks",
+   "also": [
+    {
+     "title": "Citus: seven tips for dealing with Postgres locks (2018)",
+     "url": "https://www.citusdata.com/blog/2018/02/22/seven-tips-for-dealing-with-postgres-locks/"
+    }
+   ],
+   "provenance": "#engineering · Wednesday",
+   "read_time": "~5 min",
+   "published": "2024-06-18",
+   "undated": false,
+   "concepts": [
+    "postgres-lock-queue"
+   ]
+  },
+  {
    "id": "6f4742",
    "section": "shipping",
    "concept_label": "Recommendation foundation models",
@@ -133,6 +154,27 @@
    "concepts": [
     "recsys-foundation-models",
     "model-flops-utilisation"
+   ]
+  },
+  {
+   "id": "550c4c",
+   "section": "shipping",
+   "concept_label": "Mixture of experts",
+   "title": "A 24B model that only wakes 2B parameters per token",
+   "summary": "Liquid AI's new open model has 64 experts per layer and routes each token to 4 of them. That gets it 184 tokens a second on a laptop and puts it ahead of bigger MoEs on tool-use benchmarks, though it still trails them on coding and knowledge tests. The post also lists its five-stage post-training recipe, ending in RL inside real agent harnesses. Read the visual guide alongside it for how routing and load balancing work.",
+   "url": "https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b",
+   "also": [
+    {
+     "title": "Maarten Grootendorst: a visual guide to mixture of experts (2024)",
+     "url": "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-mixture-of-experts"
+    }
+   ],
+   "provenance": "AlphaSignal · Wednesday",
+   "read_time": "~6 min",
+   "published": "2026-10-13",
+   "undated": false,
+   "concepts": [
+    "mixture-of-experts"
    ]
   },
   {
@@ -252,12 +294,12 @@
   },
   "gmail": {
    "status": "ok",
-   "newest": "2026-10-13",
-   "note": "AlphaSignal 13 Oct read; nothing used. Its featured voice model shipped in January and the rest was promotion"
+   "newest": "2026-10-14",
+   "note": "AlphaSignal 14 Oct read on the afternoon re-run; the LiquidAI MoE release used. Its lead story was Scion, already in the brief"
   },
   "slack": {
    "status": "ok",
-   "note": "24h window. All 5 core channels read. Secondary: #engineering-nits, #ai-tooling, #database-questions and #observability-chat read (quiet); the other 5 were skipped"
+   "note": "Morning 24h window plus an afternoon re-read of all 5 core channels. One new general concept (Postgres lock queue) from #engineering. Secondary: 4 read in the morning (quiet), 5 skipped"
   },
   "arxiv": {
    "status": "ok",
@@ -265,5 +307,5 @@
    "note": "Learn-box paper abstract fetched; the HTML version hit a fetch rate limit and was not checked"
   }
  },
- "source_ledger_text": "Fresh: Anthropic engineering (13 Oct, its first post since May) · Meta Eng (13 Oct) · Airbnb (13 Oct) · AlphaSignal (13 Oct, nothing used) · OpenAI and Anthropic news (nothing technical since 8 Oct) · Google Research (nothing new). Not re-checked: Google Developers, Google Cloud, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack: all 5 core channels read, but most messages were project chat, so only two general concepts came out. 4 secondary channels read, 5 skipped. New in the Learn box: an arXiv paper, filed under the existing System One models concept. 5 items after Learn, under the usual 8-12, because nothing else was strong enough."
+ "source_ledger_text": "Fresh: Anthropic engineering (13 Oct, its first post since May) · Meta Eng (13 Oct) · Airbnb (13 Oct) · AlphaSignal (14 Oct, one item used) · OpenAI and Anthropic news (nothing technical since 8 Oct) · Google Research (nothing new). Not re-checked: Google Developers, Google Cloud, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack: all 5 core channels read twice today (morning and afternoon); three general concepts came out. 4 secondary channels read, 5 skipped. Afternoon re-run added two items. Learn box unchanged. 7 items after Learn, still under 8-12, because nothing else was strong enough."
 }

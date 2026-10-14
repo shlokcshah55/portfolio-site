@@ -984,6 +984,49 @@
    "first_seen": "2026-10-14",
    "last_seen": "2026-10-14",
    "last_article": "https://airbnb.tech/ai-ml/castle-training-natural-language-search-before-the-first-real-query/"
+  },
+  "postgres-lock-queue": {
+   "name": "Postgres lock queue",
+   "what": "Lock requests on a table wait in arrival order, so a DDL statement stuck behind a long query also blocks every read and write that arrives after it.",
+   "aliases": [
+    "lock_timeout",
+    "ACCESS EXCLUSIVE lock",
+    "DDL lock contention"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-14",
+   "last_seen": "2026-10-14",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://xata.io/blog/migrations-and-exclusive-locks"
+  },
+  "mixture-of-experts": {
+   "name": "Mixture of experts",
+   "what": "A model architecture where a router sends each token to a few of many expert sub-networks, so compute per token tracks active parameters, not total parameters.",
+   "aliases": [
+    "MoE",
+    "sparse MoE",
+    "active parameters",
+    "A2B"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-14",
+   "last_seen": "2026-10-14",
+   "channels": [],
+   "origins": [
+    "alphasignal"
+   ],
+   "last_article": "https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b"
   }
  }
 }
