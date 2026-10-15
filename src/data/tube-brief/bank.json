@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated_at": "2026-10-14",
+ "updated_at": "2026-10-15",
  "concepts": {
   "agent-context-engineering": {
    "name": "Agent context engineering",
@@ -14,9 +14,9 @@
    "familiarity": null,
    "status": "unrated",
    "rated_at": null,
-   "times_seen": 1,
+   "times_seen": 2,
    "first_seen": "2026-09-28",
-   "last_seen": "2026-09-28",
+   "last_seen": "2026-10-15",
    "channels": [
     "#team-ai"
    ],
@@ -178,9 +178,9 @@
    "familiarity": null,
    "status": "unrated",
    "rated_at": null,
-   "times_seen": 1,
+   "times_seen": 2,
    "first_seen": "2026-10-12",
-   "last_seen": "2026-10-12",
+   "last_seen": "2026-10-15",
    "channels": [
     "#ai-chat"
    ],
@@ -247,7 +247,7 @@
     "learn"
    ],
    "last_article": "https://medium.com/intercom-rad/to-dbt-or-not-to-dbt-4e2d04f27d3a",
-   "learn_request": true
+   "learn_request": false
   },
   "dns-tunnelling": {
    "name": "DNS tunnelling",
@@ -447,13 +447,14 @@
    "familiarity": null,
    "status": "unrated",
    "rated_at": null,
-   "times_seen": 1,
+   "times_seen": 2,
    "first_seen": "2026-09-25",
-   "last_seen": "2026-09-25",
+   "last_seen": "2026-10-15",
    "channels": [
     "#engineering",
     "#team-ai",
-    "#ai-tooling"
+    "#ai-tooling",
+    "#team-agent"
    ],
    "origins": [
     "slack"
@@ -603,7 +604,7 @@
     "learn"
    ],
    "last_article": "https://medium.com/@akshat161181/tryhackme-guided-pentest-web-walkthrough-b59d113a8b92",
-   "learn_request": true
+   "learn_request": false
   },
   "prompt-caching": {
    "name": "Prompt caching",
@@ -753,7 +754,7 @@
     "learn"
    ],
    "last_article": "https://arxiv.org/abs/2610.05107",
-   "learn_request": true
+   "learn_request": false
   },
   "tla-plus": {
    "name": "TLA+",
@@ -766,9 +767,9 @@
    "familiarity": 2,
    "status": "gap",
    "rated_at": "2026-09-28",
-   "times_seen": 6,
+   "times_seen": 7,
    "first_seen": "2026-09-25",
-   "last_seen": "2026-10-14",
+   "last_seen": "2026-10-15",
    "channels": [
     "#engineering"
    ],
@@ -776,7 +777,7 @@
     "slack",
     "foundations"
    ],
-   "last_article": "https://buttondown.com/hillelwayne/archive/ai-is-a-gamechanger-for-tla-users/"
+   "last_article": "https://multigres.com/blog/tla-pg-rewind"
   },
   "traffic-replay": {
    "name": "Traffic capture and replay",
@@ -1027,6 +1028,175 @@
     "alphasignal"
    ],
    "last_article": "https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b"
+  },
+  "postgres-toast": {
+   "name": "Postgres TOAST",
+   "what": "How Postgres stores values too big for a row: it compresses them and, if still too large, moves them to a side table in chunks, which makes reading them several times slower.",
+   "aliases": [
+    "TOAST",
+    "oversized-attribute storage",
+    "SELECT *",
+    "large jsonb columns"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-15",
+   "last_seen": "2026-10-15",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://www.evanjones.ca/postgres-large-json-performance.html"
+  },
+  "mcp-skills-extension": {
+   "name": "Skills over MCP (SEP-2640)",
+   "what": "An MCP extension that lets a server publish Agent Skills as resources with per-file digests, so hosts can load instructions lazily and tie approval to exact content.",
+   "aliases": [
+    "SEP-2640",
+    "skill:// URIs",
+    "MCP skills extension"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-15",
+   "last_seen": "2026-10-15",
+   "channels": [
+    "#team-agent"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://rohitghumare.com/blog/mcp-skills-extension/"
+  },
+  "skill-prompt-injection": {
+   "name": "Skill-file prompt injection",
+   "what": "Hidden or malicious instructions inside skill and context files (SKILL.md, AGENTS.md) that an agent follows as if they were trusted guidance.",
+   "aliases": [
+    "agent context poisoning",
+    "ToxicSkills",
+    "Unicode tag smuggling"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-15",
+   "last_seen": "2026-10-15",
+   "channels": [
+    "#team-agent"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://embracethered.com/blog/posts/2026/scary-agent-skills/"
+  },
+  "context-resets": {
+   "name": "Context resets (fork-and-flush)",
+   "what": "Clearing an agent's chat history while keeping its workspace, often across several parallel branches, to escape the ruts that summarised context keeps it in.",
+   "aliases": [
+    "fork-and-flush",
+    "idea basins",
+    "context compaction vs clearing",
+    "context rotation"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-15",
+   "last_seen": "2026-10-15",
+   "channels": [],
+   "origins": [
+    "alphasignal"
+   ],
+   "last_article": "https://vincentvandeth.nl/blog/context-compaction-vs-clear-fork-and-flush"
+  },
+  "model-distillation": {
+   "name": "Model distillation attacks",
+   "what": "Training a cheaper model on a stronger model's outputs, especially its reasoning traces, without permission, and the defences that limit it.",
+   "aliases": [
+    "distillation",
+    "reasoning extraction",
+    "illicit distillation"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-15",
+   "last_seen": "2026-10-15",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://www.anthropic.com/research/distillation-defenses"
+  },
+  "validation-bottleneck": {
+   "name": "Validation bottleneck",
+   "what": "When AI produces documents and code faster than people can check them, so review becomes the limit; answered by agentic reviewers that split and verify long documents.",
+   "aliases": [
+    "Deep Review",
+    "AI peer review",
+    "agentic document review"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-15",
+   "last_seen": "2026-10-15",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://research.google/blog/analyzing-technical-documents-with-deep-review/"
+  },
+  "outcome-level-delegation": {
+   "name": "Outcome-level delegation",
+   "what": "Giving a model the goal behind a task (keep the app crash-free) plus the access and outside checks it needs, rather than one task at a time.",
+   "aliases": [
+    "altitude",
+    "being more ambitious with AI"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-15",
+   "last_seen": "2026-10-15",
+   "channels": [
+    "#ai-chat"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/"
+  },
+  "search-based-testing": {
+   "name": "Search-based testing",
+   "what": "Automated testing that treats finding bugs as a search problem, optimising several goals at once such as coverage, crashes found and short reproduction steps.",
+   "aliases": [
+    "Sapienz",
+    "multi-objective testing",
+    "SBST"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-15",
+   "last_seen": "2026-10-15",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://engineering.fb.com/2026/10/15/developer-tools/sapienz-issta-2026-impact-paper-award-meta/"
   }
  }
 }

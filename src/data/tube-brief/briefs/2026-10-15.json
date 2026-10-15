@@ -1,0 +1,292 @@
+{
+ "date": "2026-10-15",
+ "through_line": "Instructions are a supply chain now. MCP can now ship skills, the instruction files that teach an agent to use a server's tools, and today's reads show both halves: how hosts are meant to verify them, and how a skill file can hide commands a reviewer will never see. A Google post and the fork-and-flush study make a similar point about scale: checking work and resetting context matter as much as writing it.",
+ "sections": [
+  {
+   "key": "work",
+   "title": "Came up at work",
+   "sub": "Terms people used this week as if everyone already knew them."
+  },
+  {
+   "key": "shipping",
+   "title": "Shipping now"
+  },
+  {
+   "key": "reading",
+   "title": "Worth reading"
+  },
+  {
+   "key": "foundations",
+   "title": "Foundations",
+   "sub": "Background reading, not news. Shown with the year it was published."
+  }
+ ],
+ "items": [
+  {
+   "id": "c4eb32",
+   "section": "work",
+   "concept_label": "Postgres TOAST",
+   "title": "Why SELECT * gets slow once JSON columns pass 2 KB",
+   "url": "https://www.evanjones.ca/postgres-large-json-performance.html",
+   "summary": "Postgres squeezes each row into a quarter of an 8 KB page; anything bigger gets compressed, then moved out to a side table in chunks (TOAST). A 1M-row benchmark shows the cost: compressed values about 2x slower to query, out-of-line ones about 5x, and plain JSON far worse than JSONB. That is the hidden price of selecting a big column you never read.",
+   "also": [
+    {
+     "title": "pganalyze: Postgres performance cliffs with large JSONB values and TOAST",
+     "url": "https://pganalyze.com/blog/5mins-postgres-jsonb-toast"
+    }
+   ],
+   "provenance": "#engineering · Thursday",
+   "read_time": "~7 min",
+   "published": "2022-02-01",
+   "undated": false,
+   "concepts": [
+    "postgres-toast"
+   ]
+  },
+  {
+   "id": "023666",
+   "section": "work",
+   "concept_label": "Skills over MCP",
+   "title": "MCP servers can now ship the manual for their own tools",
+   "url": "https://rohitghumare.com/blog/mcp-skills-extension/",
+   "summary": "A walk through the new MCP Skills extension (SEP-2640): each file of a SKILL.md folder becomes a resource, listed with a SHA-256 digest, and the host fetches files only when a task needs them. The worked example puts lazy loading about 22x cheaper across twelve servers. Most of the post is the threat model: remote skills are untrusted text, approval is tied to every file's digest, and any changed file means asking again.",
+   "also": [],
+   "provenance": "#team-agent · Thursday",
+   "read_time": "~11 min",
+   "published": "2026-09-14",
+   "undated": false,
+   "concepts": [
+    "mcp-skills-extension",
+    "model-context-protocol"
+   ]
+  },
+  {
+   "id": "e6a3a6",
+   "section": "work",
+   "concept_label": "Skill-file prompt injection",
+   "title": "Hiding a backdoor in a skill that passes human review",
+   "url": "https://embracethered.com/blog/posts/2026/scary-agent-skills/",
+   "summary": "A security researcher hides instructions in a real, curated skill using invisible Unicode tag characters. A reviewer sees nothing, but the model reads them and runs a shell command. It covers why a skill's name and description are already in the prompt before it is ever used, why agents can write new skills for themselves, and a small scanner that flags long runs of hidden characters.",
+   "also": [
+    {
+     "title": "Cloud Security Alliance: SKILL.md and the new AI supply-chain attack surface",
+     "url": "https://labs.cloudsecurityalliance.org/research/csa-research-note-skill-md-agent-context-poisoning-20260506/"
+    }
+   ],
+   "provenance": "#team-agent · Thursday",
+   "read_time": "~8 min",
+   "published": "2026-02-11",
+   "undated": false,
+   "concepts": [
+    "skill-prompt-injection",
+    "mcp-skills-extension"
+   ]
+  },
+  {
+   "id": "f668a8",
+   "section": "shipping",
+   "concept_label": "Context resets for long-running agents",
+   "title": "Compaction keeps agents in a rut; fresh branches get them out",
+   "url": "https://vincentvandeth.nl/blog/context-compaction-vs-clear-fork-and-flush",
+   "summary": "A practitioner unpacks the new Fork-and-Flush paper. Agents running for days settle into one 'idea basin' even with periodic summarising. Splitting into four branches that keep the files but start with an empty chat lifted scores 66% over a single run at equal compute. The ablation is the useful bit: clearing alone or branching alone each gave only part of the gain. It ends with rules: write decisions to files, and rotate rather than compact.",
+   "also": [
+    {
+     "title": "The paper: Fork-and-Flush, Escaping Idea Basins in Autoresearch Agents",
+     "url": "https://arxiv.org/abs/2610.07447"
+    }
+   ],
+   "provenance": "AlphaSignal · 15 Oct",
+   "read_time": "~8 min",
+   "published": "2026-10-14",
+   "undated": false,
+   "concepts": [
+    "context-resets",
+    "agent-context-engineering"
+   ]
+  },
+  {
+   "id": "b407e8",
+   "section": "shipping",
+   "concept_label": "Distillation attacks",
+   "title": "How Anthropic cut reasoning stolen by distillers 10-100x",
+   "url": "https://www.anthropic.com/research/distillation-defenses",
+   "summary": "Training a model on another model's full reasoning traces is what makes copying it work: in their test, a model trained on full traces scored 80.4% on SWE-bench Verified against 71.8% on summarised ones. The post walks through defences that failed and what replaced them: reasoning that cannot be edited or carried between accounts, a two-stage classifier with under 0.1% false positives, and stricter limits for repeat offenders. It is open about the cost to normal users.",
+   "also": [],
+   "provenance": "Anthropic · 12 Oct",
+   "read_time": "~10 min",
+   "published": "2026-10-12",
+   "undated": false,
+   "concepts": [
+    "model-distillation"
+   ]
+  },
+  {
+   "id": "e5f78e",
+   "section": "shipping",
+   "concept_label": "AI review of long documents",
+   "title": "Google's agentic reviewer splits a paper up and checks each part",
+   "url": "https://research.google/blog/analyzing-technical-documents-with-deep-review/",
+   "summary": "AI conference submissions went from about 23,000 in 2023 to over 74,000 this year, and human review has not kept up. Deep Review's answer is a four-step pipeline: cut the document into parts, give more compute to the dense parts like proofs, check each part in parallel with the whole document in view, then a final agent checks the parts agree. It now takes design docs too.",
+   "also": [],
+   "provenance": "Google Research · 14 Oct",
+   "read_time": "~8 min",
+   "published": "2026-10-14",
+   "undated": false,
+   "concepts": [
+    "validation-bottleneck",
+    "comprehension-debt"
+   ]
+  },
+  {
+   "id": "5a696a",
+   "section": "reading",
+   "concept_label": "Delegating outcomes to models",
+   "title": "Four ways to ask more of a model than faster typing",
+   "url": "https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/",
+   "summary": "An engineering lead on Claude splits ambition into speed, altitude, depth and range, with prompts for each. Altitude means asking for the outcome, like 'keep the app crash-free' instead of 'fix this crash', and then building the access that makes it possible. Depth means making the model use the methods experts use and getting an outside check, not self-grading. Range means bringing in other fields' methods, not role-play.",
+   "also": [],
+   "provenance": "#ai-chat · Thursday",
+   "read_time": "~8 min",
+   "published": "2026-10-13",
+   "undated": false,
+   "concepts": [
+    "outcome-level-delegation"
+   ]
+  },
+  {
+   "id": "67a7a6",
+   "section": "reading",
+   "concept_label": "Search-based testing",
+   "title": "Sapienz, ten years on: from crash-hunting to agent testers",
+   "url": "https://engineering.fb.com/2026/10/15/developer-tools/sapienz-issta-2026-impact-paper-award-meta/",
+   "summary": "A short note on why a 2016 testing paper won an impact award. Sapienz searched app behaviour for three things at once: explore more screens, find more crashes, and keep the steps to reproduce short. It found 558 unknown crashes in 1,000 apps and now runs millions of tests a day at Meta. The ending is the interesting part: the same ideas are now being handed to LLM agents that judge whether behaviour looks right, not just whether it crashed.",
+   "also": [
+    {
+     "title": "The 2018 deep dive: Sapienz, intelligent automated testing at scale",
+     "url": "https://engineering.fb.com/2018/05/02/developer-tools/sapienz-intelligent-automated-software-testing-at-scale/"
+    }
+   ],
+   "provenance": "Meta Engineering · 15 Oct",
+   "read_time": "~2 min (deep dive ~10)",
+   "published": "2026-10-15",
+   "undated": false,
+   "concepts": [
+    "search-based-testing"
+   ]
+  },
+  {
+   "id": "89a50a",
+   "section": "foundations",
+   "concept_label": "TLA+",
+   "title": "TLA+ finds a two-crash data bug hiding in Postgres failover",
+   "url": "https://multigres.com/blog/tla-pg-rewind",
+   "summary": "A war story from Supabase's Postgres HA work. Two quick crashes let two standbys promote to the same timeline number separately. pg_rewind sees matching numbers, skips the rewind, and a node quietly keeps writes nobody else has. The TLA+ model is a few hundred lines with an 11-line invariant, and the model checker found the bug after about 7,000 states. The fix is a UUID per promotion.",
+   "also": [],
+   "provenance": "Gap filler · Multigres blog",
+   "read_time": "~15 min",
+   "published": "2026-05-08",
+   "undated": false,
+   "concepts": [
+    "tla-plus"
+   ]
+  }
+ ],
+ "bank_summary": {
+  "open_gaps": [
+   "tla-plus"
+  ],
+  "learning": [
+   "partial-indexes"
+  ],
+  "recently_closed": [
+   "nats"
+  ],
+  "most_met_unrated": "dbt",
+  "learning_requests": []
+ },
+ "source_ledger": {
+  "notion_learn_box": {
+   "status": "ok",
+   "newest": "2026-10-15",
+   "note": "Learn box empty today, so dbt, penetration testing and System One models are retired as learn requests (kept in the bank, unrated). First fetch timed out; the retry worked"
+  },
+  "slack": {
+   "status": "ok",
+   "note": "24h window. All 5 core channels read; #team-reliability had only reminders and #team-nexus was planning chatter. Concepts came from #engineering (TOAST), #team-agent (skills over MCP, skill-file injection) and #ai-chat (one shared essay). Secondary: 4 read (#ai-tooling, #random-eng, #database-questions, #observability-chat), all quiet; 5 skipped"
+  },
+  "gmail": {
+   "status": "ok",
+   "newest": "2026-10-15",
+   "note": "AlphaSignal 15 Oct read; fork-and-flush used. Gemini 4 Argon skipped: announced 30 Sep, outside the window. Levels.fyi not checked"
+  },
+  "meta_engineering": {
+   "status": "fresh",
+   "newest": "2026-10-15",
+   "note": "Sapienz post used"
+  },
+  "google_research": {
+   "status": "fresh",
+   "newest": "2026-10-14",
+   "note": "Deep Review used; Earth AI posts cut"
+  },
+  "anthropic_news": {
+   "status": "fresh",
+   "newest": "2026-10-12",
+   "note": "Distillation defences post (research section) used"
+  },
+  "anthropic_engineering": {
+   "status": "fresh",
+   "newest": "2026-10-13",
+   "note": "Scion post already covered yesterday"
+  },
+  "openai": {
+   "status": "fresh",
+   "newest": "2026-10-14",
+   "note": "Only an EU policy piece and deprecations since 8 Oct; cut"
+  },
+  "airbnb": {
+   "status": "fresh",
+   "newest": "2026-10-13",
+   "note": "Nothing new since CASTLE; the eval-driven development post has no date and looks like July, so it was skipped"
+  },
+  "google_developers": {
+   "status": "unchecked",
+   "newest": "2026-10-08",
+   "note": "Not re-checked this run"
+  },
+  "google_cloud": {
+   "status": "unchecked",
+   "note": "Not re-checked this run"
+  },
+  "elevenlabs": {
+   "status": "unchecked",
+   "newest": "2026-09-30",
+   "note": "Not re-checked this run"
+  },
+  "meta_ai": {
+   "status": "stale",
+   "newest": "2026-07-27",
+   "note": "Carried over, not re-checked"
+  },
+  "monzo": {
+   "status": "stale",
+   "newest": "2026-09-21",
+   "note": "Carried over, not re-checked"
+  },
+  "granola": {
+   "status": "stale",
+   "newest": "2026-09-02",
+   "note": "Carried over, not re-checked"
+  },
+  "ramp": {
+   "status": "stale",
+   "newest": "2026-04-10",
+   "note": "JS-rendered; not re-checked"
+  },
+  "gap_search": {
+   "status": "ok",
+   "note": "Only one gap (TLA+); the Multigres pg_rewind war story is new and isn't any earlier last_article"
+  }
+ },
+ "source_ledger_text": "Fresh: Meta Eng (15 Oct) · Google Research (14 Oct) · AlphaSignal (15 Oct) · Anthropic (12-13 Oct) · OpenAI (nothing technical) · Airbnb (nothing new). Not re-checked: Google Developers, Google Cloud, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack: all 5 core channels read, with 3 general concepts from #engineering and #team-agent and one essay from #ai-chat. 4 secondary channels read (quiet), 5 skipped. The Learn box is empty, so there's no Learn section and all three learn requests are retired. 9 items."
+}
