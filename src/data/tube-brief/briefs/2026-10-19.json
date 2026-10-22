@@ -1,0 +1,305 @@
+{
+  "date": "2026-10-19",
+  "through_line": "Put a checker next to the model. Meta's agents got more reliable once a plain, deterministic router took the decisions away from the LLM. Claude's quantum circuits came from a loop where a program graded every attempt. The NIST seed answer counts as solved only because every bit regenerates. Today's TLA+ paper makes the same argument for designs: check every interleaving instead of trusting a review.",
+  "sections": [
+    {
+      "key": "learn",
+      "title": "You asked to learn",
+      "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+    },
+    {
+      "key": "work",
+      "title": "Came up at work",
+      "sub": "Terms people used this week as if everyone already knew them."
+    },
+    {
+      "key": "shipping",
+      "title": "Shipping now"
+    },
+    {
+      "key": "reading",
+      "title": "Worth reading"
+    },
+    {
+      "key": "foundations",
+      "title": "Foundations",
+      "sub": "Background reading, not news. Shown with the year it was published."
+    }
+  ],
+  "items": [
+    {
+      "id": "296dfa",
+      "section": "learn",
+      "concept_label": "RBAC",
+      "title": "Where roles stop scaling: Grab deletes 200 of them",
+      "url": "https://engineering.grab.com/migrating-to-abac",
+      "summary": "Day three: how RBAC fails in real life. Grab's Kafka platform had a role, a group and a permission per team, so new joiners waited on manager approvals, 90-day renewals piled up, and group memberships drifted until some people had access they shouldn't and others lacked access they needed. They switched to attribute checks (your team code matches the resource's team code) in Open Policy Agent, deleting over 200 roles and 200 permissions. The catch they admit: it only works once every resource is tagged with an owner, which took three months. The second read is the other classic failure: 'engineer, plus one extra folder' or 'engineer, minus billing' doesn't fit any role, and how Infisical layered deny-then-allow rules on top without breaking existing grants.",
+      "also": [
+        {
+          "title": "Infisical: per-folder grants on top of roles, and the cache bug they caused (2026)",
+          "url": "https://infisical.com/blog/folder-based-rbac"
+        }
+      ],
+      "provenance": "Learn box · Grab engineering blog",
+      "read_time": "~10 min",
+      "published": "2023-03-09",
+      "undated": false,
+      "concepts": [
+        "rbac",
+        "abac"
+      ]
+    },
+    {
+      "id": "94e9b1",
+      "section": "work",
+      "concept_label": "Docker on a Mac",
+      "title": "Why Docker on a Mac is really a Linux VM",
+      "url": "https://blog.nicholas.clooney.io/posts/docker-on-macOS-with-colima/",
+      "summary": "Containers are a Linux kernel feature, so macOS can't run them directly. Docker Desktop and Colima both boot a small Linux VM and point your docker CLI at the engine inside it. This short write-up shows the split clearly: brew install docker gives you only the client, Colima supplies the VM, and the VM's disk is where your images actually live. Useful context for why switching tools leaves compose files and testcontainers untouched.",
+      "also": [],
+      "provenance": "#engineering · Monday",
+      "read_time": "~4 min",
+      "published": "2025-10-02",
+      "undated": false,
+      "concepts": [
+        "docker-on-macos-vm"
+      ]
+    },
+    {
+      "id": "6f5989",
+      "section": "work",
+      "concept_label": "Package manager internals",
+      "title": "How bun install got 7x faster than npm",
+      "url": "https://bun.com/blog/behind-the-scenes-of-bun-install",
+      "summary": "Bun treats installing packages as a systems problem rather than a JavaScript one. For the same install it counts about 4 million system calls for yarn, nearly 1 million for npm and 165k for bun. It explains the tricks one by one: binary-cached manifests, storing packages as flat arrays instead of nested objects to avoid cache misses, macOS clonefile to copy whole folders by sharing disk blocks, and hardlinks on Linux. Long but concrete, with numbers throughout. Written by the Bun team, so read the benchmarks as theirs.",
+      "also": [],
+      "provenance": "#engineering · Friday",
+      "read_time": "~25 min",
+      "published": "2025-09-10",
+      "undated": false,
+      "concepts": [
+        "package-manager-internals"
+      ]
+    },
+    {
+      "id": "6bd1e7",
+      "section": "work",
+      "concept_label": "Tracer bullets",
+      "title": "Build two cubes on a network before building the game",
+      "url": "https://betweencommits.substack.com/p/how-ai-is-changing-my-job-as-a-staff",
+      "summary": "A tracer bullet is a thin, real slice through every layer of a system, kept and grown rather than thrown away like a prototype. The post's example: before a multiplayer game, ship two cubes where one moves and the other player sees it live. Its rule of thumb is that tracer bullets test integration, proofs of concept test feasibility and prototypes test the look. The argument is that this matters more now that agents do the typing and the risk sits in how the parts join up. Short; the second read is the original Pragmatic Programmer idea, retold.",
+      "also": [
+        {
+          "title": "Prototypes get thrown out; tracer code doesn't (dev.to)",
+          "url": "https://dev.to/antjanus/prototypes-dont-get-thrown-out----write-tracer-bullet-code-instead-2ncn"
+        }
+      ],
+      "provenance": "#team-reliability · Monday",
+      "read_time": "~3 min",
+      "published": "2026-05-13",
+      "undated": false,
+      "concepts": [
+        "tracer-bullet"
+      ]
+    },
+    {
+      "id": "04b764",
+      "section": "shipping",
+      "concept_label": "Evaluator-in-the-loop search",
+      "title": "Claude redesigns quantum circuits against an automatic grader",
+      "url": "https://www.anthropic.com/research/designing-efficient-quantum-circuits",
+      "summary": "The setup is the reusable idea: a plain-English spec plus a program that checks each circuit for correctness and scores it on qubits times gates, then the model iterates with no human between rounds. One 53-hour run produced a new way to do modular inversion with 17x fewer gates for 12% more qubits. Another simulated 403 million decodings to show it only needed room for one saved value (19 qubits) instead of the worst case (665). The limits section is honest: the model was too cautious until it was told to try several different approaches in parallel.",
+      "also": [],
+      "provenance": "AlphaSignal · Anthropic research, 16 Oct",
+      "read_time": "~16 min",
+      "published": "2026-10-16",
+      "undated": false,
+      "concepts": [
+        "evaluator-in-the-loop"
+      ]
+    },
+    {
+      "id": "dbb53c",
+      "section": "shipping",
+      "concept_label": "Thin orchestrator",
+      "title": "Meta's agents got better when the router did less",
+      "url": "https://engineering.fb.com/2026/10/19/ml-applications/thin-orchestrator-ai-agent-architecture/",
+      "summary": "One agent loaded with all the domain knowledge started mixing up subsystems once it passed a context threshold. Without hand-written prompts per task, it succeeded only 10-20% of the time. Meta replaced it with a 1,300-line router that does no domain work: it follows a fixed seven-step protocol, and only one step calls a model, inside one of 14 specialists that each hold only their own context. New use cases are new workflow templates over the same specialists, not new agents. Column setup went from a day to under an hour.",
+      "also": [],
+      "provenance": "Meta Engineering · 19 Oct",
+      "read_time": "~8 min",
+      "published": "2026-10-19",
+      "undated": false,
+      "concepts": [
+        "thin-orchestrator",
+        "multi-agent-orchestration"
+      ]
+    },
+    {
+      "id": "7a6a34",
+      "section": "reading",
+      "concept_label": "Nothing-up-my-sleeve numbers",
+      "title": "The NIST curve seeds were a 1990s random() and a timestamp",
+      "url": "https://www.anthropic.com/research/ecdsa-curve-origins",
+      "summary": "The seeds behind P-256 and its siblings came without explanation for 25 years, which fed suspicion of a backdoor. The story here is the detective work. Every 32-bit word in four seeds had its top bit clear, which pointed to lrand48. A brute force over 2^17 hidden bits, then a lattice reduction for the truncated outputs, recovered the generator state. Stepping it back landed on Unix timestamps from 1997-98. Every 160-bit seed regenerates exactly, and the post includes code to reproduce them. It's a good lesson in why weak PRNG output is recognisable, and the finding makes a backdoor less plausible, not more.",
+      "also": [],
+      "provenance": "Anthropic Frontier Red Team · 16 Oct",
+      "read_time": "~10 min",
+      "published": "2026-10-16",
+      "undated": false,
+      "concepts": [
+        "nothing-up-my-sleeve-numbers"
+      ]
+    },
+    {
+      "id": "eeca3c",
+      "section": "reading",
+      "concept_label": "Training goodput",
+      "title": "Keeping a gigawatt training cluster running when parts keep failing",
+      "url": "https://engineering.fb.com/2026/10/19/data-center-engineering/inside-prometheus-meta-gigawatt-scale-supercluster/",
+      "summary": "Skip the hardware specs and read the reliability half. Going from 8-GPU to 72-GPU NVLink domains makes each failure hit 9x more GPUs, so each rack runs a 64-GPU slice and keeps 8 spares, which costs about 13% extra hardware. Interruptions peaked near 1,000 per 8K GPUs per day and came down 99% by sorting every halt by root cause. They measure 'goodput', the share of time the job is actually training: over 85% for pre-training. There's also a neat problem: tens of thousands of GPUs switching phases together swing power draw 30-40%.",
+      "also": [],
+      "provenance": "Meta Engineering · 19 Oct",
+      "read_time": "~17 min",
+      "published": "2026-10-19",
+      "undated": false,
+      "concepts": [
+        "training-goodput"
+      ]
+    },
+    {
+      "id": "d5f5b8",
+      "section": "reading",
+      "concept_label": "Semantic IDs",
+      "title": "Meta gives every ad a token spelling instead of an ID",
+      "url": "https://engineering.fb.com/2026/10/19/ml-applications/genrecs-tokenization-transforming-ads-recommendation-at-meta-with-stable-model-vocabulary/",
+      "summary": "Recommenders usually learn one opaque ID per item, so a new item starts with nothing learned. Here each ad's text and images are embedded, split into subspaces and snapped to codebook entries, giving a short token sequence where similar items share tokens. Next season's trail shoe inherits what was learned from last season's. A useful detail: cheap checks on the tokenizer alone (how pure the clusters are, how evenly items spread, how much of the codebook gets used) predicted ranking accuracy across eight versions. That means they can tune it without retraining the whole model.",
+      "also": [],
+      "provenance": "Meta Engineering · 19 Oct",
+      "read_time": "~7 min",
+      "published": "2026-10-19",
+      "undated": false,
+      "concepts": [
+        "semantic-ids",
+        "recsys-foundation-models"
+      ]
+    },
+    {
+      "id": "5e3f6e",
+      "section": "foundations",
+      "concept_label": "TLA+ · your gap",
+      "title": "The AWS paper that sold engineers on TLA+",
+      "url": "https://cacm.acm.org/research/how-amazon-web-services-uses-formal-methods/",
+      "summary": "The original case for TLA+ from the people who brought it into AWS. The DynamoDB story is the centrepiece: a data-loss bug whose shortest trigger took 35 steps had passed design reviews, code reviews and fault-injection testing, and the model checker found it. Also worth reading: why they pitched it as 'exhaustively testable pseudo-code', the switch from 'what might go wrong' to 'what must go right', and an honest section on what it can't catch, such as retry storms.",
+      "also": [],
+      "provenance": "Communications of the ACM (2015)",
+      "read_time": "~20 min",
+      "published": "2015-02-01",
+      "undated": false,
+      "concepts": [
+        "tla-plus"
+      ]
+    }
+  ],
+  "bank_summary": {
+    "open_gaps": [
+      "tla-plus"
+    ],
+    "learning": [
+      "partial-indexes"
+    ],
+    "recently_closed": [
+      "nats"
+    ],
+    "most_met_unrated": "penetration-testing",
+    "learning_requests": [
+      "rbac"
+    ]
+  },
+  "source_ledger": {
+    "notion_learn_box": {
+      "status": "ok",
+      "newest": "2026-10-16",
+      "note": "One bullet, \"Rbac\", still there. Day 3 of its arc: how it fails in real life. The Do and Think boxes were ignored"
+    },
+    "slack": {
+      "status": "ok",
+      "note": "72h window (Monday). All 5 core channels read. #engineering gave Docker-on-Mac and bun; #team-reliability gave tracer bullets. #ai-chat had nothing technical. #team-agent and #team-nexus were internal project talk only. A third-party breach notice in #engineering was skipped as an incident. LLM spend attribution came up but had no good narrative read, so it was cut. Secondary: #random-eng shared the ECDSA post (used via Anthropic). #data, #tech-scopes and #toolshed were internal only; the other 5 were empty"
+    },
+    "gmail": {
+      "status": "fresh",
+      "newest": "2026-10-19",
+      "note": "Monday roundup arrived 13:18 UTC. The quantum-circuits item was used via Anthropic's post. DeepSeek, Grok and the multi-agent town simulation were cut as launches or gossip. Levels.fyi not checked"
+    },
+    "meta_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-19",
+      "note": "Three posts on 19 Oct, all used: thin orchestrator, Prometheus and GenRecs tokenization"
+    },
+    "google_research": {
+      "status": "fresh",
+      "newest": "2026-10-16",
+      "note": "Nothing new since the wet-lab post (16 Oct, cut as lab automation)"
+    },
+    "google_developers": {
+      "status": "fresh",
+      "newest": "2026-10-19",
+      "note": "Only an ADK voice-agent tutorial (19 Oct), cut as a how-to"
+    },
+    "google_cloud": {
+      "status": "unchecked",
+      "newest": "2026-10-12",
+      "note": "Not checked this run"
+    },
+    "anthropic_news": {
+      "status": "fresh",
+      "newest": "2026-10-16",
+      "note": "Two research posts (16 Oct) used: quantum circuits and ECDSA seeds"
+    },
+    "anthropic_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-13",
+      "note": "Nothing new"
+    },
+    "openai": {
+      "status": "fresh",
+      "newest": "2026-10-15",
+      "note": "Nothing new found this week beyond earlier launches; nothing used"
+    },
+    "airbnb": {
+      "status": "unchecked",
+      "newest": "2026-10-13",
+      "note": "Feed not fetchable directly; not checked"
+    },
+    "elevenlabs": {
+      "status": "unchecked",
+      "newest": "2026-10-16",
+      "note": "Not re-checked"
+    },
+    "meta_ai": {
+      "status": "stale",
+      "newest": "2026-07-27",
+      "note": "Carried over, not re-checked"
+    },
+    "monzo": {
+      "status": "stale",
+      "newest": "2026-09-21",
+      "note": "Carried over, not re-checked"
+    },
+    "granola": {
+      "status": "stale",
+      "newest": "2026-09-02",
+      "note": "Carried over, not re-checked"
+    },
+    "ramp": {
+      "status": "stale",
+      "newest": "2026-04-10",
+      "note": "Carried over, not re-checked"
+    },
+    "gap_search": {
+      "status": "ok",
+      "note": "Only one gap (TLA+). One search found the 2015 AWS paper, which hadn't been shown before"
+    }
+  },
+  "source_ledger_text": "Fresh: Meta Eng (19 Oct, 3 used) · Anthropic (16 Oct, 2 used) · AlphaSignal Monday issue (19 Oct, 1 used via Anthropic) · Google Developers, Google Research, OpenAI (nothing usable). Not checked: Google Cloud, Airbnb, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack (72h): 3 concepts from #engineering and #team-reliability; every other channel was internal talk or empty. Learn box: RBAC, day 3. 9 items after Learn."
+}

@@ -1,0 +1,307 @@
+{
+ "date": "2026-10-22",
+ "through_line": "Who is the request really for? Two topics are new in your Learn box, RBAC and connector relays, and the work topics keep circling the same question. An agent querying data for someone who isn't allowed to see it is a confused deputy. A relay forwards requests into a private network, so it has to know who sent them. And a poisoned package runs with whatever access the person installing it has.",
+ "sections": [
+  {
+   "key": "learn",
+   "title": "You asked to learn",
+   "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+  },
+  {
+   "key": "work",
+   "title": "Came up at work",
+   "sub": "Terms people used this week as if everyone already knew them."
+  },
+  {
+   "key": "shipping",
+   "title": "Shipping now"
+  },
+  {
+   "key": "reading",
+   "title": "Worth reading"
+  },
+  {
+   "key": "foundations",
+   "title": "Foundations",
+   "sub": "Background reading, not news. Shown with the year it was published."
+  }
+ ],
+ "items": [
+  {
+   "id": "1f1f03",
+   "section": "learn",
+   "concept_label": "RBAC",
+   "title": "Gojek outgrew roles and rebuilt access as a graph",
+   "url": "https://medium.com/gojekengineering/we-built-a-zanzibar-style-iam-system-from-scratch-heres-everything-we-learned-bceb2686cad0",
+   "summary": "Day four, the hands-on and opinionated end of the arc. Gojek names the three ways RBAC breaks (hierarchies, per-widget granularity, conditions like 'only when resolved') and shows what replaced it: a Zanzibar-style graph in SpiceDB where a permission check asks whether a path of relationships links you to the resource. Roles survive as entities in the graph, and you see the actual schema. The best part is the hard lessons: they spent longer on the schema than on the Go service, writing to Postgres and SpiceDB together needed compensation events, and they benchmarked about 3.8 ms median checks at 10M relationships. It ends with a frank 'should you build this?' checklist.",
+   "also": [],
+   "provenance": "Learn box · Gojek engineering blog",
+   "read_time": "~14 min",
+   "published": "2026-05-02",
+   "undated": false,
+   "concepts": [
+    "rbac",
+    "rebac",
+    "abac"
+   ]
+  },
+  {
+   "id": "4b22e5",
+   "section": "learn",
+   "concept_label": "Connector relays",
+   "title": "Why the box in their network dials out to you",
+   "url": "https://goteleport.com/blog/remote-access-nat-cgnat-firewalls/",
+   "summary": "Day one: what a relay is and why people use one. You can't connect into a server behind NAT or a firewall you don't control, so you flip the direction: a small agent inside the network opens an outbound connection on port 443 to a relay, and the relay sends your requests back down that same connection. This piece walks through why inbound SSH and VPNs fail, then the three parts of the fix: the reverse tunnel, many protocols over one tunnel, and authorising by identity instead of IP. Teleport sells this, so skip the last section. The second link is how incident.io's own connector does it: an outbound SSH reverse tunnel to a relay, with an allowlist of destinations.",
+   "also": [
+    {
+     "title": "incident.io: how the connector proxy reaches private data sources (docs)",
+     "url": "https://docs.incident.io/integrations/proxy"
+    }
+   ],
+   "provenance": "Learn box · Teleport blog",
+   "read_time": "~12 min",
+   "published": "2026-05-28",
+   "undated": false,
+   "concepts": [
+    "connector-relays"
+   ]
+  },
+  {
+   "id": "c5f469",
+   "section": "work",
+   "concept_label": "Confused deputy",
+   "title": "An AI helper reset 20,000 accounts for whoever asked",
+   "url": "https://stackoverflow.blog/2026/06/17/ai-agents-expose-the-security-checks-you-never-actually-wrote/",
+   "summary": "The question came up of whether an agent can query a data source for someone who isn't allowed to query it themselves. That's the confused deputy problem, and this essay explains it through a real 2026 case: a support assistant re-bound recovery emails for anyone who asked, because the ownership check lived in a human's judgement rather than in code. The fix is short: check the principal from the authenticated session, not from the chat, scope the agent's token to each action, and put a hard gate on anything you can't undo. It pairs well with today's RBAC read.",
+   "also": [],
+   "provenance": "#team-nexus · Wednesday",
+   "read_time": "~8 min",
+   "published": "2026-06-17",
+   "undated": false,
+   "concepts": [
+    "confused-deputy",
+    "agent-least-privilege",
+    "rbac"
+   ]
+  },
+  {
+   "id": "de2784",
+   "section": "work",
+   "concept_label": "Post-quantum TLS",
+   "title": "Post-quantum TLS: the slow part is the extra round trip",
+   "url": "https://blog.cloudflare.com/automatic-key-exchange-for-origins/",
+   "summary": "Someone asked whether a message-bus client supports TLS 1.3 with a post-quantum handshake. This is the practitioner view of what that means: the hybrid X25519MLKEM768 key share is bigger, so if the client's first guess is wrong the server sends a HelloRetryRequest and the handshake costs an extra round trip. Cloudflare learned each origin's preference and cut retries from about 52% to 3.7%, saving 150 ms at p90. The 2023 follow-up is the war story: post-quantum ClientHellos no longer fit in one packet, and middleboxes that assumed they always would silently dropped them.",
+   "also": [
+    {
+     "title": "Cloudflare: the split-ClientHello breakage that slowed post-quantum rollout (2023)",
+     "url": "https://blog.cloudflare.com/post-quantum-to-origins/"
+    }
+   ],
+   "provenance": "#team-reliability · Wednesday",
+   "read_time": "~12 min",
+   "published": "2026-09-08",
+   "undated": false,
+   "concepts": [
+    "post-quantum-tls"
+   ]
+  },
+  {
+   "id": "5188df",
+   "section": "work",
+   "concept_label": "Progressive disclosure",
+   "title": "226 skills later: what PostHog learned about writing them",
+   "url": "https://posthog.com/newsletter/writing-agent-skills",
+   "summary": "Shared in the channel this week. PostHog's main point is that a good skill works like a router: the name and description say when to load it, and the body links out to references so the agent only reads what it needs. They found agents got worse as skill descriptions filled the context window. Also: don't spell out the steps, only the goal, the limits and the context the agent can't work out itself, and rebuild rotting skills from scratch instead of patching them. It ends with a prompt that finds skill-worthy workflows in your last 30 days.",
+   "also": [],
+   "provenance": "#ai-chat · Thursday",
+   "read_time": "~9 min",
+   "published": "2026-08-03",
+   "undated": false,
+   "concepts": [
+    "progressive-disclosure",
+    "mcp-skills-extension"
+   ]
+  },
+  {
+   "id": "d31a18",
+   "section": "shipping",
+   "concept_label": "AI-found PHP bugs",
+   "title": "A 14-year-old PHP memory bug, turned into an exploit with AI",
+   "url": "https://www.wiz.io/blog/php2shell-php-rce",
+   "summary": "PHP shipped emergency fixes on 21 October for two critical flaws in the engine itself. An out-of-memory error mid-request can leave a global pointing at freed memory, and the next request on the same worker uses it. That's a cross-request use-after-free, enough for unauthenticated code execution on stock WordPress, Drupal and Joomla. The bug class is old. What's new is the economics: the researchers say frontier models made adapting the exploit to each memory layout take hours, not months. OpenAI's companion post covers the coordinated disclosure.",
+   "also": [
+    {
+     "title": "OpenAI: Patch the Planet, coordinating the PHP disclosure",
+     "url": "https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/"
+    }
+   ],
+   "provenance": "AlphaSignal · Thursday · Wiz Research",
+   "read_time": "~9 min",
+   "published": "2026-10-21",
+   "undated": false,
+   "concepts": [
+    "ai-vulnerability-discovery",
+    "use-after-free"
+   ]
+  },
+  {
+   "id": "c7046f",
+   "section": "shipping",
+   "concept_label": "Supply-chain attacks",
+   "title": "How a poisoned PyPI release ran before any import",
+   "url": "https://www.wiz.io/blog/litellm-compromised-steals-credentials",
+   "summary": "A malicious LiteLLM release was up for under two hours and still got about 49,000 downloads. The mechanics are worth knowing. It dropped a .pth file and a sitecustomize.py into site-packages, and Python runs both every time an interpreter starts, so you didn't even have to import the library. The attackers got in by stealing GitHub CLI tokens from an exposed internal deployment's logs and used two accounts to approve their own release. Stolen cloud keys were being tested about 4.5 hours later. It's a strong case for pinning versions and treating release approval as a security boundary.",
+   "also": [],
+   "provenance": "#engineering · Wednesday · Wiz Research",
+   "read_time": "~7 min",
+   "published": "2026-10-21",
+   "undated": false,
+   "concepts": [
+    "software-supply-chain-attacks",
+    "slsa"
+   ]
+  },
+  {
+   "id": "9d2ca7",
+   "section": "shipping",
+   "concept_label": "Speculative decoding",
+   "title": "Why a small drafter model makes the big one 3x faster",
+   "url": "https://blog.fal.ai/eagle-4-technical-deepdive/",
+   "summary": "Inference speed dominated this week's AlphaSignal, with DeepSeek's production engine open-sourced and EAGLE-4 hitting 961 tokens/s. This deep dive explains the idea. At small batch sizes the GPU is starved for memory bandwidth, so a cheap drafter guesses several tokens and the big model checks them all in one pass, with the same output. EAGLE-4 drafts a tree of options instead of a single line and sizes the tree from measured GPU costs. The second read is a sceptic testing the related trick on a Mac: 92% faster on a dense model, 19% slower on a mixture-of-experts one.",
+   "also": [
+    {
+     "title": "I measured multi-token prediction on a Mac: +92% on one model, -19% on another",
+     "url": "https://dev.to/romantsisyk/eagle-4-does-not-run-on-a-mac-i-measured-mtp-instead-92-on-one-model-19-on-another-5g9a"
+    }
+   ],
+   "provenance": "AlphaSignal · Thursday",
+   "read_time": "~8 min",
+   "published": "2026-10-20",
+   "undated": false,
+   "concepts": [
+    "speculative-decoding",
+    "mixture-of-experts"
+   ]
+  },
+  {
+   "id": "e59253",
+   "section": "foundations",
+   "concept_label": "TLA+",
+   "title": "A 12-step bug that TLA+ caught and testing never would",
+   "url": "https://ahelwer.ca/post/2023-04-05-checkpoint-coordination/",
+   "summary": "Your one open gap. A Microsoft engineer designing snapshot leases for Azure DNS's Paxos cluster adds a 'clever optimisation', and the model checker finds a 12-step sequence of crashes and re-elections where two nodes both think they hold the lease. The post shows the two invariants he wrote, the exact trace, and why coding from a checked spec was 'the smoothest development experience of my career'. It's short, concrete, and a good model for writing your own first spec.",
+   "also": [],
+   "provenance": "Foundations · Andrew Helwer (2023)",
+   "read_time": "~9 min",
+   "published": "2023-04-05",
+   "undated": false,
+   "concepts": [
+    "tla-plus"
+   ]
+  }
+ ],
+ "bank_summary": {
+  "open_gaps": [
+   "tla-plus"
+  ],
+  "learning": [
+   "partial-indexes"
+  ],
+  "recently_closed": [
+   "nats"
+  ],
+  "most_met_unrated": "dbt",
+  "learning_requests": [
+   "rbac",
+   "connector-relays"
+  ]
+ },
+ "source_ledger": {
+  "notion_learn_box": {
+   "status": "ok",
+   "newest": "2026-10-20",
+   "note": "Two bullets: \"Rbac\" (day 4: hands-on and opinionated) and \"Connector relays\" (new, day 1: what it is and why). Do and Think boxes ignored"
+  },
+  "slack": {
+   "status": "ok",
+   "newest": "2026-10-22",
+   "note": "~40h window covering 21-22 Oct. All 5 core channels read. #team-nexus gave confused deputy, #team-reliability gave post-quantum TLS, #ai-chat gave the skills essay, #engineering gave the PyPI supply-chain attack. #team-agent was internal tracking talk. Secondary: #ai-tooling, #random-eng (PHP flaw, matched AlphaSignal), #observability-chat, #database-questions and #pointless-debates read, nothing lifted. Other 4 secondaries skipped"
+  },
+  "gmail": {
+   "status": "fresh",
+   "newest": "2026-10-22",
+   "note": "Thursday roundup (22 Oct, 14:13 UTC). Used: speculative decoding (DeepInfer, EAGLE-4) and the PHP flaw. Claude Duet, the humanoid robot and quantisation release were cut as launches. Levels.fyi not checked"
+  },
+  "meta_engineering": {
+   "status": "fresh",
+   "newest": "2026-10-19",
+   "note": "Nothing new since the 19 Oct posts already used"
+  },
+  "google_research": {
+   "status": "fresh",
+   "newest": "2026-10-21",
+   "note": "Only a maternal-care ultrasound post (21 Oct), cut as off-topic"
+  },
+  "google_developers": {
+   "status": "unchecked",
+   "newest": "2026-10-19",
+   "note": "Not re-checked"
+  },
+  "google_cloud": {
+   "status": "unchecked",
+   "newest": "2026-10-12",
+   "note": "Not checked"
+  },
+  "anthropic_news": {
+   "status": "fresh",
+   "newest": "2026-10-21",
+   "note": "Protein-binder research and governance news (18-21 Oct), cut as off-topic"
+  },
+  "anthropic_engineering": {
+   "status": "unchecked",
+   "newest": "2026-10-13",
+   "note": "Not re-checked; quiet"
+  },
+  "openai": {
+   "status": "fresh",
+   "newest": "2026-10-21",
+   "note": "Patch the Planet PHP disclosure (21 Oct), used as a second link"
+  },
+  "airbnb": {
+   "status": "unchecked",
+   "newest": "2026-10-13",
+   "note": "Not checked"
+  },
+  "elevenlabs": {
+   "status": "unchecked",
+   "newest": "2026-10-16",
+   "note": "Not checked"
+  },
+  "meta_ai": {
+   "status": "stale",
+   "newest": "2026-07-27",
+   "note": "Carried over, not re-checked"
+  },
+  "monzo": {
+   "status": "stale",
+   "newest": "2026-09-21",
+   "note": "Carried over, not re-checked"
+  },
+  "granola": {
+   "status": "stale",
+   "newest": "2026-09-02",
+   "note": "Carried over, not re-checked"
+  },
+  "ramp": {
+   "status": "stale",
+   "newest": "2026-04-10",
+   "note": "Carried over, not re-checked"
+  },
+  "gap_search": {
+   "status": "ok",
+   "newest": "2026-10-22",
+   "note": "Only one open gap (TLA+); one search, used the Helwer write-up"
+  }
+ },
+ "source_ledger_text": "Learn box: RBAC (day 4) and Connector relays (new). Fresh: AlphaSignal (22 Oct, 2 used) · OpenAI (21 Oct, 1 second link) · Google Research and Anthropic (21 Oct, nothing on-topic) · Meta Eng (nothing new since 19 Oct). Not checked: Google Developers, Google Cloud, Anthropic engineering, Airbnb, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack (~40h): 4 concepts from #team-nexus, #team-reliability, #ai-chat and #engineering. Secondary channels had nothing strong. 7 items after Learn, under the usual 8-12, because nothing else was good enough to include. No brief was written on 20-21 Oct."
+}

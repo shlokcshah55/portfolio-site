@@ -1,0 +1,286 @@
+{
+  "date": "2026-10-18",
+  "through_line": "The harness matters more than the model. Airbnb, Meta and Google all report that their gains came from what they built around the agent: shared context through tool servers, ways for the agent to check its own work, and pass/fail evals that block a bad merge. Today's Learn read makes the same move for permissions: Figma got control back by turning rules into data that can be checked.",
+  "sections": [
+    {
+      "key": "learn",
+      "title": "You asked to learn",
+      "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+    },
+    {
+      "key": "work",
+      "title": "Came up at work",
+      "sub": "Terms people used this week as if everyone already knew them."
+    },
+    {
+      "key": "shipping",
+      "title": "Shipping now"
+    },
+    {
+      "key": "reading",
+      "title": "Worth reading"
+    },
+    {
+      "key": "foundations",
+      "title": "Foundations",
+      "sub": "Background reading, not news. Shown with the year it was published."
+    }
+  ],
+  "items": [
+    {
+      "id": "facc04",
+      "section": "learn",
+      "concept_label": "RBAC",
+      "title": "How Figma pulled permissions out of one giant if/else",
+      "url": "https://www.figma.com/blog/how-we-rolled-out-our-own-permissions-dsl-at-figma/",
+      "summary": "Day two: how a permission check actually runs. Figma's single has_access? function had grown boolean flags nobody dared touch and was about 20% of database load, so they split every rule into small allow/deny policies (deny always wins) written as JSON, kept data loading separate, and evaluated lazily so a check stops as soon as one policy decides. Their debugger and null-comparison linter show what you get once rules are data rather than code. The second read is the short version of the golden rule: check permissions, never role names.",
+      "also": [
+        {
+          "title": "Contentsquare: check permissions, not roles, and keep grants additive (2018)",
+          "url": "https://contentsquare.com/blog/structure-permissions-saas-app/"
+        }
+      ],
+      "provenance": "Learn box · Figma engineering blog",
+      "read_time": "~17 min",
+      "published": "2024-03-13",
+      "undated": false,
+      "concepts": [
+        "rbac"
+      ]
+    },
+    {
+      "id": "d81483",
+      "section": "work",
+      "concept_label": "Internal agent platforms",
+      "title": "Airbnb wired its internal tools into one coding agent",
+      "url": "https://www.latent.space/p/airbnb",
+      "summary": "Airbnb's CTO on how 60% of their code came to be AI-authored: one internal agent that carries company context through MCP servers, a context graph of past projects that cut a six-to-nine-month build to about six weeks for the next similar one, and async agents that wake on monitoring alerts to do first-pass on-call triage. It also covers picking a different model per job: the strongest one for coding, small post-trained ones for latency-sensitive search.",
+      "also": [],
+      "provenance": "#team-nexus · Saturday",
+      "read_time": "~7 min",
+      "published": "2026-10-02",
+      "undated": false,
+      "concepts": [
+        "internal-agent-platform",
+        "model-context-protocol"
+      ]
+    },
+    {
+      "id": "87c512",
+      "section": "shipping",
+      "concept_label": "DPoP",
+      "title": "Google binds OAuth refresh tokens to a key, not a bearer",
+      "url": "https://developers.googleblog.com/announcing-dpop-support-for-google-oauth-securing-refresh-tokens/",
+      "summary": "A stolen bearer token works for whoever holds it. DPoP ties the token to a private key on the client, so a copy is useless without the key. The interesting part is the trade-off: Google binds only the long-lived refresh token, because checking a signature on every access-token call would cost too much CPU at their request rates. It also explains why one agent can't sign for another when tasks get handed down a chain.",
+      "also": [],
+      "provenance": "Google Developers · 15 Oct",
+      "read_time": "~5 min",
+      "published": "2026-10-15",
+      "undated": false,
+      "concepts": [
+        "dpop"
+      ]
+    },
+    {
+      "id": "dc9ed1",
+      "section": "shipping",
+      "concept_label": "Independent model evaluation",
+      "title": "Anthropic gives outside evaluators employee-level access",
+      "url": "https://www.anthropic.com/news/an-update-on-independent-evaluators",
+      "summary": "A team from METR now gets company laptops, internal tools and the right to publish without a veto. The post sets out three tiers of evaluator access and compares the setup to bank examiners who work inside the banks they supervise. It's a short look at how outside auditing of AI models is being set up, and where it stops: architecture and customer data stay off-limits.",
+      "also": [],
+      "provenance": "Anthropic · 15 Oct",
+      "read_time": "~5 min",
+      "published": "2026-10-15",
+      "undated": false,
+      "concepts": [
+        "independent-model-evaluation"
+      ]
+    },
+    {
+      "id": "bc7f5e",
+      "section": "reading",
+      "concept_label": "Next-concept modeling",
+      "title": "Stanford generates text coarse-to-fine, not token by token",
+      "summary": "Instead of predicting one token after another, NCM compresses text into a few levels of codes, rough gist first and detail last, and fills in each level in one parallel step. A step-through of a German-to-English translation shows rough drafts sharpening level by level. At around 100M parameters it runs 10-31x faster than strong diffusion language models at similar quality and solves the most hard Sudokus. It's still early and small-scale.",
+      "also": [
+        {
+          "title": "The paper (arXiv)",
+          "url": "https://arxiv.org/abs/2610.14162"
+        }
+      ],
+      "provenance": "AlphaSignal Sunday deep dive · Hazy Research, 12 Oct",
+      "read_time": "~10 min",
+      "published": "2026-10-12",
+      "undated": false,
+      "concepts": [
+        "next-concept-modeling"
+      ]
+    },
+    {
+      "id": "adb6c8",
+      "section": "reading",
+      "concept_label": "Human-on-the-loop",
+      "title": "Meta built a whole app with the engineer supervising the loop",
+      "url": "https://engineering.fb.com/2026/10/15/ml-applications/how-meta-built-forum-ai-native-engineering/",
+      "summary": "The Forum team let agents plan, build and test their own work, while engineers set goals and signed off. A task only counted as done once tests and visual checks passed. Their biggest gains came from giving the agent tools to inspect the live app instead of describing it, which sharply cut edits to the wrong screen. A stress-testing loop caught a memory problem before launch, and fixing it roughly halved memory use.",
+      "also": [],
+      "provenance": "Meta Engineering · 15 Oct",
+      "read_time": "~9 min",
+      "published": "2026-10-15",
+      "undated": false,
+      "concepts": [
+        "human-on-the-loop"
+      ]
+    },
+    {
+      "id": "663dce",
+      "section": "reading",
+      "concept_label": "Agent evaluation",
+      "title": "Testing agents properly: read 20 traces first, judge yes/no",
+      "url": "https://developers.googleblog.com/evaluating-ai-agents-moving-past-the-vibe-check/",
+      "summary": "A practical playbook for testing agents. Start by reading 20 traces by hand and marking every wrong tool call or loop. Turn those notes into pass/fail checks, because LLM judges can't hold a 1-to-5 scale steady. Count latency, tokens and tool calls alongside answer quality. Then block merges when any check that used to pass fails. Expect 50-60 small tweaks to reach production quality, not one big rewrite.",
+      "also": [],
+      "provenance": "Google Developers · 15 Oct",
+      "read_time": "~9 min",
+      "published": "2026-10-15",
+      "undated": false,
+      "concepts": [
+        "agent-evaluation"
+      ]
+    },
+    {
+      "id": "9dd69d",
+      "section": "reading",
+      "concept_label": "Multiplane network fabrics",
+      "title": "Meta's GPU network: eight planes per GPU, cable length matters",
+      "url": "https://engineering.fb.com/2026/10/12/open-source/ocp-summit-2026-powering-ai-with-open-innovations-in-scale-up-scale-out-and-scale-across-networks/",
+      "summary": "Skip the hardware launches and read the fabric sections. Each GPU now connects to eight separate network planes, and the network card spreads every packet across all of them, which removes a whole tier of switches. When one cluster stretches across buildings, lossless Ethernet needs buffer space in proportion to cable length, so the switches measure their own cables with timed probes and size the buffers to match.",
+      "also": [],
+      "provenance": "Meta Engineering · 12 Oct",
+      "read_time": "~12 min",
+      "published": "2026-10-12",
+      "undated": false,
+      "concepts": [
+        "multiplane-network-fabrics"
+      ]
+    },
+    {
+      "id": "000991",
+      "section": "foundations",
+      "concept_label": "TLA+",
+      "title": "The AWS DNS outage race, rebuilt as a TLA+ model",
+      "url": "http://muratbuffalo.blogspot.com/2025/11/tla-modeling-of-aws-outage-dns-race.html",
+      "summary": "Murat Demirbas models the race behind the October 2025 DynamoDB outage. The model only found the bug once one atomic step was split into three: receive a plan, apply it, clean up old plans. With that split, a slow worker applies a stale plan that the cleanup then deletes. It's a short worked example of how breaking up a step exposes a check-then-act race, and you can step through the failing trace in your browser.",
+      "also": [],
+      "provenance": "Gap: TLA+ (rated 2) · Metadata blog",
+      "read_time": "~6 min",
+      "published": "2025-11-05",
+      "undated": false,
+      "concepts": [
+        "tla-plus"
+      ]
+    }
+  ],
+  "bank_summary": {
+    "open_gaps": [
+      "tla-plus"
+    ],
+    "learning": [
+      "partial-indexes"
+    ],
+    "recently_closed": [
+      "nats"
+    ],
+    "most_met_unrated": "dbt",
+    "learning_requests": [
+      "rbac"
+    ]
+  },
+  "source_ledger": {
+    "notion_learn_box": {
+      "status": "ok",
+      "newest": "2026-10-16",
+      "note": "One bullet, \"Rbac\", still there. Day 2 of its arc: how a permission check actually runs. The Do and Think boxes were ignored"
+    },
+    "slack": {
+      "status": "ok",
+      "note": "24h window (Sunday). All 5 core channels read. #team-nexus gave internal agent platforms. #engineering had one security notice about a third-party tool, skipped because it's an incident. #ai-chat, #team-agent and #team-reliability were empty. All 9 secondary channels were read and all were empty. Re-run at 16:20 UTC: #ai-chat still empty since the morning; #engineering read timed out; other channels not re-read"
+    },
+    "gmail": {
+      "status": "fresh",
+      "newest": "2026-10-18",
+      "note": "Sunday deep dive on Next-Concept Modeling arrived 15:31 UTC and was added on a same-day re-run; the Hazy Research write-up is the main link. Levels.fyi not checked"
+    },
+    "meta_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-15",
+      "note": "Forum and OCP networking posts used. World Cup and Sapienz posts were already shown"
+    },
+    "google_research": {
+      "status": "fresh",
+      "newest": "2026-10-16",
+      "note": "Autonomous wet-lab post (16 Oct) and Research@ roundup (14 Oct) cut: lab automation and an event recap"
+    },
+    "google_developers": {
+      "status": "fresh",
+      "newest": "2026-10-15",
+      "note": "DPoP and agent-evaluation posts used. MCP in Apigee and ADK recipes cut as product announcements"
+    },
+    "google_cloud": {
+      "status": "unchecked",
+      "newest": "2026-10-12",
+      "note": "Not re-checked this run"
+    },
+    "anthropic_news": {
+      "status": "fresh",
+      "newest": "2026-10-15",
+      "note": "Independent evaluators post used. Singapore office and usage policy cut"
+    },
+    "anthropic_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-13",
+      "note": "Nothing new since the source-control post (already shown)"
+    },
+    "openai": {
+      "status": "fresh",
+      "newest": "2026-10-16",
+      "note": "Nothing new found beyond launches and partnerships; cut"
+    },
+    "airbnb": {
+      "status": "unchecked",
+      "newest": "2026-10-13",
+      "note": "Blog feed not fetchable directly. The Airbnb read came from a Latent Space interview found via search"
+    },
+    "elevenlabs": {
+      "status": "fresh",
+      "newest": "2026-10-16",
+      "note": "Certification, office launches and a changelog only; cut"
+    },
+    "meta_ai": {
+      "status": "stale",
+      "newest": "2026-07-27",
+      "note": "Carried over, not re-checked"
+    },
+    "monzo": {
+      "status": "stale",
+      "newest": "2026-09-21",
+      "note": "Carried over, not re-checked"
+    },
+    "granola": {
+      "status": "stale",
+      "newest": "2026-09-02",
+      "note": "Carried over, not re-checked"
+    },
+    "ramp": {
+      "status": "stale",
+      "newest": "2026-04-10",
+      "note": "Carried over, not re-checked"
+    },
+    "gap_search": {
+      "status": "ok",
+      "note": "Only one gap (TLA+); one search found a new worked example"
+    }
+  },
+  "source_ledger_text": "Fresh: Meta Eng (15 Oct, 2 used) · Google Developers (15 Oct, 2 used) · Anthropic (15 Oct, 1 used) · Google Research, OpenAI, ElevenLabs (nothing usable). AlphaSignal: Sunday deep dive (18 Oct, 1 used, added on an afternoon re-run). Not re-checked: Google Cloud, Airbnb's own blog. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack: quiet weekend. One concept from #team-nexus, every other channel empty. Learn box: RBAC, day 2. 8 items after Learn, at the low end of 8-12, because it's a quiet Sunday."
+}
