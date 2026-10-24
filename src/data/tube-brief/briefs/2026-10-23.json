@@ -1,0 +1,286 @@
+{
+ "date": "2026-10-23",
+ "through_line": "Write down what must always be true. Today's security post asks every new system to carry a file of its invariants, and the reads keep landing on the same move: Cursor checks code against a written list every day, Claude Security scans against a threat model your team edits, the Mergify TLA+ spec found a race by checking one invariant, and Anthropic turned fuzz tests into specs and proved them. The useful lesson is Mergify's: an invariant you can't make fail is checking nothing.",
+ "sections": [
+  {
+   "key": "learn",
+   "title": "You asked to learn",
+   "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+  },
+  {
+   "key": "work",
+   "title": "Came up at work",
+   "sub": "Terms people used this week as if everyone already knew them."
+  },
+  {
+   "key": "shipping",
+   "title": "Shipping now"
+  },
+  {
+   "key": "reading",
+   "title": "Worth reading"
+  },
+  {
+   "key": "foundations",
+   "title": "Foundations",
+   "sub": "Background reading, not news. Shown with the year it was published."
+  }
+ ],
+ "items": [
+  {
+   "id": "3374b5",
+   "section": "learn",
+   "concept_label": "RBAC",
+   "title": "The day roles start outnumbering the people they describe",
+   "url": "https://workos.com/blog/rbac-role-explosion-what-comes-after",
+   "summary": "Day five, how it fails. Role explosion is RBAC's quiet failure: nothing breaks, but every per-project or per-document exception mints a new role until a customer-defined roles table hits a million rows and slows every check. The piece pins the cause to one move (putting a resource id into a role name), shows why Zanzibar-style relationships fix it, and gives a migration you can actually run: keep RBAC for org-level access, add resource-scoped checks alongside it in shadow mode, and treat every disagreement as a bug found early. It's a WorkOS post, so the middle third is their product; the signal to watch and the shadow-mode rollout are the parts worth keeping.",
+   "also": [],
+   "provenance": "Learn box · WorkOS blog",
+   "read_time": "~8 min",
+   "published": "2026-08-06",
+   "undated": false,
+   "concepts": [
+    "rbac",
+    "rebac"
+   ]
+  },
+  {
+   "id": "b03b1e",
+   "section": "learn",
+   "concept_label": "Connector relays",
+   "title": "How two machines behind NATs end up talking, and when they relay",
+   "url": "https://tailscale.com/blog/how-nat-traversal-works",
+   "summary": "Day two, how it actually works. Yesterday's piece said 'dial out and let the relay send traffic back'. This is the classic long read on the machinery underneath: why stateful firewalls only let replies in, how STUN tells a machine its public address, why some NATs make direct paths impossible, and where a relay (Tailscale's DERP, the same role as TURN) takes over as a dumb pipe for encrypted packets. The key idea for a connector: the relay is both the fallback and the side channel that sets up the direct path. It's long, so it suits two rides; the first half covers the relay story.",
+   "also": [],
+   "provenance": "Learn box · Tailscale blog (2020)",
+   "read_time": "~35 min",
+   "published": "2020-08-21",
+   "undated": false,
+   "concepts": [
+    "connector-relays",
+    "nat-traversal"
+   ]
+  },
+  {
+   "id": "6e20b1",
+   "section": "work",
+   "concept_label": "Postgres connection pooling",
+   "title": "Five Postgres poolers and what each does with session state",
+   "url": "https://thebuild.com/blog/everyone-into-the-pool/",
+   "summary": "A pooler lets the app think it has 5,000 connections while the database sees 40, and transaction pooling is the trick. The catch is session state: SET, prepared statements, advisory locks and LISTEN belong to a backend you won't get back next time. This walks through Pgpool-II, PgBouncer, RDS Proxy, PgCat and PgDog by how each answers that one question: let it leak, pin the session, reset it, or parse your SQL and replay it. There's a scorecard at the end and a frank 'which one' section.",
+   "also": [],
+   "provenance": "#engineering · Friday",
+   "read_time": "~14 min",
+   "published": "2026-10-05",
+   "undated": false,
+   "concepts": [
+    "postgres-connection-pooling"
+   ]
+  },
+  {
+   "id": "ff2db3",
+   "section": "work",
+   "concept_label": "Read replica scaling",
+   "title": "One Postgres primary, fifty replicas and the limits OpenAI hit",
+   "url": "https://openai.com/index/scaling-postgresql/",
+   "summary": "A good read for when replica CPU is creeping up. OpenAI serves ChatGPT from a single Postgres primary and nearly 50 read replicas, and lists what broke along the way: a 12-table join behind past outages, cache-miss storms (fixed with a lock so only one reader refills a key), connection storms (PgBouncer cut connect time from 50 ms to 5 ms), and the primary's cost of streaming WAL to every replica, which is why they're testing cascading replication. It also covers workload isolation, putting low-priority traffic on separate instances so a bad launch can't starve the rest.",
+   "also": [],
+   "provenance": "#team-reliability · Friday",
+   "read_time": "~11 min",
+   "published": "2026-01-22",
+   "undated": false,
+   "concepts": [
+    "read-replica-scaling",
+    "postgres-connection-pooling",
+    "load-shedding"
+   ]
+  },
+  {
+   "id": "d88980",
+   "section": "work",
+   "concept_label": "Durable execution",
+   "title": "Why durable workflows must be deterministic, and which parts",
+   "url": "https://jack-vanlightly.com/blog/2025/11/24/demystifying-determinism-in-durable-execution",
+   "summary": "Temporal-style engines recover by re-running your function from the top and reusing the recorded results of steps that already happened. That one fact explains the confusing rule in the docs: control flow must be deterministic (a branch on the clock or a random number has to be recorded as a step), while side effects only need to be idempotent or tolerate running twice. Vanlightly separates the two cleanly, with diagrams, and it applies equally to Temporal, Restate and DBOS.",
+   "also": [],
+   "provenance": "#team-reliability · Friday",
+   "read_time": "~16 min",
+   "published": "2025-11-24",
+   "undated": false,
+   "concepts": [
+    "durable-execution"
+   ]
+  },
+  {
+   "id": "9bcc46",
+   "section": "work",
+   "concept_label": "Security invariants",
+   "title": "Write down what must always hold, then have agents check it daily",
+   "url": "https://cursor.com/blog/security-agents",
+   "summary": "The idea in practice: Cursor's security team keeps a list of security and compliance invariants and runs an agent daily that splits the repo into chunks, checks each against the list, remembers the last run, and reports drift with code locations. It sits beside three other agents: PR review gated on a written threat model, a scanner for old code, and automatic dependency bumps that run reachability analysis first. Short, with real numbers (3,000+ PRs reviewed a week, 200+ vulnerabilities caught).",
+   "also": [],
+   "provenance": "#engineering · Friday",
+   "read_time": "~5 min",
+   "published": "2026-03-16",
+   "undated": false,
+   "concepts": [
+    "security-invariants",
+    "threat-modeling"
+   ]
+  },
+  {
+   "id": "3964fa",
+   "section": "shipping",
+   "concept_label": "Threat modeling",
+   "title": "Claude Security now rescans as code changes, guided by your threat model",
+   "url": "https://claude.com/resources/articles/claude-security-now-scans-continuously-and-tracks-fixes",
+   "summary": "The interesting design choice is the threat model: the scanner writes one from your code, your team edits it (how it's deployed, what external users can reach), and later scans use it to decide severity and what to skip. Findings close themselves when a fix lands anywhere and reopen if the bug returns, and one project can span several repos to catch trust bugs between services. Read it beside the invariants piece above; it's the same idea run as a product.",
+   "also": [],
+   "provenance": "AlphaSignal · Thursday",
+   "read_time": "~5 min",
+   "published": "2026-10-21",
+   "undated": false,
+   "concepts": [
+    "threat-modeling",
+    "ai-vulnerability-discovery"
+   ]
+  },
+  {
+   "id": "1360bd",
+   "section": "reading",
+   "concept_label": "Formal verification",
+   "title": "Claude proved 123 libraries never crash, and found bugs fuzzing missed",
+   "url": "https://www.anthropic.com/research/formal-verification",
+   "summary": "Formal proofs used to cost far more than the code (seL4 took 2 person-years to build and 20 to verify). Here fuzz tests are turned into specs ('this never crashes for any input under 64 MB') and Claude writes the proofs against compiled RISC-V: 239 entry points, about 180 million lines of Rocq, checked by a small trusted proof checker. Along the way it found bugs a fuzzer would never reach, like one that needed a 20 MB input with a rare layout. The limitations section is the best part: what 'verified' does and doesn't promise.",
+   "also": [],
+   "provenance": "Anthropic research · Thursday",
+   "read_time": "~16 min",
+   "published": "2026-10-22",
+   "undated": false,
+   "concepts": [
+    "formal-verification",
+    "tla-plus"
+   ]
+  },
+  {
+   "id": "350c1c",
+   "section": "foundations",
+   "concept_label": "TLA+",
+   "title": "A merge queue spec found two bugs years of traffic missed",
+   "url": "https://mergify.com/blog/how-we-formally-verified-our-merge-queue-with-tla-plus",
+   "summary": "The most concrete TLA+ story yet: a first-time author used Claude to draft a spec from Python, then spent a week refining it. TLC checked 468,000 states in under a minute and found a race where a freeze could land between 'CI passed' and 'merge' and be ignored. You see real invariants (NoPRLost in one line), what they chose not to model and why, and a lesson worth keeping: two invariants were silently checking nothing. If you can't make TLC fail on demand, a pass is just silence.",
+   "also": [],
+   "provenance": "Gap · TLA+ (2026)",
+   "read_time": "~9 min",
+   "published": "2026-04-13",
+   "undated": false,
+   "concepts": [
+    "tla-plus"
+   ]
+  }
+ ],
+ "bank_summary": {
+  "open_gaps": [
+   "tla-plus"
+  ],
+  "learning": [
+   "partial-indexes"
+  ],
+  "recently_closed": [
+   "nats"
+  ],
+  "most_met_unrated": "rbac",
+  "learning_requests": [
+   "rbac",
+   "connector-relays"
+  ]
+ },
+ "source_ledger": {
+  "notion_learn_box": {
+   "status": "ok",
+   "newest": "2026-10-23",
+   "note": "Two bullets unchanged: \"Rbac\" (day 5: how it fails) and \"Connector relays\" (day 2: how it works). Do and Think boxes ignored"
+  },
+  "slack": {
+   "status": "ok",
+   "newest": "2026-10-23",
+   "note": "~28h window (22 Oct 12:00 to 23 Oct 17:00 UTC). All 5 core channels read. #engineering gave the Postgres pooler and security invariants; #team-reliability gave replica CPU and durable execution. #team-agent and #team-nexus were internal planning, nothing general lifted. Secondary: #database-questions, #ai-tooling and #observability-chat were empty in the window; the other 6 were skipped"
+  },
+  "gmail": {
+   "status": "fresh",
+   "newest": "2026-10-23",
+   "note": "Friday roundup (23 Oct, 14:13 UTC). Used: Claude Security. Cut: Meta byte-level models (the paper is from 11 Sep, outside the 7-day gate), the robot-duck demo, Grok phone control, the GPU instance launch. Levels.fyi not checked"
+  },
+  "meta_engineering": {
+   "status": "fresh",
+   "newest": "2026-10-19",
+   "note": "Nothing new since the 19 Oct posts already used"
+  },
+  "google_research": {
+   "status": "fresh",
+   "newest": "2026-10-21",
+   "note": "Nothing new since the maternal-care post (21 Oct)"
+  },
+  "google_developers": {
+   "status": "unchecked",
+   "newest": "2026-10-19",
+   "note": "Not re-checked"
+  },
+  "google_cloud": {
+   "status": "unchecked",
+   "newest": "2026-10-12",
+   "note": "Not checked"
+  },
+  "anthropic_news": {
+   "status": "fresh",
+   "newest": "2026-10-22",
+   "note": "Formal verification research (22 Oct) used. Agent Skills donation to the Agentic AI Foundation and a life-sciences call cut as org news"
+  },
+  "anthropic_engineering": {
+   "status": "unchecked",
+   "newest": "2026-10-13",
+   "note": "Not re-checked; quiet"
+  },
+  "openai": {
+   "status": "fresh",
+   "newest": "2026-10-21",
+   "note": "Only an ad-stack post (21 Oct), cut. The January Postgres post was used as the read for a work concept"
+  },
+  "airbnb": {
+   "status": "unchecked",
+   "newest": "2026-10-13",
+   "note": "Search showed nothing obviously new; per-post dates not checked"
+  },
+  "elevenlabs": {
+   "status": "unchecked",
+   "newest": "2026-10-16",
+   "note": "Not checked"
+  },
+  "meta_ai": {
+   "status": "stale",
+   "newest": "2026-07-27",
+   "note": "Carried over, not re-checked"
+  },
+  "monzo": {
+   "status": "stale",
+   "newest": "2026-09-21",
+   "note": "Carried over, not re-checked"
+  },
+  "granola": {
+   "status": "stale",
+   "newest": "2026-09-02",
+   "note": "Carried over, not re-checked"
+  },
+  "ramp": {
+   "status": "stale",
+   "newest": "2026-04-10",
+   "note": "Carried over, not re-checked"
+  },
+  "gap_search": {
+   "status": "ok",
+   "newest": "2026-10-23",
+   "note": "Only one open gap (TLA+); one search, used the Mergify merge-queue write-up"
+  }
+ },
+ "source_ledger_text": "Learn box: RBAC (day 5) and Connector relays (day 2). Fresh: AlphaSignal (23 Oct, 1 used) · Anthropic (22 Oct, 1 used) · OpenAI and Google Research (21 Oct, nothing on-topic) · Meta Eng (nothing new since 19 Oct). Not checked: Google Developers, Google Cloud, Anthropic engineering, Airbnb, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack (~28h): 4 concepts from #engineering and #team-reliability; secondary channels were quiet. 7 items after Learn, under the usual 8-12: the byte-model paper failed the date gate and nothing else was strong enough."
+}

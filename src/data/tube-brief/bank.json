@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated_at": "2026-10-22",
+ "updated_at": "2026-10-23",
  "concepts": {
   "agent-context-engineering": {
    "name": "Agent context engineering",
@@ -76,14 +76,14 @@
    "familiarity": null,
    "status": "unrated",
    "rated_at": null,
-   "times_seen": 2,
+   "times_seen": 3,
    "first_seen": "2026-10-09",
-   "last_seen": "2026-10-22",
+   "last_seen": "2026-10-23",
    "channels": [],
    "origins": [
     "blogs"
    ],
-   "last_article": "https://www.wiz.io/blog/php2shell-php-rce"
+   "last_article": "https://claude.com/resources/articles/claude-security-now-scans-continuously-and-tracks-fixes"
   },
   "asr-vocabulary-biasing": {
    "name": "ASR vocabulary biasing",
@@ -407,9 +407,9 @@
    "familiarity": null,
    "status": "unrated",
    "rated_at": null,
-   "times_seen": 3,
+   "times_seen": 4,
    "first_seen": "2026-10-09",
-   "last_seen": "2026-10-16",
+   "last_seen": "2026-10-23",
    "channels": [
     "#random-eng"
    ],
@@ -417,7 +417,7 @@
     "slack",
     "blogs"
    ],
-   "last_article": "https://aws.amazon.com/builders-library/using-load-shedding-to-avoid-overload/"
+   "last_article": "https://openai.com/index/scaling-postgresql/"
   },
   "matryoshka-embeddings": {
    "name": "Matryoshka embeddings",
@@ -769,9 +769,9 @@
    "familiarity": 2,
    "status": "gap",
    "rated_at": "2026-09-28",
-   "times_seen": 11,
+   "times_seen": 12,
    "first_seen": "2026-09-25",
-   "last_seen": "2026-10-22",
+   "last_seen": "2026-10-23",
    "channels": [
     "#engineering"
    ],
@@ -779,7 +779,7 @@
     "slack",
     "foundations"
    ],
-   "last_article": "https://ahelwer.ca/post/2023-04-05-checkpoint-coordination/"
+   "last_article": "https://www.anthropic.com/research/formal-verification"
   },
   "traffic-replay": {
    "name": "Traffic capture and replay",
@@ -1211,16 +1211,16 @@
    "familiarity": null,
    "status": "unrated",
    "rated_at": null,
-   "times_seen": 4,
+   "times_seen": 5,
    "first_seen": "2026-10-16",
-   "last_seen": "2026-10-22",
+   "last_seen": "2026-10-23",
    "channels": [
     "#team-agent"
    ],
    "origins": [
     "learn"
    ],
-   "last_article": "https://medium.com/gojekengineering/we-built-a-zanzibar-style-iam-system-from-scratch-heres-everything-we-learned-bceb2686cad0",
+   "last_article": "https://workos.com/blog/rbac-role-explosion-what-comes-after",
    "learn_request": true
   },
   "react-compiler": {
@@ -1697,14 +1697,14 @@
    "familiarity": null,
    "status": "unrated",
    "rated_at": null,
-   "times_seen": 1,
+   "times_seen": 2,
    "first_seen": "2026-10-22",
-   "last_seen": "2026-10-22",
+   "last_seen": "2026-10-23",
    "channels": [],
    "origins": [
     "learn"
    ],
-   "last_article": null
+   "last_article": "https://workos.com/blog/rbac-role-explosion-what-comes-after"
   },
   "connector-relays": {
    "name": "Connector relays",
@@ -1718,14 +1718,14 @@
    "familiarity": null,
    "status": "unrated",
    "rated_at": null,
-   "times_seen": 1,
+   "times_seen": 2,
    "first_seen": "2026-10-22",
-   "last_seen": "2026-10-22",
+   "last_seen": "2026-10-23",
    "channels": [],
    "origins": [
     "learn"
    ],
-   "last_article": "https://goteleport.com/blog/remote-access-nat-cgnat-firewalls/",
+   "last_article": "https://tailscale.com/blog/how-nat-traversal-works",
    "learn_request": true
   },
   "confused-deputy": {
@@ -1856,6 +1856,156 @@
     "alphasignal"
    ],
    "last_article": "https://blog.fal.ai/eagle-4-technical-deepdive/"
+  },
+  "nat-traversal": {
+   "name": "NAT traversal",
+   "what": "Techniques (STUN, hole punching, relays like TURN or DERP) that let two machines behind NATs and firewalls establish a connection.",
+   "aliases": [
+    "hole punching",
+    "STUN",
+    "TURN",
+    "DERP"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "channels": [],
+   "origins": [
+    "learn"
+   ],
+   "last_article": "https://tailscale.com/blog/how-nat-traversal-works"
+  },
+  "postgres-connection-pooling": {
+   "name": "Postgres connection pooling",
+   "what": "A proxy that multiplexes many client connections onto a few database connections, usually per transaction, at the cost of handling per-session state.",
+   "aliases": [
+    "PgBouncer",
+    "PgDog",
+    "transaction pooling"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://thebuild.com/blog/everyone-into-the-pool/"
+  },
+  "read-replica-scaling": {
+   "name": "Read replica scaling",
+   "what": "Spreading read traffic across replicas that replay the primary's write-ahead log, with limits from replica lag and the primary's cost of streaming WAL to each one.",
+   "aliases": [
+    "read replicas",
+    "cascading replication",
+    "replica lag"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "channels": [
+    "#team-reliability"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://openai.com/index/scaling-postgresql/"
+  },
+  "durable-execution": {
+   "name": "Durable execution",
+   "what": "Running a function so it survives crashes by recording each step's result and replaying the function from the top on recovery.",
+   "aliases": [
+    "Temporal",
+    "workflow engine",
+    "Restate",
+    "DBOS"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "channels": [
+    "#team-reliability"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://jack-vanlightly.com/blog/2025/11/24/demystifying-determinism-in-durable-execution"
+  },
+  "security-invariants": {
+   "name": "Security invariants",
+   "what": "Properties the code must always uphold (for example, every query is scoped to the caller's organisation), written down so humans and agents can check code against them.",
+   "aliases": [
+    "security.md",
+    "invariant checking"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "channels": [
+    "#engineering"
+   ],
+   "origins": [
+    "slack"
+   ],
+   "last_article": "https://cursor.com/blog/security-agents"
+  },
+  "threat-modeling": {
+   "name": "Threat modeling",
+   "what": "Writing down what a system protects, who could attack it and how, so reviews and scanners can judge which findings actually matter.",
+   "aliases": [
+    "threat model",
+    "STRIDE"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "channels": [],
+   "origins": [
+    "alphasignal"
+   ],
+   "last_article": "https://cursor.com/blog/security-agents"
+  },
+  "formal-verification": {
+   "name": "Formal verification",
+   "what": "Proving mathematically that code meets a specification for every possible input, with the proof checked by a small trusted checker.",
+   "aliases": [
+    "Rocq",
+    "Coq",
+    "Lean",
+    "Verus",
+    "proof assistant"
+   ],
+   "familiarity": null,
+   "status": "unrated",
+   "rated_at": null,
+   "times_seen": 1,
+   "first_seen": "2026-10-23",
+   "last_seen": "2026-10-23",
+   "channels": [],
+   "origins": [
+    "blogs"
+   ],
+   "last_article": "https://www.anthropic.com/research/formal-verification"
   }
  }
 }
