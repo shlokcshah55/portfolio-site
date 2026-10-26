@@ -1,0 +1,278 @@
+{
+  "date": "2026-10-26",
+  "through_line": "Several reads today are about how much one actor can do alone. A self-registered account became a car dealer. A proxy keeps API keys out of reach of the app server. A second engineer has to approve destructive commands in prod. Separately, Postgres wraparound and the softmax cliff are both fixed-width numbers running out of room.",
+  "sections": [
+    {
+      "key": "learn",
+      "title": "You asked to learn",
+      "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+    },
+    {
+      "key": "work",
+      "title": "Came up at work",
+      "sub": "Terms people used this week as if everyone already knew them."
+    },
+    {
+      "key": "shipping",
+      "title": "Shipping now"
+    },
+    {
+      "key": "foundations",
+      "title": "Foundations",
+      "sub": "Background reading, not news. Shown with the year it was published."
+    }
+  ],
+  "items": [
+    {
+      "id": "cf1f9f",
+      "section": "learn",
+      "concept_label": "RBAC",
+      "title": "Sign up as a car dealer, then unlock anyone's car",
+      "url": "https://samcurry.net/hacking-kia",
+      "summary": "Day eight, how it fails in the wild. The role model on paper was fine: owners control their own cars, and dealers can look up a car and reassign who owns it. What broke was how you got the dealer role. The dealer portal accepted the same self-service sign-up as the owner site, so any member of the public could get a dealer token. From there it took four API calls to go from a licence plate to the owner's contact details, demote the owner and add yourself, with no alert to the victim. The lesson to keep: an RBAC check is only as strong as the path that assigns the role.",
+      "also": [],
+      "provenance": "Learn box · Sam Curry",
+      "read_time": "~8 min",
+      "published": "2024-09-20",
+      "undated": false,
+      "concepts": [
+        "rbac",
+        "broken-access-control"
+      ]
+    },
+    {
+      "id": "879813",
+      "section": "learn",
+      "concept_label": "Connector relays",
+      "title": "Why a relay should forget connections, not the connector",
+      "url": "https://blog.cloudflare.com/argo-tunnels-that-live-forever/",
+      "summary": "Day five, the relay operator's side of the design. Cloudflare's first tunnel design tied the public DNS record to the live outbound connection. So every restart or network blip deleted the record and rebuilt it through the control plane, and a slow control plane could turn a routine restart into an outage. The redesign gives each connector a permanent name and ID, treats connections as disposable, and lets the edge keep serving from the last config if the control plane is down. It also drops long-lived account tokens from the box in the customer's network. The useful idea for any relay: separate the stable identity from the flaky pipe.",
+      "also": [],
+      "provenance": "Learn box · Cloudflare blog",
+      "read_time": "~7 min",
+      "published": "2020-10-13",
+      "undated": false,
+      "concepts": [
+        "connector-relays",
+        "control-plane-data-plane-split"
+      ]
+    },
+    {
+      "id": "547b9f",
+      "section": "work",
+      "concept_label": "Postgres XID wraparound",
+      "title": "The day Postgres ran out of transaction IDs",
+      "url": "https://blog.sentry.io/transaction-id-wraparound-in-postgres/",
+      "summary": "Postgres stamps rows with a 32-bit transaction counter, and vacuum has to 'freeze' old rows before about two billion transactions pass. If it falls behind, the database stops taking writes to avoid corrupting itself. This is Sentry's 2015 write-up of exactly that: most of a working day read-only, a bet to let the running vacuum finish rather than restart, and a last-resort truncate of one huge, non-critical table that brought writes back in five minutes. It ends with the autovacuum settings they changed, plus a correction about memory that turned out to be capped and unused. It explains why an 'anti-wraparound' vacuum can't be cancelled and can block migrations.",
+      "also": [],
+      "provenance": "#engineering · Monday",
+      "read_time": "~9 min",
+      "published": "2015-07-23",
+      "undated": false,
+      "concepts": [
+        "postgres-xid-wraparound"
+      ]
+    },
+    {
+      "id": "e8a8fd",
+      "section": "work",
+      "concept_label": "Secret-injecting proxy",
+      "title": "Keep API keys out of the app with a secret-injecting proxy",
+      "url": "https://fly.io/blog/tokenized-tokens/",
+      "summary": "Fly.io's rule: secrets can only ever leave their main app, never be added to it. They list three common ways apps hold third-party credentials: an encrypted database column, a vault the app reads from, or a small service per secret. Then they describe a fourth: store each secret encrypted to a tiny HTTP proxy's public key, send outbound calls through that proxy, and let it decrypt the secret and add it to the request. A compromised app server holds only blobs it can't use. Each secret is pinned to allowed hosts so an attacker can't redirect it to their own server. The same trick covers the OAuth login flow.",
+      "also": [],
+      "provenance": "#team-nexus · Monday",
+      "read_time": "~11 min",
+      "published": "2023-07-12",
+      "undated": false,
+      "concepts": [
+        "secret-injecting-proxy"
+      ]
+    },
+    {
+      "id": "e063ed",
+      "section": "work",
+      "concept_label": "Two-person rule",
+      "title": "Get a second operator to approve before touching prod",
+      "url": "https://carlin.blog/posts/2pr/",
+      "summary": "A short ex-AWS argument for requiring a second engineer's explicit approval before any destructive manual action in production. The reasoning: the riskiest moment is a tired on-call engineer using broad permissions to try something untested. Big outages like S3 in 2017 and Facebook in 2021 started with a manual command. He is honest that there's no hard data, and he leaves two cases open for teams to decide calmly in advance: pre-tested runbooks, and nights when no second person is around. It sits next to role-based access: roles decide who may act, and this decides who must agree.",
+      "also": [],
+      "provenance": "#engineering · Monday",
+      "read_time": "~5 min",
+      "published": "2025-12-01",
+      "undated": false,
+      "concepts": [
+        "two-person-rule",
+        "break-glass-access"
+      ]
+    },
+    {
+      "id": "d7ec49",
+      "section": "work",
+      "concept_label": "Rich-text editor models",
+      "title": "Why every serious web editor stops trusting contentEditable",
+      "url": "https://news.ycombinator.com/item?id=11487667",
+      "summary": "A long Hacker News thread about Medium's essay on building its editor. People who have shipped editors argue it out. The consensus: use the browser's editable area only to capture keystrokes. Keep your own document model, apply every edit as a function on that model, and redraw the HTML from it. That is the design ProseMirror, Draft.js and Trix share. You get the war stories too: pasting from Word, Android keyboards changing the page without sending events, and grammar extensions fighting the editor. Good context for why editor libraries feel the way they do.",
+      "also": [
+        {
+          "title": "Why ContentEditable is terrible: how the Medium editor works (2014)",
+          "url": "https://medium.engineering/why-contenteditable-is-terrible-122d8a40e480"
+        }
+      ],
+      "provenance": "#team-agent · Monday",
+      "read_time": "~12 min",
+      "published": "2016-04-13",
+      "undated": false,
+      "concepts": [
+        "rich-text-editor-models"
+      ]
+    },
+    {
+      "id": "e6c74e",
+      "section": "shipping",
+      "concept_label": "Softmax numerics",
+      "title": "Cross-entropy quietly rounds to zero on your most confident examples",
+      "url": "https://dev.to/frankchu/i-measured-softmaxs-precision-cliff-in-fp32-cross-entropy-returns-exactly-zero-at-margin-16-47k3",
+      "summary": "A DeepMind paper last week said the standard softmax and cross-entropy code in every major framework has two floating-point bugs. This post checks them in NumPy. Once the correct class leads by about 16 in fp32 (about 5.5 in bf16), the loss and that class's gradient round to exactly zero while the other gradients don't, so they stop summing to zero. The exact cutoff moves between 15.8 and 16.7 depending on summation order. In distillation, gradients carry a fixed noise floor of about 5e-8. The fix is about 40 lines: define the target gradient as minus the sum of the others.",
+      "also": [
+        {
+          "title": "A Fix for Softmax and Cross-Entropy (the paper's project page)",
+          "url": "https://jonbarron.info/softmaxfix/"
+        }
+      ],
+      "provenance": "AlphaSignal · Monday",
+      "read_time": "~6 min",
+      "published": "2026-10-23",
+      "undated": false,
+      "concepts": [
+        "softmax-numerical-stability"
+      ]
+    },
+    {
+      "id": "297d6f",
+      "section": "foundations",
+      "concept_label": "TLA+ · your gap",
+      "title": "TLA+ in one sitting: safety, liveness, and where it stops",
+      "url": "https://reasonable.io/blog/tla-tutorial/",
+      "summary": "The cleanest intro yet to the parts earlier case studies skipped. It uses a three-machine leader election with a clickable playground. Safety means 'never two leaders': the checker explores all 38 states, and letting a node vote twice produces a six-step counterexample. Liveness means 'a leader is eventually elected' and needs fairness assumptions. Then come the limits: the checker only covers small fixed sizes, the spec is not the code, and some properties can't be expressed at all. It closes on proofs in Verus and AI writing them. The last part is the authors pitching their own work, but the first half is the explainer you've been missing.",
+      "also": [],
+      "provenance": "Gap search · Reasonable",
+      "read_time": "~9 min",
+      "published": "2026-09-25",
+      "undated": false,
+      "concepts": [
+        "tla-plus",
+        "formal-verification"
+      ]
+    }
+  ],
+  "bank_summary": {
+    "open_gaps": [
+      "tla-plus"
+    ],
+    "learning": [
+      "partial-indexes"
+    ],
+    "recently_closed": [
+      "nats"
+    ],
+    "most_met_unrated": "rbac",
+    "learning_requests": [
+      "rbac",
+      "connector-relays"
+    ]
+  },
+  "source_ledger": {
+    "notion_learn_box": {
+      "status": "ok",
+      "newest": "2026-10-23",
+      "note": "Two bullets unchanged: \"Rbac\" (day 8: how it fails, via the role-assignment path) and \"Connector relays\" (day 5: the operator's design side). Do and Think boxes ignored"
+    },
+    "slack": {
+      "status": "ok",
+      "newest": "2026-10-26",
+      "note": "Monday window, 72h (23 Oct 17:00 UTC to 26 Oct 17:00 UTC). All 5 core channels read: #engineering, #team-nexus and #team-agent gave four concepts; #ai-chat had only links and chat; #team-reliability had only bot reminders. Secondary: #random-eng had a React Compiler tip (already covered on 16 Oct), #database-questions and #ai-tooling were empty. The other 6 were skipped"
+    },
+    "gmail": {
+      "status": "fresh",
+      "newest": "2026-10-26",
+      "note": "Monday roundup (26 Oct, 13:46 UTC). The softmax story was used. The sandbox-escape story is OpenAI's 23 Oct post, which was already shown on 24 Oct. Kimi K3.1 (another MoE launch), the GPU unlock mod and the quantised DeepSeek release were cut: no narrative read. Levels.fyi not checked"
+    },
+    "meta_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-26",
+      "note": "OCP Summit networking talks (26 Oct) cut because it overlaps the 18 Oct OCP networking item"
+    },
+    "google_research": {
+      "status": "fresh",
+      "newest": "2026-10-23",
+      "note": "Nothing new since the 23 Oct TB screening post (off-topic)"
+    },
+    "google_developers": {
+      "status": "unchecked",
+      "newest": "2026-10-22",
+      "note": "Not checked"
+    },
+    "google_cloud": {
+      "status": "unchecked",
+      "newest": "2026-10-12",
+      "note": "Not checked"
+    },
+    "anthropic_news": {
+      "status": "fresh",
+      "newest": "2026-10-22",
+      "note": "Only IPO and org news since 22 Oct, cut"
+    },
+    "anthropic_engineering": {
+      "status": "unchecked",
+      "newest": "2026-10-13",
+      "note": "Not re-checked; quiet"
+    },
+    "openai": {
+      "status": "fresh",
+      "newest": "2026-10-26",
+      "note": "26 Oct is a customer story and 21-22 Oct are ad-stack and FDE posts: all cut as low on concepts. The 23 Oct posts were already used"
+    },
+    "airbnb": {
+      "status": "unchecked",
+      "newest": "2026-10-13",
+      "note": "Not checked"
+    },
+    "elevenlabs": {
+      "status": "unchecked",
+      "newest": "2026-10-16",
+      "note": "Not checked"
+    },
+    "meta_ai": {
+      "status": "stale",
+      "newest": "2026-07-27",
+      "note": "Carried over, not re-checked"
+    },
+    "monzo": {
+      "status": "stale",
+      "newest": "2026-09-21",
+      "note": "Carried over, not re-checked"
+    },
+    "granola": {
+      "status": "stale",
+      "newest": "2026-09-02",
+      "note": "Carried over, not re-checked"
+    },
+    "ramp": {
+      "status": "stale",
+      "newest": "2026-04-10",
+      "note": "Carried over, not re-checked"
+    },
+    "gap_search": {
+      "status": "ok",
+      "newest": "2026-09-25",
+      "note": "Only one open gap (TLA+). One search; used Reasonable's TLA+ explainer (Sep 2026), new to the list"
+    },
+    "fetch_notes": {
+      "status": "partial",
+      "newest": "2026-10-26",
+      "note": "The Medium editor essay returned an empty page, so the HN discussion is the main link and the essay is the second link. The blog index pages couldn't be fetched directly and were found through search"
+    }
+  },
+  "source_ledger_text": "Learn box: RBAC (day 8) and Connector relays (day 5). Slack (72h over the weekend): all 5 core channels read, 4 concepts from #engineering, #team-nexus and #team-agent. Fresh: AlphaSignal Monday roundup (1 used, sandbox story already shown 24 Oct) · Meta (26 Oct, overlaps an earlier item) · OpenAI (nothing new on-topic) · Anthropic and Google Research: nothing on-topic. Not checked: Google Developers, Google Cloud, Anthropic engineering, Airbnb, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. 6 items after Learn, below the usual 8-12: nothing else was strong enough. The Medium editor essay wouldn't load, so the HN thread leads."
+}

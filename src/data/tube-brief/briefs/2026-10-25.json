@@ -1,0 +1,221 @@
+{
+  "date": "2026-10-25",
+  "through_line": "Watch the layer above the data. Today's RBAC read is about permissions over the permission system. The relay piece asks who can read traffic passing through the middle. OpenAI's storage post shows the shared layer every team leans on going wrong in both directions. A quiet Sunday, so the list is short.",
+  "sections": [
+    {
+      "key": "learn",
+      "title": "You asked to learn",
+      "sub": "From the Learn box on your Notion home. These go first until you take them off the list."
+    },
+    {
+      "key": "shipping",
+      "title": "Shipping now"
+    },
+    {
+      "key": "reading",
+      "title": "Worth reading"
+    },
+    {
+      "key": "foundations",
+      "title": "Foundations",
+      "sub": "Background reading, not news. Shown with the year it was published."
+    }
+  ],
+  "items": [
+    {
+      "id": "cfae97",
+      "section": "learn",
+      "concept_label": "RBAC",
+      "title": "The permission that lets you hand yourself admin",
+      "url": "https://raesene.github.io/blog/2021/01/16/Getting-Into-A-Bind-with-Kubernetes/",
+      "summary": "Day seven, hands-on. A role system also has to decide who may grant roles, and this short Kubernetes walkthrough shows how that goes wrong. Normally you can't bind someone to a role holding permissions you lack. The 'bind' verb lifts that rule, so an account that can create bindings and has bind can make itself cluster-admin in one command. You see both accounts' permissions side by side and the exact error that stops the safe one. The second link covers 'escalate', which lets you edit your own role. Together they make the general point: any permission over the permission system counts as admin.",
+      "also": [
+        {
+          "title": "Escalating away: editing your own role up to admin (2020)",
+          "url": "https://raesene.github.io/blog/2020/12/12/Escalating_Away/"
+        }
+      ],
+      "provenance": "Learn box · Raesene's Ramblings",
+      "read_time": "~4 min + 3 min",
+      "published": "2021-01-16",
+      "undated": false,
+      "concepts": [
+        "rbac",
+        "privilege-escalation"
+      ]
+    },
+    {
+      "id": "078897",
+      "section": "learn",
+      "concept_label": "Connector relays",
+      "title": "Building a tunnel where the relay can't read your traffic",
+      "url": "https://dev.to/explita/i-built-an-encrypted-ngrok-alternative-the-hardest-part-wasnt-the-crypto-108i",
+      "summary": "Day four, opinionated and hands-on. A developer builds an ngrok-style reverse tunnel and begins from the trust question. In the usual design, TLS ends at the relay, which means whoever runs it sees every header and token. His fix is an ECDH key exchange between agent and relay, then AES-GCM on every frame. He admits this doesn't yet authenticate the relay. The useful part is how much harder the plumbing was than the crypto: WebSocket close codes, a compression layer that buffered server-sent events until they stalled, and reconnects that reserve your subdomain and rotate keys. It's the author's own product, but the architecture and the bugs are what you're reading for.",
+      "also": [],
+      "provenance": "Learn box · DEV Community",
+      "read_time": "~8 min",
+      "published": "2026-09-28",
+      "undated": false,
+      "concepts": [
+        "connector-relays",
+        "untrusted-relay"
+      ]
+    },
+    {
+      "id": "63f4fa",
+      "section": "shipping",
+      "concept_label": "Agent memory",
+      "title": "Strong models don't need a memory layer, just the raw log",
+      "url": "https://arxiv.org/html/2610.29823",
+      "summary": "A short, blunt study. Seven ways to give an agent long-term memory (full context, BM25, Mem0, Zep, and three coding agents searching the raw history) were each run with three models. Extracted memory only helped the weakest model. With Opus 5.5, building the Mem0 store cost more than a whole full-context run ($25.88 vs $17.84). A lean agent with grep-style tools scored 99% for $6.95. The point to remember: the model that writes the memory sets its ceiling, because a stronger reader can't recover facts a weaker writer dropped. It's one conversation and one run per setup, and the paper says so.",
+      "also": [],
+      "provenance": "AlphaSignal Sunday deep dive · arXiv",
+      "read_time": "~10 min",
+      "published": "2026-10-21",
+      "undated": false,
+      "concepts": [
+        "agent-memory",
+        "agentic-search-over-history"
+      ]
+    },
+    {
+      "id": "298c8d",
+      "section": "reading",
+      "concept_label": "Noisy neighbours",
+      "title": "OpenAI went multi-tenant, single-tenant, then multi-tenant again",
+      "url": "https://openai.com/index/scaling-storage-one-billion-users-part-two/",
+      "summary": "Part II of the ChatGPT storage story, and the honest part is the loop. One shared Cosmos DB container let a niche feature's hot key hurt login traffic. Giving each team its own container fixed that, but now every team had to plan capacity, and launches failed because nobody pre-scaled. So they went back to shared, this time with hot-key throttling, priority tiers for batch work, and partitions that split on load. There's also a failback that caused a second outage through a connection stampede. And there's the move from 120 ms to 10 ms p50 reads, using a nearby cache kept fresh by change-data-capture invalidation instead of TTLs.",
+      "also": [],
+      "provenance": "OpenAI engineering · Friday",
+      "read_time": "~14 min",
+      "published": "2026-10-23",
+      "undated": false,
+      "concepts": [
+        "noisy-neighbors",
+        "cdc-cache-invalidation",
+        "capacity-planning"
+      ]
+    },
+    {
+      "id": "ca63be",
+      "section": "foundations",
+      "concept_label": "TLA+ · your gap",
+      "title": "Model a Go deadlock in TLA+, then test three fixes",
+      "url": "https://www.hillelwayne.com/post/tla-golang/",
+      "summary": "A small worked example you can follow line by line. Hillel Wayne takes 20 lines of Go that deadlock (a worker pool where tokens come back only after a send nobody is receiving yet) and turns them into a PlusCal spec. He shows how to model goroutines, buffered and unbuffered channels. The model checker finds the deadlock with 3 workers and 2 tokens, and then he checks all three proposed fixes the same way. A good next step after the case studies: it shows the act of writing a spec, not just the payoff.",
+      "also": [],
+      "provenance": "Gap search · Hillel Wayne",
+      "read_time": "~10 min",
+      "published": "2020-09-25",
+      "undated": false,
+      "concepts": [
+        "tla-plus",
+        "formal-verification"
+      ]
+    }
+  ],
+  "bank_summary": {
+    "open_gaps": [
+      "tla-plus"
+    ],
+    "learning": [
+      "partial-indexes"
+    ],
+    "recently_closed": [
+      "nats"
+    ],
+    "most_met_unrated": "rbac",
+    "learning_requests": [
+      "rbac",
+      "connector-relays"
+    ]
+  },
+  "source_ledger": {
+    "notion_learn_box": {
+      "status": "ok",
+      "newest": "2026-10-23",
+      "note": "Two bullets unchanged: \"Rbac\" (day 7: hands-on, who may grant roles) and \"Connector relays\" (day 4: building one, and the trust model). Do and Think boxes ignored"
+    },
+    "slack": {
+      "status": "ok",
+      "newest": "2026-10-25",
+      "note": "Window 24 Oct 12:00 UTC to 25 Oct 20:00 UTC. All 5 core channels read: #team-agent, #team-nexus and #team-reliability empty, and #ai-chat and #engineering had one non-technical post each, so no concepts. Secondary: #ai-tooling, #observability-chat and #pointless-debates empty, #random-eng had one link post. The other 5 were skipped"
+    },
+    "gmail": {
+      "status": "fresh",
+      "newest": "2026-10-25",
+      "note": "Sunday deep dive (25 Oct, 15:44 UTC) on agent memory, used via the underlying paper. Levels.fyi not checked"
+    },
+    "meta_engineering": {
+      "status": "fresh",
+      "newest": "2026-10-19",
+      "note": "Nothing new since 19 Oct"
+    },
+    "google_research": {
+      "status": "fresh",
+      "newest": "2026-10-23",
+      "note": "TB screening post (23 Oct): medical, off-topic"
+    },
+    "google_developers": {
+      "status": "unchecked",
+      "newest": "2026-10-22",
+      "note": "Not re-checked today"
+    },
+    "google_cloud": {
+      "status": "unchecked",
+      "newest": "2026-10-12",
+      "note": "Not checked"
+    },
+    "anthropic_news": {
+      "status": "fresh",
+      "newest": "2026-10-22",
+      "note": "Nothing new since the Agent Skills donation (22 Oct), cut as org news"
+    },
+    "anthropic_engineering": {
+      "status": "unchecked",
+      "newest": "2026-10-13",
+      "note": "Not re-checked; quiet"
+    },
+    "openai": {
+      "status": "fresh",
+      "newest": "2026-10-23",
+      "note": "Storage scaling Part II (23 Oct, missed by earlier runs) used"
+    },
+    "airbnb": {
+      "status": "unchecked",
+      "newest": "2026-10-13",
+      "note": "Not re-checked today"
+    },
+    "elevenlabs": {
+      "status": "unchecked",
+      "newest": "2026-10-16",
+      "note": "Not checked"
+    },
+    "meta_ai": {
+      "status": "stale",
+      "newest": "2026-07-27",
+      "note": "Carried over, not re-checked"
+    },
+    "monzo": {
+      "status": "stale",
+      "newest": "2026-09-21",
+      "note": "Carried over, not re-checked"
+    },
+    "granola": {
+      "status": "stale",
+      "newest": "2026-09-02",
+      "note": "Carried over, not re-checked"
+    },
+    "ramp": {
+      "status": "stale",
+      "newest": "2026-04-10",
+      "note": "Carried over, not re-checked"
+    },
+    "gap_search": {
+      "status": "ok",
+      "newest": "2026-10-25",
+      "note": "Only one open gap (TLA+). One search, used Hillel Wayne's goroutine deadlock spec (2020)"
+    }
+  },
+  "source_ledger_text": "Learn box: RBAC (day 7) and Connector relays (day 4). Fresh: AlphaSignal Sunday deep dive (25 Oct, 1 used) · OpenAI (23 Oct storage post, 1 used) · Anthropic (22 Oct) and Google Research (23 Oct): nothing on-topic · Meta Eng: nothing new since 19 Oct. Not checked: Google Developers, Google Cloud, Anthropic engineering, Airbnb, ElevenLabs. Stale: Monzo since 21 Sep, Granola since 2 Sep, Meta AI since 27 Jul, Ramp since April. Slack (~32h over the weekend): no concepts, as every core channel was empty or non-technical. 3 items after Learn, well under the usual 8-12: a quiet weekend with nothing else strong enough."
+}
